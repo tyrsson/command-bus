@@ -1,0 +1,73 @@
+{
+    "name": "php-cmd/cmd-bus",
+    "description": "CommandBus for Mezzio",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "php-cmd",
+        "CommandBus",
+        "Mezzio"
+    ],
+    "homepage": "https://github.com/php-cmd/cmd-bus/discussions",
+    "support": {
+        "issues": "https://github.com/php-cmd/cmd-bus/issues",
+        "source": "https://github.com/php-cmd/cmd-bus",
+        "forum": "https://github.com/php-cmd/cmd-bus/discussions"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.99"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "extra": {
+        "laminas": {
+            "config-provider": "PhpCmd\\ConfigProvider"
+        }
+    },
+    "require": {
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+        "webmozart/assert": "^1.11"
+    },
+    "require-dev": {
+        "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0",
+        "laminas/laminas-coding-standard": "^3.0.1",
+        "phpunit/phpunit": "^11.5.0",
+        "psalm/plugin-phpunit": "^0.19.2",
+        "vimeo/psalm": "^6.13.1"
+    },
+    "suggest": {
+        "laminas/laminas-servicemanager": "Laminas\\ServiceManager component"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpCmd\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpCmdTest\\": "test/unit/",
+            "PhpCmdIntegrationTest\\": "test/integration/"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@static-analysis",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always --testsuite \"unit test\"",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "test-integration": "phpunit --colors=always --testsuite \"integration test\"",
+        "static-analysis": "psalm --shepherd --stats",
+        "sa-update-baseline": "psalm --update-baseline",
+        "sa-no-baseline": "psalm --shepherd --stats --ignore-baseline",
+        "upload-coverage": "coveralls -v"
+    }
+}
