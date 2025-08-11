@@ -1,0 +1,16 @@
+{
+    "ignore_php_platform_requirements": {
+        "8.4": true
+    },
+    "exclude": [
+        {
+            "name": "PHPUnit",
+            "php": "8.1"
+        },
+        {
+            "name": "PHPUnit",
+            "php": "8.4",
+            "dependencies": "lowest"
+        }
+    ]
+}
