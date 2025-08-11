@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace PhpCmd;
 
+/**
+ *
+ * @psalm-type
+ */
 final class ConfigProvider
 {
+    public final const CONFIG_KEY              = 'php-cmd-bus';
+    public final const COMMAND_MAP_KEY         = 'command-map';
+    public final const DEFAULT_PRIORITY        = 1;
+    public final const MIDDLEWARE_PIPELINE_KEY = 'middleware_pipeline';
+
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies(),
-            'php-cmd-bus'  => [
-                'command-handlers' => $this->getCommandHandlers(),
-                'middleware'       => $this->getMiddleware(),
+            'dependencies'    => $this->getDependencies(),
+            self::CONFIG_KEY  => [
+                self::COMMAND_MAP_KEY         => $this->getCommandMap(),
+                self::MIDDLEWARE_PIPELINE_KEY => $this->getMiddleware(),
             ],
         ];
     }
@@ -21,11 +30,15 @@ final class ConfigProvider
     {
         return [
             'aliases'   => [],
-            'factories' => [],
+            'factories' => [
+                CmdBus::class                           => Container\CmdBusFactory::class,
+                MiddlewarePipe::class                   => Container\MiddlewarePipeFactory::class,
+                Handler\CommandHandlerMiddleware::class => Container\CommandHandlerMiddlewareFactory::class,
+            ],
         ];
     }
 
-    public function getCommandHandlers(): array
+    public function getCommandMap(): array
     {
         return [
             // Command FQCN => CommandHandler FQCN
@@ -35,7 +48,10 @@ final class ConfigProvider
     public function getMiddleware(): array
     {
         return [
-            // FQCN => priority
+            [
+                'middleware' => Handler\CommandHandlerMiddleware::class,
+                'priority'   => 1,
+            ]
         ];
     }
 }

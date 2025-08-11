@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace PhpCmd;
 
-interface CmdBusInterface extends MiddlewareInterface {}
+interface CmdBusInterface extends CommandHandlerInterface {}

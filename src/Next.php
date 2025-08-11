@@ -8,26 +8,25 @@ use SplQueue;
 
 final class Next implements CommandHandlerInterface
 {
-        /** @var SplQueue<MiddlewareInterface> */
+    /** @var SplQueue<MiddlewareInterface> */
     private ?SplQueue $queue;
 
     /**
      * Clones the queue provided to allow re-use.
      *
      * @param SplQueue<MiddlewareInterface> $queue
-     * @param RequestHandlerInterface $fallbackHandler Fallback handler to
-     *     invoke when the queue is exhausted.
      */
-    public function __construct(SplQueue $queue, ?CommandHandlerInterface $fallbackHandler = null)
-    {
-        $this->queue           = clone $queue;
-        //$this->fallbackHandler = $fallbackHandler;
+    public function __construct(
+        SplQueue $queue,
+        private CommandHandlerInterface $handler
+    ) {
+        $this->queue = clone $queue;
     }
 
     public function handle(CommandInterface $command): mixed
     {
         if ($this->queue === null) {
-            //throw MiddlewarePipeNextHandlerAlreadyCalledException::create();
+            throw new \RuntimeException('Middleware pipe has already been processed.');
         }
 
         if ($this->queue->isEmpty()) {

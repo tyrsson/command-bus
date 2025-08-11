@@ -6,7 +6,7 @@ namespace PhpCmd;
 
 use SplQueue;
 
-final class MiddlewarePipe implements MiddlewarePipelineInterface
+final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandlerInterface
 {
     /** @var SplQueue<MiddlewareInterface> */
     private SplQueue $pipeline;
@@ -43,7 +43,7 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface
      * @throws Exception\EmptyPipelineException If no middleware is present in
      *     the instance in order to process the request.
      */
-    public function handle(CommandInterface $command)
+    public function handle(CommandInterface $command): mixed
     {
         return $this->process($command);
     }

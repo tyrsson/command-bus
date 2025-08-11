@@ -6,15 +6,13 @@ namespace PhpCmd;
 
 final class CmdBus implements CmdBusInterface
 {
-    private MiddlewarePipelineInterface $pipeline;
-
-    public function __construct(MiddlewarePipelineInterface $pipeline)
-    {
-        $this->pipeline = $pipeline;
+    public function __construct(
+        private MiddlewarePipelineInterface&MiddlewarePipe $pipeline
+    ) {
     }
 
-    public function process(CommandInterface $command): mixed
+    public function handle(CommandInterface $command): mixed
     {
-
+        return $this->pipeline->handle($command);
     }
 }
