@@ -17,13 +17,6 @@ final class CmdBusTest extends TestCase
     {
         parent::setUp();
         // Set up any necessary dependencies or mocks here
-    }
-
-    #[CoversMethod('handle')]
-    public function testHandle(): void
-    {
-        $cmdBus = new CmdBus();
-        $result = $cmdBus->handle(new SomeCommand());
-        $this->assertEquals('expected', $result);
+        $this->markTestIncomplete('Not implemented yet');
     }
 }

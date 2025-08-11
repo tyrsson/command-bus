@@ -31,10 +31,10 @@
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
-        "webmozart/assert": "^1.11",
-        "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0"
+        "webmozart/assert": "^1.11"
     },
     "require-dev": {
+        "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0",
         "laminas/laminas-coding-standard": "^3.0.1",
         "phpunit/phpunit": "^11.5.0",
         "psalm/plugin-phpunit": "^0.19.2",

@@ -18,7 +18,7 @@ final class Next implements CommandHandlerInterface
      */
     public function __construct(
         SplQueue $queue,
-        private CommandHandlerInterface $handler
+        private ?CommandHandlerInterface $handler = null
     ) {
         $this->queue = clone $queue;
     }

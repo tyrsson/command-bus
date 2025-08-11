@@ -29,11 +29,14 @@ final class ConfigProvider
     public function getDependencies(): array
     {
         return [
-            'aliases'   => [],
+            'aliases'   => [
+                CmdBusInterface::class             => CmdBus::class,
+                MiddlewarePipelineInterface::class => MiddlewarePipe::class,
+            ],
             'factories' => [
-                CmdBus::class                           => Container\CmdBusFactory::class,
-                MiddlewarePipe::class                   => Container\MiddlewarePipeFactory::class,
-                Handler\CommandHandlerMiddleware::class => Container\CommandHandlerMiddlewareFactory::class,
+                CmdBus::class                              => Container\CmdBusFactory::class,
+                MiddlewarePipe::class                      => Container\MiddlewarePipeFactory::class,
+                Middleware\CommandHandlerMiddleware::class => Container\CommandHandlerMiddlewareFactory::class,
             ],
         ];
     }
@@ -49,8 +52,8 @@ final class ConfigProvider
     {
         return [
             [
-                'middleware' => Handler\CommandHandlerMiddleware::class,
-                'priority'   => 1,
+                'middleware' => Middleware\CommandHandlerMiddleware::class,
+                'priority'   => self::DEFAULT_PRIORITY,
             ]
         ];
     }

@@ -43,7 +43,7 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandle
      * @throws Exception\EmptyPipelineException If no middleware is present in
      *     the instance in order to process the request.
      */
-    public function handle(CommandInterface $command): mixed
+    public function handle(CommandInterface $command, ?CommandHandlerInterface $handler = null): mixed
     {
         return $this->process($command);
     }

@@ -13,8 +13,11 @@
     colors="true"
 >
     <testsuites>
-        <testsuite name="default">
-            <directory>./test</directory>
+        <testsuite name="unit test">
+            <directory>./test/unit</directory>
+        </testsuite>
+        <testsuite name="integration test">
+            <directory>./test/integration</directory>
         </testsuite>
     </testsuites>
 
