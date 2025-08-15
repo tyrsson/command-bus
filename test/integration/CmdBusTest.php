@@ -32,7 +32,7 @@ final class CmdBusTest extends TestCase
             TestAssets\CommandHandler::class => InvokableFactory::class,
             TestAssets\Command::class        => InvokableFactory::class,
         ];
-        $config[ConfigProvider::CONFIG_KEY][ConfigProvider::COMMAND_MAP_KEY] = [
+        $config[ConfigProvider::class][ConfigProvider::COMMAND_MAP_KEY] = [
             TestAssets\Command::class => TestAssets\CommandHandler::class,
         ];
         $dependencies['services']['config'] = $config;

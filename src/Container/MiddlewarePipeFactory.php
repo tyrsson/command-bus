@@ -27,13 +27,13 @@ final class MiddlewarePipeFactory
             throw Exception\ServiceNotFoundException::fromService('config');
         }
 
-        $config = $container->get('config')[ConfigProvider::CONFIG_KEY] ?? [];
+        $config = $container->get('config')[ConfigProvider::class] ?? [];
 
         if ($config === []) {
             throw Exception\InvalidConfigurationException::fromMissingKey(
                 sprintf(
                     'Configuration for key: %s was not found in the config service.',
-                    '$config[' . ConfigProvider::CONFIG_KEY . ']'
+                    '$config[' . ConfigProvider::class . ']'
                 )
             );
         }
@@ -97,7 +97,7 @@ final class MiddlewarePipeFactory
         return static function ($item): array {
             if (! is_array($item) || ! array_key_exists('middleware', $item)) {
                 throw Exception\InvalidConfigurationException::fromInvalidType(
-                    '$config[' . ConfigProvider::CONFIG_KEY . '][' . ConfigProvider::MIDDLEWARE_PIPELINE_KEY . ']',
+                    '$config[' . ConfigProvider::class . '][' . ConfigProvider::MIDDLEWARE_PIPELINE_KEY . ']',
                     $item
                 );
             }

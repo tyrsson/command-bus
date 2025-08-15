@@ -18,7 +18,7 @@ final class CommandHandlerMiddleware implements MiddlewareInterface
 
     public function process(CommandInterface $command): mixed
     {
-        $map = $this->container->get('config')[ConfigProvider::CONFIG_KEY][ConfigProvider::COMMAND_MAP_KEY] ?? [];
+        $map = $this->container->get('config')[ConfigProvider::class][ConfigProvider::COMMAND_MAP_KEY] ?? [];
         if (! $this->container->has($map[$command::class])) {
             throw new \RuntimeException('Command handler not found.');
         }
