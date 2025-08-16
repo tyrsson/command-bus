@@ -16,10 +16,9 @@ namespace PhpCmd;
  */
 final class ConfigProvider
 {
-    public final const CONFIG_KEY              = 'php-cmd-bus';
-    public final const COMMAND_MAP_KEY         = 'command-map';
-    public final const DEFAULT_PRIORITY        = 1;
-    public final const MIDDLEWARE_PIPELINE_KEY = 'middleware_pipeline';
+    public const COMMAND_MAP_KEY         = 'command-map';
+    public const DEFAULT_PRIORITY        = 1;
+    public const MIDDLEWARE_PIPELINE_KEY = 'middleware_pipeline';
 
     /**
      * @return array{
@@ -33,8 +32,8 @@ final class ConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies'    => $this->getDependencies(),
-            self::CONFIG_KEY  => [
+            'dependencies' => $this->getDependencies(),
+            static::class  => [
                 self::COMMAND_MAP_KEY         => $this->getCommandMap(),
                 self::MIDDLEWARE_PIPELINE_KEY => $this->getMiddleware(),
             ],
@@ -69,7 +68,7 @@ final class ConfigProvider
             [
                 'middleware' => Middleware\CommandHandlerMiddleware::class,
                 'priority'   => self::DEFAULT_PRIORITY,
-            ]
+            ],
         ];
     }
 }

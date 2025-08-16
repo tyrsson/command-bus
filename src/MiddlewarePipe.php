@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpCmd;
 
+use Override;
 use SplQueue;
 
 final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandlerInterface
@@ -43,6 +44,7 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandle
      * @throws Exception\EmptyPipelineException If no middleware is present in
      *     the instance in order to process the request.
      */
+    #[Override]
     public function handle(CommandInterface $command, ?CommandHandlerInterface $handler = null): mixed
     {
         return $this->process($command);
@@ -54,7 +56,7 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandle
      * Executes the internal pipeline, passing $handler as the "final
      * handler" in cases when the pipeline exhausts itself.
      */
-    public function process(CommandInterface $command, ?CommandHandlerInterface $handler = null)
+    public function process(CommandInterface $command, ?CommandHandlerInterface $handler = null): mixed
     {
         return (new Next($this->pipeline, $handler))->handle($command);
     }
@@ -62,6 +64,7 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandle
     /**
      * Attach middleware to the pipeline.
      */
+    #[Override]
     public function pipe(MiddlewareInterface $middleware): void
     {
         $this->pipeline->enqueue($middleware);
