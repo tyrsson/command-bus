@@ -34,8 +34,10 @@
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0",
         "laminas/laminas-coding-standard": "^3.0.1",
+        "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^11.5.0",
         "psalm/plugin-phpunit": "^0.19.2",
         "vimeo/psalm": "^6.13.1"
@@ -65,9 +67,8 @@
         "test": "phpunit --colors=always --testsuite \"unit test\"",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "test-integration": "phpunit --colors=always --testsuite \"integration test\"",
-        "static-analysis": "psalm --shepherd --stats",
-        "sa-update-baseline": "psalm --update-baseline",
-        "sa-no-baseline": "psalm --shepherd --stats --ignore-baseline",
+        "static-analysis": "vendor/bin/phpstan analyse",
+        "sa-update-baseline": "vendor/bin/phpstan analyse --generate-baseline",
         "upload-coverage": "coveralls -v"
     }
 }

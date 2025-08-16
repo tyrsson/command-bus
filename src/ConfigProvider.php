@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace PhpCmd;
 
 /**
+ * @phpstan-type CommandMap array<class-string, class-string>
  *
- * @psalm-type
+ * @phpstan-type MiddlewareSpec array{
+ *     middleware: class-string,
+ *     priority: int
+ * }
+ *
+ * @phpstan-type MiddlewarePipe MiddlewareSpec[]
  */
 final class ConfigProvider
 {
@@ -15,6 +21,15 @@ final class ConfigProvider
     public final const DEFAULT_PRIORITY        = 1;
     public final const MIDDLEWARE_PIPELINE_KEY = 'middleware_pipeline';
 
+    /**
+     * @return array{
+     *     dependencies: array{
+     *         aliases: array<class-string, class-string>,
+     *         factories: array<class-string, class-string>,
+     *     PhpCmd\ConfigProvider:
+     *     }
+     * }
+     */
     public function __invoke(): array
     {
         return [
