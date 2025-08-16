@@ -16,8 +16,8 @@ final class CmdBusFactory
         if (! $container->has(MiddlewarePipelineInterface::class)) {
             throw ServiceNotFoundException::fromService(MiddlewarePipelineInterface::class);
         }
+        /** @var MiddlewarePipelineInterface $middlewarePipeline */
         $middlewarePipeline = $container->get(MiddlewarePipelineInterface::class);
         return new CmdBus($middlewarePipeline);
     }
 }
-
