@@ -14,6 +14,8 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
+use function array_merge;
+
 #[CoversClass(CmdBus::class)]
 #[CoversMethod(CmdBus::class, 'handle')]
 /**
@@ -31,12 +33,26 @@ final class CmdBusTest extends TestCase
         $config                    = (new ConfigProvider())();
         $dependencies              = $config['dependencies'];
         $dependencies['factories'] = ($dependencies['factories'] ?? []) + [
-            TestAssets\CommandHandler::class => InvokableFactory::class,
-            TestAssets\Command::class        => InvokableFactory::class,
+            TestAssets\CommandHandler::class       => InvokableFactory::class,
+            TestAssets\Command::class              => InvokableFactory::class,
+            TestAssets\TestMiddlewareBefore::class => InvokableFactory::class,
+            TestAssets\TestMiddlewareAfter::class  => InvokableFactory::class,
         ];
         $config[ConfigProvider::class][ConfigProvider::COMMAND_MAP_KEY] = [
             TestAssets\Command::class => TestAssets\CommandHandler::class,
         ];
+        $middleware     = $config[ConfigProvider::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY];
+        $testMiddleware = [
+            [
+                'middleware' => TestAssets\TestMiddlewareBefore::class,
+                'priority'   => 100,
+            ],
+            [
+                'middleware' => TestAssets\TestMiddlewareAfter::class,
+                'priority'   => -1,
+            ],
+        ];
+        $config[ConfigProvider::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY] = array_merge($middleware, $testMiddleware);
         $dependencies['services']['config']                             = $config;
 
         /** @phpstan-ignore-next-line */

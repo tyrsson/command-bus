@@ -6,5 +6,5 @@ namespace PhpCmd;
 
 interface MiddlewareInterface
 {
-    public function process(CommandInterface $command): mixed;
+    public function process(CommandInterface $command, CommandHandlerInterface $next): mixed;
 }

@@ -40,6 +40,6 @@ final class Next implements CommandHandlerInterface
         $next        = clone $this; // deep clone is not used intentionally
         $this->queue = null; // mark queue as processed at this nesting level
 
-        return $middleware->process($command);
+        return $middleware->process($command, $next);
     }
 }

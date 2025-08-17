@@ -22,7 +22,7 @@ final class CommandHandlerMiddleware implements MiddlewareInterface
     ) {
     }
 
-    public function process(CommandInterface $command): mixed
+    public function process(CommandInterface $command, CommandHandlerInterface $next): mixed
     {
         /** @phpstan-var array<CmdBusConfig> */
         $config = $this->container->get('config');
@@ -37,6 +37,8 @@ final class CommandHandlerMiddleware implements MiddlewareInterface
         }
         /** @var CommandHandlerInterface $handler */
         $handler = $this->container->get($handlerClass);
-        return $handler->handle($command);
+        // todo: decide how to handle the result
+        $handler->handle($command);
+        return $next->handle($command);
     }
 }
