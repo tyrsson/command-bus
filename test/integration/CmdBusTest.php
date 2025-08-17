@@ -28,8 +28,8 @@ final class CmdBusTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $config                     = (new ConfigProvider())();
-        $dependencies               = $config['dependencies'];
+        $config                    = (new ConfigProvider())();
+        $dependencies              = $config['dependencies'];
         $dependencies['factories'] = ($dependencies['factories'] ?? []) + [
             TestAssets\CommandHandler::class => InvokableFactory::class,
             TestAssets\Command::class        => InvokableFactory::class,

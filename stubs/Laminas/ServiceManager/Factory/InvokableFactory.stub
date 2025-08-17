@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd;
+namespace Laminas\ServiceManager\Factory;
+
+use Psr\Container\ContainerInterface;
 
 /**
  * PHPStan stub for Laminas\ServiceManager\Factory\InvokableFactory

@@ -21,7 +21,8 @@
             "php": "8.2.99"
         },
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "laminas/laminas-component-installer": true
         }
     },
     "extra": {
@@ -38,9 +39,7 @@
         "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
-        "phpunit/phpunit": "^11.5.0",
-        "phpstan/plugin-phpunit": "^0.19.2",
-        "vimeo/phpstan": "^6.13.1"
+        "phpunit/phpunit": "^11.5.0"
     },
     "suggest": {
         "laminas/laminas-servicemanager": "Laminas\\ServiceManager component"

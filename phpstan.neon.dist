@@ -1,13 +1,13 @@
 parameters:
-    level: 7
+    level: 10
     paths:
         - src
         - test
     stubFiles:
-        - stubs/AbstractFactoryInterface.stub
-        - stubs/ContainerInterface.stub
-        - stubs/DelegatorFactoryInterface.stub
-        - stubs/FactoryInterface.stub
-        - stubs/InitializerInterface.stub
-        - stubs/InvokableFactory.stub
+        - stubs/Laminas/ServiceManager/Factory/AbstractFactoryInterface.stub
+        - stubs/Laminas/ServiceManager/Factory/DelegatorFactoryInterface.stub
+        - stubs/Laminas/ServiceManager/Factory/FactoryInterface.stub
+        - stubs/Laminas/ServiceManager/Factory/InvokableFactory.stub
+        - stubs/Laminas/ServiceManager/Initializer/InitializerInterface.stub
+        - stubs/Psr/Container/ContainerInterface.stub
     treatPhpDocTypesAsCertain: false

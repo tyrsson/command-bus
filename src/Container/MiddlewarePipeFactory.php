@@ -15,7 +15,6 @@ use SplPriorityQueue;
 use function array_key_exists;
 use function array_map;
 use function array_reduce;
-use function is_array;
 use function is_int;
 use function sprintf;
 
@@ -134,7 +133,6 @@ final class MiddlewarePipeFactory
      *
      * The function is useful to reduce an array of pipeline middleware to a
      * priority queue.
-     *
      */
     private static function createPriorityQueueReducer(): callable
     {

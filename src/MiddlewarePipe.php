@@ -39,7 +39,6 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandle
      *
      * If the pipeline is empty at the time this method is invoked, it will
      * raise an exception.
-     *
      */
     #[Override]
     public function handle(CommandInterface $command, ?CommandHandlerInterface $handler = null): mixed

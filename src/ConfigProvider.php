@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace PhpCmd;
 
+use Laminas\ServiceManager\Factory;
+use Laminas\ServiceManager\Initializer;
+use Psr\Container\ContainerInterface;
+
 /**
  * @phpstan-type CommandMap array<class-string, class-string>
  * @phpstan-type MiddlewareSpec array{
@@ -17,28 +21,28 @@ namespace PhpCmd;
  * }
  * @phpstan-type AbstractFactoriesConfiguration = array<
  *      array-key,
- *      class-string<\Laminas\ServiceManager\Factory\AbstractFactoryInterface>|\Laminas\ServiceManager\Factory\AbstractFactoryInterface
+ *      class-string<Factory\AbstractFactoryInterface>|Factory\AbstractFactoryInterface
  * >
- * @phpstan-type DelegatorCallable = callable(\Psr\Container\ContainerInterface,string,callable():mixed,array<mixed>|null):mixed
+ * @phpstan-type DelegatorCallable = callable(ContainerInterface,string,callable():mixed,array<mixed>|null):mixed
  * @phpstan-type DelegatorsConfiguration = array<
  *      string,
  *      array<
  *          array-key,
- *          class-string<\Laminas\ServiceManager\Factory\DelegatorFactoryInterface>
+ *          class-string<Factory\DelegatorFactoryInterface>
  *          |class-string<object&DelegatorCallable>
- *          |\Laminas\ServiceManager\Factory\DelegatorFactoryInterface
+ *          |Factory\DelegatorFactoryInterface
  *          |DelegatorCallable
  *      >
  * >
- * @phpstan-type FactoryCallable = callable(\Psr\Container\ContainerInterface,string,array<mixed>|null):mixed
+ * @phpstan-type FactoryCallable = callable(ContainerInterface,string,array<mixed>|null):mixed
  * @phpstan-type FactoriesConfiguration = array<
  *      string,
- *      class-string<\Laminas\ServiceManager\Factory\FactoryInterface>|class-string<object&FactoryCallable>|\Laminas\ServiceManager\Factory\FactoryInterface|FactoryCallable|class-string
+ *      class-string<Factory\FactoryInterface>|class-string<object&FactoryCallable>|Factory\FactoryInterface|FactoryCallable|class-string
  * >
- * @phpstan-type InitializerCallable = callable(\Psr\Container\ContainerInterface,mixed):void
+ * @phpstan-type InitializerCallable = callable(ContainerInterface,mixed):void
  * @phpstan-type InitializersConfiguration = array<
  *      array-key,
- *      class-string<\Laminas\ServiceManager\Initializer\InitializerInterface>|class-string<object&InitializerCallable>|\Laminas\ServiceManager\Initializer\InitializerInterface|InitializerCallable
+ *      class-string<Initializer\InitializerInterface>|class-string<object&InitializerCallable>|Initializer\InitializerInterface|InitializerCallable
  * >
  * @phpstan-type LazyServicesConfiguration = array{
  *      class_map?:array<string,class-string>,
