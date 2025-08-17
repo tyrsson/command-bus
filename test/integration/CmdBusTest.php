@@ -17,10 +17,9 @@ use Psr\Container\ContainerInterface;
 #[CoversClass(CmdBus::class)]
 #[CoversMethod(CmdBus::class, 'handle')]
 /**
- * @psalm-import-type ServiceManagerConfiguration from ServiceManager
- * @psalm-import-type FactoriesConfiguration from ServiceManager
- * @psalm-import-type CmdBusConfig from ConfigProvider
- * @psalm-import-type CmdBusCommandMap from ConfigProvider
+ * @phpstan-import-type ServiceManagerConfiguration from ConfigProvider
+ * @phpstan-import-type CmdBusConfig from ConfigProvider
+ * @phpstan-import-type CommandMap from ConfigProvider
  */
 final class CmdBusTest extends TestCase
 {
@@ -29,19 +28,18 @@ final class CmdBusTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        /** @psalm-var array{dependencies: ServiceManagerConfiguration} $config*/
         $config                     = (new ConfigProvider())();
         $dependencies               = $config['dependencies'];
-        $dependencies['factories'] += [
+        $dependencies['factories'] = ($dependencies['factories'] ?? []) + [
             TestAssets\CommandHandler::class => InvokableFactory::class,
             TestAssets\Command::class        => InvokableFactory::class,
         ];
-        /** @psalm-var CmdBusCommandMap */
         $config[ConfigProvider::class][ConfigProvider::COMMAND_MAP_KEY] = [
             TestAssets\Command::class => TestAssets\CommandHandler::class,
         ];
         $dependencies['services']['config']                             = $config;
 
+        /** @phpstan-ignore-next-line */
         $this->container = new ServiceManager($dependencies);
     }
 

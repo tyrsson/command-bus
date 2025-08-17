@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+namespace PhpCmd;
+
+/**
+ * PHPStan stub for Laminas\ServiceManager\Factory\FactoryInterface
+ * This is a type alias to help PHPStan understand the interface in the PhpCmd namespace context.
+ */
+interface FactoryInterface
+{
+    /**
+     * Create a service instance
+     *
+     * @param array<mixed>|null $options
+     */
+    public function __invoke(ContainerInterface $container, string $requestedName, ?array $options = null): mixed;
+}

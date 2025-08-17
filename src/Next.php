@@ -20,7 +20,6 @@ final class Next implements CommandHandlerInterface
      */
     public function __construct(
         SplQueue $queue,
-        private ?CommandHandlerInterface $handler = null
     ) {
         $this->queue = clone $queue;
     }
@@ -35,13 +34,12 @@ final class Next implements CommandHandlerInterface
         if ($this->queue->isEmpty()) {
             $this->queue = null;
             throw new RuntimeException('Empty Queue!');
-            //return $this->fallbackHandler->handle($request);
         }
 
         $middleware  = $this->queue->dequeue();
         $next        = clone $this; // deep clone is not used intentionally
         $this->queue = null; // mark queue as processed at this nesting level
 
-        return $middleware->process($command, $next);
+        return $middleware->process($command);
     }
 }

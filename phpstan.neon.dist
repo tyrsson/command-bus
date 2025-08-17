@@ -1,8 +1,13 @@
-includes:
-    - phpstan-baseline.neon
-
 parameters:
-    level: 6
+    level: 7
     paths:
         - src
         - test
+    stubFiles:
+        - stubs/AbstractFactoryInterface.stub
+        - stubs/ContainerInterface.stub
+        - stubs/DelegatorFactoryInterface.stub
+        - stubs/FactoryInterface.stub
+        - stubs/InitializerInterface.stub
+        - stubs/InvokableFactory.stub
+    treatPhpDocTypesAsCertain: false

@@ -22,9 +22,10 @@ use function sprintf;
 use const PHP_INT_MAX;
 
 /**
- * @psalm-import-type CmdBusConfig from ConfigProvider
- * @psalm-import-type CmdBusMiddlewareSpec from ConfigProvider
- * @psalm-import-type CmdBusCommandMap from ConfigProvider
+ * @phpstan-import-type CmdBusConfig from ConfigProvider
+ * @phpstan-import-type MiddlewarePipeSpec from ConfigProvider
+ * @phpstan-import-type MiddlewareSpec from ConfigProvider
+ * @phpstan-import-type CommandMap from ConfigProvider
  */
 final class MiddlewarePipeFactory
 {
@@ -34,9 +35,9 @@ final class MiddlewarePipeFactory
             throw Exception\ServiceNotFoundException::fromService('config');
         }
 
-        /** @psalm-var array<CmdBusConfig> $config */
+        /** @phpstan-var array<CmdBusConfig> $config */
         $config = $container->get('config');
-        /** @psalm-var CmdBusConfig $config */
+        /** @phpstan-var CmdBusConfig $config */
         $config = $config[ConfigProvider::class] ?? [];
 
         if ($config === []) {
@@ -50,7 +51,6 @@ final class MiddlewarePipeFactory
 
         $middlewarePipe = new MiddlewarePipe();
 
-        /** @psalm-var CmdBusMiddlewareSpec[] $middleware */
         $config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY] ??= [];
 
         if ($config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY] !== []) {
@@ -60,12 +60,17 @@ final class MiddlewarePipeFactory
         return $middlewarePipe;
     }
 
+    /**
+     * Pipe middleware into the CmdBus middleware pipeline.
+     *
+     * @phpstan-param CmdBusConfig $config
+     */
     private static function pipeMiddleware(
         ContainerInterface $container,
         MiddlewarePipelineInterface $middlewarePipe,
         array $config
     ): MiddlewarePipelineInterface {
-        /** @psalm-var CmdBusMiddlewareSpec[] $middleware */
+        /** @phpstan-var MiddlewarePipeSpec $middleware */
         $middleware = $config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY] ?? [];
         if ($middleware === []) {
             return $middlewarePipe;
@@ -74,7 +79,7 @@ final class MiddlewarePipeFactory
         /**
          * Create a priority queue from the specifications
          *
-         * @psalm-var SplPriorityQueue<int, CmdBusMiddlewareSpec> $queue
+         * @phpstan-var SplPriorityQueue<int, MiddlewareSpec> $queue
          */
         $queue = array_reduce(
             array_map(self::createCollectionMapper(), $middleware),
@@ -82,7 +87,6 @@ final class MiddlewarePipeFactory
             new SplPriorityQueue()
         );
 
-        /** @psalm-var CmdBusMiddlewareSpec $spec */
         foreach ($queue as $spec) {
             if ($container->has($spec['middleware'])) {
                 /** @var MiddlewareInterface $middleware */
@@ -105,15 +109,11 @@ final class MiddlewarePipeFactory
      *
      * If the 'middleware' value is missing, or not viable as middleware, it
      * raises an exception, to ensure the pipeline is built correctly.
-     *
-     * @return callable(CommandBusMiddlewareSpec): CmdBusMiddlewareSpec
-     * @throws InvalidArgumentException
      */
     private static function createCollectionMapper(): callable
     {
-        /** @psalm-var CmdBusMiddlewareSpec $item */
-        return static function ($item): array {
-            if (! is_array($item) || ! array_key_exists('middleware', $item)) {
+        return static function (array $item): array {
+            if (! array_key_exists('middleware', $item)) {
                 throw Exception\InvalidConfigurationException::fromInvalidType(
                     '$config[' . ConfigProvider::class . '][' . ConfigProvider::MIDDLEWARE_PIPELINE_KEY . ']',
                     $item
@@ -135,14 +135,12 @@ final class MiddlewarePipeFactory
      * The function is useful to reduce an array of pipeline middleware to a
      * priority queue.
      *
-     * @return callable(SplPriorityQueue, CmdBusMiddlewareSpec): SplPriorityQueue
      */
     private static function createPriorityQueueReducer(): callable
     {
         // insure that items with the same priority are enqueued in the order
         // in which they are inserted.
         $serial = PHP_INT_MAX;
-        /** @psalm-var CmdBusMiddlewareSpec $item */
         return static function (SplPriorityQueue $queue, array $item) use (&$serial): SplPriorityQueue {
             $priority = isset($item['priority']) && is_int($item['priority'])
                 ? $item['priority']

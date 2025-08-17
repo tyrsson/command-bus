@@ -17,7 +17,6 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandle
      */
     public function __construct()
     {
-        /** @psalm-var SplQueue<MiddlewareInterface> */
         $this->pipeline = new SplQueue();
     }
 
@@ -41,8 +40,6 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandle
      * If the pipeline is empty at the time this method is invoked, it will
      * raise an exception.
      *
-     * @throws Exception\EmptyPipelineException If no middleware is present in
-     *     the instance in order to process the request.
      */
     #[Override]
     public function handle(CommandInterface $command, ?CommandHandlerInterface $handler = null): mixed
@@ -56,9 +53,9 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface, CommandHandle
      * Executes the internal pipeline, passing $handler as the "final
      * handler" in cases when the pipeline exhausts itself.
      */
-    public function process(CommandInterface $command, ?CommandHandlerInterface $handler = null): mixed
+    public function process(CommandInterface $command): mixed
     {
-        return (new Next($this->pipeline, $handler))->handle($command);
+        return (new Next($this->pipeline))->handle($command);
     }
 
     /**

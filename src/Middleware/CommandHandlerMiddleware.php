@@ -12,8 +12,8 @@ use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
- * @psalm-import-type CmdBusConfig from ConfigProvider
- * @psalm-import-type CmdBusCommandMap from ConfigProvider
+ * @phpstan-import-type CmdBusConfig from ConfigProvider
+ * @phpstan-import-type CommandMap from ConfigProvider
  */
 final class CommandHandlerMiddleware implements MiddlewareInterface
 {
@@ -24,13 +24,13 @@ final class CommandHandlerMiddleware implements MiddlewareInterface
 
     public function process(CommandInterface $command): mixed
     {
-        /** @psalm-var array<CmdBusConfig> */
+        /** @phpstan-var array<CmdBusConfig> */
         $config = $this->container->get('config');
-        /** @psalm-var CmdBusConfig $config */
+        /** @phpstan-var CmdBusConfig $config */
         $config = $config[ConfigProvider::class] ?? [];
-        /** @psalm-var CmdBusCommandMap $map */
+        /** @phpstan-var CommandMap $map */
         $map = $config[ConfigProvider::COMMAND_MAP_KEY] ?? [];
-        /** @psalm-var class-string $handlerClass */
+        /** @phpstan-var class-string $handlerClass */
         $handlerClass = $map[$command::class];
         if (! $this->container->has($handlerClass)) {
             throw new RuntimeException('Command handler not found.');
