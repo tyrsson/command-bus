@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\Container;
+namespace PhpCmd\CmdBus\Container;
 
-use PhpCmd\CmdBus;
-use PhpCmd\Exception\ServiceNotFoundException;
-use PhpCmd\MiddlewarePipe;
-use PhpCmd\MiddlewarePipelineInterface;
+use PhpCmd\CmdBus\CmdBus;
+use PhpCmd\CmdBus\Exception\ServiceNotFoundException;
+use PhpCmd\CmdBus\MiddlewarePipe;
+use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use Psr\Container\ContainerInterface;
 
 final class CmdBusFactory

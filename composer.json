@@ -27,11 +27,12 @@
     },
     "extra": {
         "laminas": {
-            "config-provider": "PhpCmd\\ConfigProvider"
+            "config-provider": "PhpCmd\\CmdBus\\ConfigProvider"
         }
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+        "beberlei/assert": "^3.3",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
@@ -46,13 +47,13 @@
     },
     "autoload": {
         "psr-4": {
-            "PhpCmd\\": "src/"
+            "PhpCmd\\CmdBus\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PhpCmdTest\\": "test/unit/",
-            "PhpCmdIntegrationTest\\": "test/integration/"
+            "PhpCmd\\CmdBusTest\\": "test/unit/",
+            "PhpCmd\\CmdBusIntegrationTest\\": "test/integration/"
         }
     },
     "scripts": {

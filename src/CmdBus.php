@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd;
+namespace PhpCmd\CmdBus;
 
 use Override;
 

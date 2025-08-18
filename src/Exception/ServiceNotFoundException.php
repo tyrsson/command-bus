@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\Exception;
+namespace PhpCmd\CmdBus\Exception;
 
 use Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;

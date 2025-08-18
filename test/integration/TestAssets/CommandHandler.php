@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpCmdIntegrationTest\TestAssets;
+namespace PhpCmd\CmdBusIntegrationTest\TestAssets;
 
-use PhpCmd\CommandHandlerInterface;
-use PhpCmd\CommandInterface;
+use PhpCmd\CmdBus\CommandHandlerInterface;
+use PhpCmd\CmdBus\CommandInterface;
 
 final class CommandHandler implements CommandHandlerInterface
 {

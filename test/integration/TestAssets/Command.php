@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpCmdIntegrationTest\TestAssets;
+namespace PhpCmd\CmdBusIntegrationTest\TestAssets;
 
-use PhpCmd\CommandInterface;
+use PhpCmd\CmdBus\CommandInterface;
 
 final class Command implements CommandInterface
 {

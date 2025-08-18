@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\Container;
+namespace PhpCmd\CmdBus\Container;
 
-use PhpCmd\ConfigProvider;
-use PhpCmd\Exception;
-use PhpCmd\MiddlewareInterface;
-use PhpCmd\MiddlewarePipe;
-use PhpCmd\MiddlewarePipelineInterface;
+use PhpCmd\CmdBus\ConfigProvider;
+use PhpCmd\CmdBus\Exception;
+use PhpCmd\CmdBus\MiddlewareInterface;
+use PhpCmd\CmdBus\MiddlewarePipe;
+use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use Psr\Container\ContainerInterface;
 use SplPriorityQueue;
 

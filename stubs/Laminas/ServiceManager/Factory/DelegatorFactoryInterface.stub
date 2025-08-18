@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 
 /**
  * PHPStan stub for Laminas\ServiceManager\Factory\DelegatorFactoryInterface
- * This is a type alias to help PHPStan understand the interface in the PhpCmd namespace context.
+ * This is a type alias to help PHPStan understand the interface in the PhpCmd\CmdBus namespace context.
  */
 interface DelegatorFactoryInterface
 {

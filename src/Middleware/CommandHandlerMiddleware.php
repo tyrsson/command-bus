@@ -2,43 +2,36 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\Middleware;
+namespace PhpCmd\CmdBus\Middleware;
 
-use PhpCmd\CommandHandlerInterface;
-use PhpCmd\CommandInterface;
-use PhpCmd\ConfigProvider;
-use PhpCmd\MiddlewareInterface;
-use Psr\Container\ContainerInterface;
-use RuntimeException;
+use Override;
+use PhpCmd\CmdBus\CommandHandlerFactory;
+use PhpCmd\CmdBus\CommandHandlerInterface;
+use PhpCmd\CmdBus\CommandInterface;
+use PhpCmd\CmdBus\MiddlewareInterface;
 
-/**
- * @phpstan-import-type CmdBusConfig from ConfigProvider
- * @phpstan-import-type CommandMap from ConfigProvider
- */
-final class CommandHandlerMiddleware implements MiddlewareInterface
+final class CommandHandlerMiddleware implements MiddlewareInterface, CommandHandlerInterface
 {
+    private CommandHandlerInterface $handler;
+
     public function __construct(
-        private ContainerInterface $container
+        private readonly CommandHandlerFactory $factory
     ) {
     }
 
-    public function process(CommandInterface $command, CommandHandlerInterface $next): mixed
+    #[Override]
+    public function process(
+        CommandInterface $command,
+        CommandHandlerInterface $handler
+    ): mixed {
+        $this->handler = ($this->factory)($command);
+        // run the command and return the result to the caller.
+        return $this->handle($command);
+    }
+
+    #[Override]
+    public function handle(CommandInterface $command): mixed
     {
-        /** @phpstan-var array<CmdBusConfig> */
-        $config = $this->container->get('config');
-        /** @phpstan-var CmdBusConfig $config */
-        $config = $config[ConfigProvider::class] ?? [];
-        /** @phpstan-var CommandMap $map */
-        $map = $config[ConfigProvider::COMMAND_MAP_KEY] ?? [];
-        /** @phpstan-var class-string $handlerClass */
-        $handlerClass = $map[$command::class];
-        if (! $this->container->has($handlerClass)) {
-            throw new RuntimeException('Command handler not found.');
-        }
-        /** @var CommandHandlerInterface $handler */
-        $handler = $this->container->get($handlerClass);
-        // todo: decide how to handle the result
-        $handler->handle($command);
-        return $next->handle($command);
+        return $this->handler->handle($command);
     }
 }
