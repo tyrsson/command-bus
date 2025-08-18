@@ -14,6 +14,10 @@
         {
             "name": "PHPStan",
             "php": "8.4"
+        },
+        {
+            "name": "PHPUnit",
+            "php": "8.4"
         }
     ],
     "additional_checks": [
