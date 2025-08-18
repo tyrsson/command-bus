@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd;
+namespace PhpCmd\CmdBus;
 
 use Override;
-use RuntimeException;
+use PhpCmd\CmdBus\CommandHandlerInterface;
+use PhpCmd\CmdBus\Exception\NextHandlerAlreadyCalledException;
+use PhpCmd\CmdBus\Handler\EmptyPipelineHandler;
 use SplQueue;
 
 final class Next implements CommandHandlerInterface
@@ -20,7 +22,7 @@ final class Next implements CommandHandlerInterface
      */
     public function __construct(
         SplQueue $queue,
-        private ?CommandHandlerInterface $handler = null
+        private CommandHandlerInterface $emptyPipelineHandler = new EmptyPipelineHandler()
     ) {
         $this->queue = clone $queue;
     }
@@ -29,13 +31,12 @@ final class Next implements CommandHandlerInterface
     public function handle(CommandInterface $command): mixed
     {
         if ($this->queue === null) {
-            throw new RuntimeException('Middleware pipe has already been processed.');
+            throw NextHandlerAlreadyCalledException::create();
         }
 
         if ($this->queue->isEmpty()) {
             $this->queue = null;
-            throw new RuntimeException('Empty Queue!');
-            //return $this->fallbackHandler->handle($request);
+            return $this->emptyPipelineHandler->handle($command);
         }
 
         $middleware  = $this->queue->dequeue();

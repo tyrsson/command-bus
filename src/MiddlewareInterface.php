@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd;
+namespace PhpCmd\CmdBus;
 
 interface MiddlewareInterface
 {
-    public function process(CommandInterface $command): mixed;
+    public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed;
 }

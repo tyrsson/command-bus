@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd;
+namespace PhpCmd\CmdBus;
 
-interface MiddlewarePipelineInterface
+interface MiddlewarePipelineInterface extends MiddlewareInterface, CommandHandlerInterface
 {
     public function pipe(MiddlewareInterface $middleware): void;
 }

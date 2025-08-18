@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpCmdTest;
+namespace PhpCmd\CmdBusTest;
 
-use PhpCmd\CmdBus;
+use PhpCmd\CmdBus\CmdBus;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

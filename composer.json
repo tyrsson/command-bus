@@ -21,37 +21,39 @@
             "php": "8.2.99"
         },
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "laminas/laminas-component-installer": true
         }
     },
     "extra": {
         "laminas": {
-            "config-provider": "PhpCmd\\ConfigProvider"
+            "config-provider": "PhpCmd\\CmdBus\\ConfigProvider"
         }
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
+        "beberlei/assert": "^3.3",
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0",
         "laminas/laminas-coding-standard": "^3.0.1",
-        "phpunit/phpunit": "^11.5.0",
-        "psalm/plugin-phpunit": "^0.19.2",
-        "vimeo/psalm": "^6.13.1"
+        "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/phpunit": "^11.5.0"
     },
     "suggest": {
         "laminas/laminas-servicemanager": "Laminas\\ServiceManager component"
     },
     "autoload": {
         "psr-4": {
-            "PhpCmd\\": "src/"
+            "PhpCmd\\CmdBus\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PhpCmdTest\\": "test/unit/",
-            "PhpCmdIntegrationTest\\": "test/integration/"
+            "PhpCmd\\CmdBusTest\\": "test/unit/",
+            "PhpCmd\\CmdBusIntegrationTest\\": "test/integration/"
         }
     },
     "scripts": {
@@ -65,9 +67,8 @@
         "test": "phpunit --colors=always --testsuite \"unit test\"",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "test-integration": "phpunit --colors=always --testsuite \"integration test\"",
-        "static-analysis": "psalm --shepherd --stats",
-        "sa-update-baseline": "psalm --update-baseline",
-        "sa-no-baseline": "psalm --shepherd --stats --ignore-baseline",
+        "static-analysis": "vendor/bin/phpstan analyse",
+        "sa-update-baseline": "vendor/bin/phpstan analyse --generate-baseline",
         "upload-coverage": "coveralls -v"
     }
 }

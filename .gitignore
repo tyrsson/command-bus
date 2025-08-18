@@ -1,7 +1,8 @@
 /.phpcs-cache
-/.psalm-cache
+/.phpstan-cache
 /.phpunit.cache
 /clover.xml
 /coveralls-upload.json
 /phpunit.xml
+/phpstan.neon
 /vendor/
