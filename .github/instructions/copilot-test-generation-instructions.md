@@ -1,11 +1,16 @@
 # Copilot Agent Instructions: PHPUnit Test Suite Generation for Command Bus Library
 
+---
+applyTo: "test/**/*.php"
+---
+
 ## Overview
 This document provides detailed instructions for generating comprehensive PHPUnit 11.5 test suites for PHP Command Bus libraries, based on the successful implementation of the `cmd-bus` repository test coverage expansion project.
 
 ## Project Context
 - **Repository**: cmd-bus (PHP Command Bus implementation for Mezzio Framework)
-- **Framework**: PHPUnit 11.5
+- **Target PHP Framework**: Mezzio
+- **Unit testing Framework**: PHPUnit 11.5
 - **PHP Version**: 8.1+
 - **Architecture**: Command/Query pattern with middleware pipeline
 - **Quality Standards**: PHPStan Level 10, PHP CodeSniffer PSR-12
