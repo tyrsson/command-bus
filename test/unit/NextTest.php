@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace PhpCmd\CmdBusTest;
 
 use PhpCmd\CmdBus\CommandInterface;
+use PhpCmd\CmdBus\Exception\CommandException;
 use PhpCmd\CmdBus\Exception\NextHandlerAlreadyCalledException;
-use PhpCmd\CmdBus\Exception\NoCommandHandledException;
 use PhpCmd\CmdBus\MiddlewareInterface;
 use PhpCmd\CmdBus\Next;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -164,7 +164,7 @@ final class NextTest extends TestCase
         $next       = new Next($emptyQueue);
 
         // Assert
-        $this->expectException(NoCommandHandledException::class);
+        $this->expectException(CommandException::class);
         $this->expectExceptionMessage('No command handler found for command class "MockObject_CommandInterface_');
 
         // Act

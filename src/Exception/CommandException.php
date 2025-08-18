@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-final class NoCommandHandledException extends RuntimeException
+final class CommandException extends RuntimeException
 {
     public static function create(string $commandClass): self
     {
@@ -16,6 +16,11 @@ final class NoCommandHandledException extends RuntimeException
     }
 
     public static function fromCommandClass(string $commandClass): self
+    {
+        return new self(sprintf('No command handler found for command class "%s".', $commandClass));
+    }
+
+    public static function commandNotHandled(string $commandClass): self
     {
         return new self(sprintf('No command handler found for command class "%s".', $commandClass));
     }
