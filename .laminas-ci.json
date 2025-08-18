@@ -6,13 +6,21 @@
         {
             "name": "PHPUnit",
             "php": "8.1"
+        },
+        {
+            "name": "PHPStan",
+            "php": "8.1"
+        },
+        {
+            "name": "PHPStan",
+            "php": "8.4"
         }
     ],
     "additional_checks": [
         {
             "name": "PhpStan",
             "job": {
-                "php": "8.1",
+                "php": "8.2",
                 "dependencies": "latest",
                 "command": "composer require --dev --ignore-platform-reqs phpstan/phpstan && vendor/bin/phpstan analyse"
             }
