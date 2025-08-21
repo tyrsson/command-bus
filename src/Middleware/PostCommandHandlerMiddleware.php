@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusIntegrationTest\TestAssets;
+namespace PhpCmd\CmdBus\Middleware;
 
+use Override;
 use PhpCmd\CmdBus\Command\CommandResult;
 use PhpCmd\CmdBus\CommandHandlerInterface;
 use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\MiddlewareInterface;
 
-final class TestMiddlewareSecond implements MiddlewareInterface
+final class PostCommandHandlerMiddleware implements MiddlewareInterface
 {
+    #[Override]
     public function process(
         CommandInterface $command,
         CommandHandlerInterface $handler

@@ -49,7 +49,7 @@ final class CmdBusTest extends TestCase
             ],
             [
                 'middleware' => TestAssets\TestMiddlewareSecond::class,
-                'priority'   => 50,
+                'priority'   => -1,
             ],
         ];
         $config[ConfigProvider::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY] = array_merge(
@@ -68,6 +68,6 @@ final class CmdBusTest extends TestCase
         $cmdBus  = $this->container->get(CmdBusInterface::class);
         $command = new TestAssets\Command();
         $result  = $cmdBus->handle($command);
-        $this->assertEquals($command->name, $result);
+        $this->assertEquals('Command-One', $result);
     }
 }

@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace PhpCmd\CmdBusTest\Middleware;
 
-use PhpCmd\CmdBus\CommandHandlerFactory;
+use PhpCmd\CmdBus\Command\CommandResult;
+use PhpCmd\CmdBus\Command\CommandStatus;
 use PhpCmd\CmdBus\CommandHandlerInterface;
+use PhpCmd\CmdBus\CommandHandlerResolverInterface;
 use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\ConfigProvider;
 use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
 use PhpCmd\CmdBus\MiddlewareInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-
-use function get_class;
+use RuntimeException;
 
 #[CoversClass(CommandHandlerMiddleware::class)]
 final class CommandHandlerMiddlewareTest extends TestCase
 {
     private CommandHandlerMiddleware $middleware;
 
-    private CommandHandlerFactory $factory;
+    /** @var CommandHandlerResolverInterface&MockObject */
+    private CommandHandlerResolverInterface $resolver;
 
     /** @var CommandInterface&MockObject */
     private CommandInterface $command;
@@ -37,258 +37,119 @@ final class CommandHandlerMiddlewareTest extends TestCase
     {
         parent::setUp();
 
-        // Create a real CommandHandlerFactory since it's final
-        $container            = $this->createMock(ContainerInterface::class);
-        $this->factory        = new CommandHandlerFactory($container);
+        $this->resolver       = $this->createMock(CommandHandlerResolverInterface::class);
         $this->command        = $this->createMock(CommandInterface::class);
         $this->handler        = $this->createMock(CommandHandlerInterface::class);
         $this->commandHandler = $this->createMock(CommandHandlerInterface::class);
-        $this->middleware     = new CommandHandlerMiddleware($this->factory);
+        $this->middleware     = new CommandHandlerMiddleware($this->resolver);
     }
 
     public function testMiddlewareImplementsCorrectInterfaces(): void
     {
         $this->assertInstanceOf(MiddlewareInterface::class, $this->middleware);
-        $this->assertInstanceOf(CommandHandlerInterface::class, $this->middleware);
     }
 
-    public function testProcessMethodExists(): void
+    public function testConstructorAcceptsCommandHandlerResolver(): void
     {
-        $this->assertInstanceOf(MiddlewareInterface::class, $this->middleware);
-    }
-
-    public function testHandleMethodExists(): void
-    {
-        $this->assertInstanceOf(CommandHandlerInterface::class, $this->middleware);
-    }
-
-    public function testConstructorAcceptsCommandHandlerFactory(): void
-    {
-        $container  = $this->createMock(ContainerInterface::class);
-        $factory    = new CommandHandlerFactory($container);
-        $middleware = new CommandHandlerMiddleware($factory);
+        $resolver   = $this->createMock(CommandHandlerResolverInterface::class);
+        $middleware = new CommandHandlerMiddleware($resolver);
 
         $this->assertInstanceOf(CommandHandlerMiddleware::class, $middleware);
     }
 
-    public function testProcessInvokesFactoryWithCommand(): void
+    public function testProcessResolvesCommandHandlerAndCallsIt(): void
     {
-        // We need to test this with a working setup since CommandHandlerFactory is final
-        // Create a mock container that will provide a command handler
-        $container = $this->createMock(ContainerInterface::class);
+        $expectedResult = 'test result';
 
-        // Mock the config structure that CommandHandlerFactory expects
-        $config = [
-            ConfigProvider::class => [
-                'command-map' => [
-                    get_class($this->command) => 'TestHandler',
-                ],
-            ],
-        ];
-
-        $container->method('get')
-            ->willReturnCallback(function ($service) use ($config) {
-                return match ($service) {
-                    'config'      => $config,
-                    'TestHandler' => $this->commandHandler,
-                    default       => null,
-                };
-            });
-
-        $container->method('has')
-            ->with('TestHandler')
-            ->willReturn(true);
+        $this->resolver->expects($this->once())
+            ->method('resolve')
+            ->with($this->command)
+            ->willReturn($this->commandHandler);
 
         $this->commandHandler->expects($this->once())
             ->method('handle')
             ->with($this->command)
-            ->willReturn('test result');
+            ->willReturn($expectedResult);
 
-        $factory    = new CommandHandlerFactory($container);
-        $middleware = new CommandHandlerMiddleware($factory);
-        $result     = $middleware->process($this->command, $this->handler);
+        $this->handler->expects($this->once())
+            ->method('handle')
+            ->with($this->callback(function ($commandResult) use ($expectedResult) {
+                return $commandResult instanceof CommandResult
+                    && $commandResult->getCommand() === $this->command
+                    && $commandResult->getStatus() === CommandStatus::Success
+                    && $commandResult->getResult() === $expectedResult;
+            }))
+            ->willReturn('final result');
 
-        $this->assertEquals('test result', $result);
+        $result = $this->middleware->process($this->command, $this->handler);
+
+        $this->assertEquals('final result', $result);
     }
 
-    public function testProcessReturnsResultFromCommandHandler(): void
+    public function testProcessWrapsExceptionInFailureCommandResult(): void
+    {
+        $exception = new RuntimeException('Test exception');
+
+        $this->resolver->expects($this->once())
+            ->method('resolve')
+            ->with($this->command)
+            ->willReturn($this->commandHandler);
+
+        $this->commandHandler->expects($this->once())
+            ->method('handle')
+            ->with($this->command)
+            ->willThrowException($exception);
+
+        $this->handler->expects($this->once())
+            ->method('handle')
+            ->with($this->callback(function ($commandResult) use ($exception) {
+                return $commandResult instanceof CommandResult
+                    && $commandResult->getCommand() === $this->command
+                    && $commandResult->getStatus() === CommandStatus::Failure
+                    && $commandResult->getResult() === $exception;
+            }))
+            ->willReturn('error handled');
+
+        $result = $this->middleware->process($this->command, $this->handler);
+
+        $this->assertEquals('error handled', $result);
+    }
+
+    public function testProcessCallsResolverWithCorrectCommand(): void
+    {
+        $this->resolver->expects($this->once())
+            ->method('resolve')
+            ->with($this->identicalTo($this->command))
+            ->willReturn($this->commandHandler);
+
+        $this->commandHandler->method('handle')
+            ->willReturn('result');
+
+        $this->handler->method('handle')
+            ->willReturn('final');
+
+        $this->middleware->process($this->command, $this->handler);
+    }
+
+    public function testProcessPassesCommandResultToNextHandler(): void
     {
         $expectedResult = 'command result';
 
-        // Setup the mock container and config
-        $container = $this->createMock(ContainerInterface::class);
-        $config    = [
-            ConfigProvider::class => [
-                'command-map' => [
-                    get_class($this->command) => 'TestHandler',
-                ],
-            ],
-        ];
+        $this->resolver->method('resolve')
+            ->willReturn($this->commandHandler);
 
-        $container->method('get')
-            ->willReturnCallback(function ($service) use ($config) {
-                return match ($service) {
-                    'config'      => $config,
-                    'TestHandler' => $this->commandHandler,
-                    default       => null,
-                };
-            });
-
-        $container->method('has')
-            ->with('TestHandler')
-            ->willReturn(true);
-
-        $this->commandHandler->expects($this->once())
-            ->method('handle')
-            ->with($this->command)
+        $this->commandHandler->method('handle')
             ->willReturn($expectedResult);
 
-        $factory    = new CommandHandlerFactory($container);
-        $middleware = new CommandHandlerMiddleware($factory);
-        $result     = $middleware->process($this->command, $this->handler);
-
-        $this->assertEquals($expectedResult, $result);
-    }
-
-    public function testHandleCallsInternalHandler(): void
-    {
-        $expectedResult = 'handle result';
-
-        // Setup the middleware with a working factory
-        $container = $this->createMock(ContainerInterface::class);
-        $config    = [
-            ConfigProvider::class => [
-                'command-map' => [
-                    get_class($this->command) => 'TestHandler',
-                ],
-            ],
-        ];
-
-        $container->method('get')
-            ->willReturnCallback(function ($service) use ($config) {
-                return match ($service) {
-                    'config'      => $config,
-                    'TestHandler' => $this->commandHandler,
-                    default       => null,
-                };
-            });
-
-        $container->method('has')
-            ->with('TestHandler')
-            ->willReturn(true);
-
-        $this->commandHandler->expects($this->exactly(2))
+        $this->handler->expects($this->once())
             ->method('handle')
-            ->with($this->command)
-            ->willReturn($expectedResult);
+            ->with($this->callback(function ($commandResult) {
+                return $commandResult instanceof CommandResult;
+            }))
+            ->willReturn('next result');
 
-        $factory    = new CommandHandlerFactory($container);
-        $middleware = new CommandHandlerMiddleware($factory);
+        $result = $this->middleware->process($this->command, $this->handler);
 
-        // First call process to set up the internal handler
-        $middleware->process($this->command, $this->handler);
-
-        // Then call handle directly
-        $result = $middleware->handle($this->command);
-
-        $this->assertEquals($expectedResult, $result);
-    }
-
-    public function testProcessIgnoresPassedHandler(): void
-    {
-        // The passed handler should not be used, only the one from the factory
-        $container = $this->createMock(ContainerInterface::class);
-        $config    = [
-            ConfigProvider::class => [
-                'command-map' => [
-                    get_class($this->command) => 'TestHandler',
-                ],
-            ],
-        ];
-
-        $container->method('get')
-            ->willReturnCallback(function ($service) use ($config) {
-                return match ($service) {
-                    'config'      => $config,
-                    'TestHandler' => $this->commandHandler,
-                    default       => null,
-                };
-            });
-
-        $container->method('has')
-            ->with('TestHandler')
-            ->willReturn(true);
-
-        // The passed handler should never be called
-        $this->handler->expects($this->never())
-            ->method('handle');
-
-        // The factory-created handler should be called
-        $this->commandHandler->expects($this->once())
-            ->method('handle')
-            ->with($this->command)
-            ->willReturn('factory result');
-
-        $factory    = new CommandHandlerFactory($container);
-        $middleware = new CommandHandlerMiddleware($factory);
-        $result     = $middleware->process($this->command, $this->handler);
-
-        $this->assertEquals('factory result', $result);
-    }
-
-    public function testMiddlewareCanBeInstantiatedMultipleTimes(): void
-    {
-        $container   = $this->createMock(ContainerInterface::class);
-        $factory1    = new CommandHandlerFactory($container);
-        $factory2    = new CommandHandlerFactory($container);
-        $middleware1 = new CommandHandlerMiddleware($factory1);
-        $middleware2 = new CommandHandlerMiddleware($factory2);
-        $this->assertInstanceOf(CommandHandlerMiddleware::class, $middleware1);
-        $this->assertInstanceOf(CommandHandlerMiddleware::class, $middleware2);
-        $this->assertNotSame($middleware1, $middleware2);
-    }
-
-    public function testProcessSetsInternalHandlerForSubsequentHandleCalls(): void
-    {
-        $container = $this->createMock(ContainerInterface::class);
-        $config    = [
-            ConfigProvider::class => [
-                'command-map' => [
-                    get_class($this->command) => 'TestHandler',
-                ],
-            ],
-        ];
-
-        $container->method('get')
-            ->willReturnCallback(function ($service) use ($config) {
-                return match ($service) {
-                    'config'      => $config,
-                    'TestHandler' => $this->commandHandler,
-                    default       => null,
-                };
-            });
-
-        $container->method('has')
-            ->with('TestHandler')
-            ->willReturn(true);
-
-        $this->commandHandler->expects($this->exactly(3))
-            ->method('handle')
-            ->with($this->command)
-            ->willReturn('consistent result');
-
-        $factory    = new CommandHandlerFactory($container);
-        $middleware = new CommandHandlerMiddleware($factory);
-
-        // Call process to set up the handler
-        $result1 = $middleware->process($this->command, $this->handler);
-
-        // Subsequent handle calls should use the same internal handler
-        $result2 = $middleware->handle($this->command);
-        $result3 = $middleware->handle($this->command);
-
-        $this->assertEquals('consistent result', $result1);
-        $this->assertEquals('consistent result', $result2);
-        $this->assertEquals('consistent result', $result3);
+        $this->assertEquals('next result', $result);
     }
 }

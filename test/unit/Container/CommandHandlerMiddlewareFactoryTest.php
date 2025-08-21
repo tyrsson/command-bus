@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace PhpCmd\CmdBusTest\Container;
 
 use Assert\InvalidArgumentException;
-use PhpCmd\CmdBus\CommandHandlerFactory;
+use PhpCmd\CmdBus\CommandHandlerResolver;
+use PhpCmd\CmdBus\CommandHandlerResolverInterface;
 use PhpCmd\CmdBus\Container\CommandHandlerMiddlewareFactory;
 use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -23,7 +24,7 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
     /** @var ContainerInterface&MockObject */
     private ContainerInterface $container;
 
-    private CommandHandlerFactory $commandHandlerFactory;
+    private CommandHandlerResolver $commandHandlerResolver;
 
     protected function setUp(): void
     {
@@ -32,9 +33,9 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
         $this->factory   = new CommandHandlerMiddlewareFactory();
         $this->container = $this->createMock(ContainerInterface::class);
 
-        // Create a real CommandHandlerFactory instance since it's final and cannot be mocked
-        $factoryContainer            = $this->createMock(ContainerInterface::class);
-        $this->commandHandlerFactory = new CommandHandlerFactory($factoryContainer);
+        // Create a real CommandHandlerResolver instance since it's final and cannot be mocked
+        $resolverContainer            = $this->createMock(ContainerInterface::class);
+        $this->commandHandlerResolver = new CommandHandlerResolver($resolverContainer);
     }
 
     public function testInvokeReturnsCommandHandlerMiddleware(): void
@@ -42,40 +43,41 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
         $this->container
             ->expects($this->once())
             ->method('get')
-            ->with(CommandHandlerFactory::class)
-            ->willReturn($this->commandHandlerFactory);
+            ->with(CommandHandlerResolverInterface::class)
+            ->willReturn($this->commandHandlerResolver);
 
         $result = ($this->factory)($this->container);
 
         $this->assertInstanceOf(CommandHandlerMiddleware::class, $result);
     }
 
-    public function testInvokeRetrievesCommandHandlerFactoryFromContainer(): void
+    public function testInvokeRetrievesCommandHandlerResolverFromContainer(): void
     {
         $this->container
             ->expects($this->once())
             ->method('get')
-            ->with($this->identicalTo(CommandHandlerFactory::class))
-            ->willReturn($this->commandHandlerFactory);
+            ->with($this->identicalTo(CommandHandlerResolverInterface::class))
+            ->willReturn($this->commandHandlerResolver);
 
         $result = ($this->factory)($this->container);
 
         $this->assertInstanceOf(CommandHandlerMiddleware::class, $result);
     }
 
-    public function testInvokeThrowsExceptionWhenCommandHandlerFactoryIsNotCorrectType(): void
+    public function testInvokeThrowsExceptionWhenCommandHandlerResolverIsNotCorrectType(): void
     {
-        $invalidFactory = new stdClass();
+        $invalidResolver = new stdClass();
 
         $this->container
             ->expects($this->once())
             ->method('get')
-            ->with(CommandHandlerFactory::class)
-            ->willReturn($invalidFactory);
+            ->with(CommandHandlerResolverInterface::class)
+            ->willReturn($invalidResolver);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Class "stdClass" was expected to be instanceof of "PhpCmd\CmdBus\CommandHandlerFactory" but is not.'
+            'Class "stdClass" was expected to be instanceof of '
+            . '"PhpCmd\CmdBus\CommandHandlerResolverInterface" but is not.'
         );
 
         ($this->factory)($this->container);
@@ -86,8 +88,8 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
         $this->container
             ->expects($this->exactly(2))
             ->method('get')
-            ->with(CommandHandlerFactory::class)
-            ->willReturn($this->commandHandlerFactory);
+            ->with(CommandHandlerResolverInterface::class)
+            ->willReturn($this->commandHandlerResolver);
 
         $result1 = ($this->factory)($this->container);
         $result2 = ($this->factory)($this->container);
@@ -97,13 +99,13 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
         $this->assertNotSame($result1, $result2, 'Factory should create new instances each time');
     }
 
-    public function testFactoryCreatesNewInstancesWithSameCommandHandlerFactory(): void
+    public function testFactoryCreatesNewInstancesWithSameCommandHandlerResolver(): void
     {
         $this->container
             ->expects($this->exactly(2))
             ->method('get')
-            ->with(CommandHandlerFactory::class)
-            ->willReturn($this->commandHandlerFactory);
+            ->with(CommandHandlerResolverInterface::class)
+            ->willReturn($this->commandHandlerResolver);
 
         $middleware1 = ($this->factory)($this->container);
         $middleware2 = ($this->factory)($this->container);
@@ -124,22 +126,22 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
         $container1 = $this->createMock(ContainerInterface::class);
         $container2 = $this->createMock(ContainerInterface::class);
 
-        $factoryContainer1      = $this->createMock(ContainerInterface::class);
-        $factoryContainer2      = $this->createMock(ContainerInterface::class);
-        $commandHandlerFactory1 = new CommandHandlerFactory($factoryContainer1);
-        $commandHandlerFactory2 = new CommandHandlerFactory($factoryContainer2);
+        $resolverContainer1      = $this->createMock(ContainerInterface::class);
+        $resolverContainer2      = $this->createMock(ContainerInterface::class);
+        $commandHandlerResolver1 = new CommandHandlerResolver($resolverContainer1);
+        $commandHandlerResolver2 = new CommandHandlerResolver($resolverContainer2);
 
         $container1
             ->expects($this->once())
             ->method('get')
-            ->with(CommandHandlerFactory::class)
-            ->willReturn($commandHandlerFactory1);
+            ->with(CommandHandlerResolverInterface::class)
+            ->willReturn($commandHandlerResolver1);
 
         $container2
             ->expects($this->once())
             ->method('get')
-            ->with(CommandHandlerFactory::class)
-            ->willReturn($commandHandlerFactory2);
+            ->with(CommandHandlerResolverInterface::class)
+            ->willReturn($commandHandlerResolver2);
 
         $result1 = ($this->factory)($container1);
         $result2 = ($this->factory)($container2);
@@ -154,8 +156,8 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
         $this->container
             ->expects($this->exactly(3))
             ->method('get')
-            ->with(CommandHandlerFactory::class)
-            ->willReturn($this->commandHandlerFactory);
+            ->with(CommandHandlerResolverInterface::class)
+            ->willReturn($this->commandHandlerResolver);
 
         $instances = [];
 
@@ -175,19 +177,19 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
         $this->assertNotSame($instances[0], $instances[2]);
     }
 
-    public function testFactoryPassesCommandHandlerFactoryToMiddleware(): void
+    public function testFactoryPassesCommandHandlerResolverToMiddleware(): void
     {
         $this->container
             ->expects($this->once())
             ->method('get')
-            ->with(CommandHandlerFactory::class)
-            ->willReturn($this->commandHandlerFactory);
+            ->with(CommandHandlerResolverInterface::class)
+            ->willReturn($this->commandHandlerResolver);
 
         $result = ($this->factory)($this->container);
 
         $this->assertInstanceOf(CommandHandlerMiddleware::class, $result);
 
-        // The middleware should have received the command handler factory
+        // The middleware should have received the command handler resolver
         // This is verified by the fact that the middleware was created successfully
         $this->assertInstanceOf(CommandHandlerMiddleware::class, $result);
     }

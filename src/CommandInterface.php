@@ -6,5 +6,4 @@ namespace PhpCmd\CmdBus;
 
 interface CommandInterface
 {
-    public function execute(): mixed;
 }

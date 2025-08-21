@@ -7,14 +7,17 @@ namespace PhpCmd\CmdBusTest;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use PhpCmd\CmdBus\CmdBus;
 use PhpCmd\CmdBus\CmdBusInterface;
-use PhpCmd\CmdBus\CommandHandlerFactory;
+use PhpCmd\CmdBus\CommandHandlerResolver;
+use PhpCmd\CmdBus\CommandHandlerResolverInterface;
 use PhpCmd\CmdBus\ConfigProvider;
 use PhpCmd\CmdBus\Container\CmdBusFactory;
-use PhpCmd\CmdBus\Container\CommandHandlerFactoryFactory;
 use PhpCmd\CmdBus\Container\CommandHandlerMiddlewareFactory;
+use PhpCmd\CmdBus\Container\CommandHandlerResolverFactory;
 use PhpCmd\CmdBus\Container\MiddlewarePipeFactory;
 use PhpCmd\CmdBus\Handler\EmptyPipelineHandler;
 use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
+use PhpCmd\CmdBus\Middleware\PostCommandHandlerMiddleware;
+use PhpCmd\CmdBus\Middleware\PreCommandHandlerMiddleware;
 use PhpCmd\CmdBus\MiddlewarePipe;
 use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -52,8 +55,9 @@ final class ConfigProviderTest extends TestCase
         $dependencies = $this->configProvider->getDependencies();
 
         $expectedAliases = [
-            CmdBusInterface::class             => CmdBus::class,
-            MiddlewarePipelineInterface::class => MiddlewarePipe::class,
+            CmdBusInterface::class                 => CmdBus::class,
+            MiddlewarePipelineInterface::class     => MiddlewarePipe::class,
+            CommandHandlerResolverInterface::class => CommandHandlerResolver::class,
         ];
 
         $this->assertSame($expectedAliases, $dependencies['aliases']);
@@ -64,11 +68,13 @@ final class ConfigProviderTest extends TestCase
         $dependencies = $this->configProvider->getDependencies();
 
         $expectedFactories = [
-            CmdBus::class                   => CmdBusFactory::class,
-            CommandHandlerFactory::class    => CommandHandlerFactoryFactory::class,
-            MiddlewarePipe::class           => MiddlewarePipeFactory::class,
-            CommandHandlerMiddleware::class => CommandHandlerMiddlewareFactory::class,
-            EmptyPipelineHandler::class     => InvokableFactory::class,
+            CmdBus::class                       => CmdBusFactory::class,
+            CommandHandlerResolver::class       => CommandHandlerResolverFactory::class,
+            EmptyPipelineHandler::class         => InvokableFactory::class,
+            MiddlewarePipe::class               => MiddlewarePipeFactory::class,
+            CommandHandlerMiddleware::class     => CommandHandlerMiddlewareFactory::class,
+            PostCommandHandlerMiddleware::class => InvokableFactory::class,
+            PreCommandHandlerMiddleware::class  => InvokableFactory::class,
         ];
 
         $this->assertSame($expectedFactories, $dependencies['factories']);
@@ -96,7 +102,15 @@ final class ConfigProviderTest extends TestCase
 
         $expectedMiddleware = [
             [
+                'middleware' => PreCommandHandlerMiddleware::class,
+                'priority'   => ConfigProvider::DEFAULT_PRIORITY,
+            ],
+            [
                 'middleware' => CommandHandlerMiddleware::class,
+                'priority'   => ConfigProvider::DEFAULT_PRIORITY,
+            ],
+            [
+                'middleware' => PostCommandHandlerMiddleware::class,
                 'priority'   => ConfigProvider::DEFAULT_PRIORITY,
             ],
         ];
@@ -108,13 +122,17 @@ final class ConfigProviderTest extends TestCase
     {
         $middleware = $this->configProvider->getMiddleware();
 
-        $this->assertCount(1, $middleware);
+        $this->assertCount(3, $middleware);
 
-        $firstMiddleware = $middleware[0];
-        $this->assertArrayHasKey('middleware', $firstMiddleware);
-        $this->assertArrayHasKey('priority', $firstMiddleware);
-        $this->assertSame(CommandHandlerMiddleware::class, $firstMiddleware['middleware']);
-        $this->assertSame(1, $firstMiddleware['priority']);
+        foreach ($middleware as $middlewareSpec) {
+            $this->assertArrayHasKey('middleware', $middlewareSpec);
+            $this->assertArrayHasKey('priority', $middlewareSpec);
+            $this->assertSame(1, $middlewareSpec['priority']);
+        }
+
+        $this->assertSame(PreCommandHandlerMiddleware::class, $middleware[0]['middleware']);
+        $this->assertSame(CommandHandlerMiddleware::class, $middleware[1]['middleware']);
+        $this->assertSame(PostCommandHandlerMiddleware::class, $middleware[2]['middleware']);
     }
 
     public function testConstants(): void

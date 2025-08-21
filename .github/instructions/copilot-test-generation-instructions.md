@@ -22,7 +22,6 @@ This document provides detailed instructions for generating comprehensive PHPUni
 #### 1.1 Initial Codebase Assessment
 ```bash
 # Commands to understand the project structure
-composer install
 tree src/ /f
 tree test/ /f
 vendor/bin/phpunit.bat --testdox

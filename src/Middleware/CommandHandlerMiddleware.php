@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace PhpCmd\CmdBus\Middleware;
 
 use Override;
-use PhpCmd\CmdBus\CommandHandlerFactory;
+use PhpCmd\CmdBus\Command\CommandResult;
+use PhpCmd\CmdBus\Command\CommandStatus;
 use PhpCmd\CmdBus\CommandHandlerInterface;
+use PhpCmd\CmdBus\CommandHandlerResolverInterface;
 use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\MiddlewareInterface;
+use Throwable;
 
-final class CommandHandlerMiddleware implements MiddlewareInterface, CommandHandlerInterface
+final class CommandHandlerMiddleware implements MiddlewareInterface
 {
-    private CommandHandlerInterface $handler;
-
     public function __construct(
-        private readonly CommandHandlerFactory $factory
+        private readonly CommandHandlerResolverInterface $resolver
     ) {
     }
 
@@ -24,14 +25,16 @@ final class CommandHandlerMiddleware implements MiddlewareInterface, CommandHand
         CommandInterface $command,
         CommandHandlerInterface $handler
     ): mixed {
-        $this->handler = ($this->factory)($command);
-        // run the command and return the result to the caller.
-        return $this->handle($command);
-    }
-
-    #[Override]
-    public function handle(CommandInterface $command): mixed
-    {
-        return $this->handler->handle($command);
+        // Resolve the command handler for the given command
+        $cmdHandler = $this->resolver->resolve($command);
+        try {
+            // run the command and capture results
+            $result = $cmdHandler->handle($command);
+            // create a new CommandResult with the captured results
+            $command = new CommandResult($command, CommandStatus::Success, $result);
+        } catch (Throwable $th) {
+            $command = new CommandResult($command, CommandStatus::Failure, $th);
+        }
+        return $handler->handle($command);
     }
 }

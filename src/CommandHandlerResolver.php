@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpCmd\CmdBus;
 
+use Override;
 use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\ConfigProvider;
 use PhpCmd\CmdBus\Exception\InvalidConfigurationException;
@@ -15,7 +16,7 @@ use function array_key_exists;
  * @phpstan-import-type CmdBusConfig from ConfigProvider
  * @phpstan-import-type CommandMap from ConfigProvider
  */
-final class CommandHandlerFactory
+final class CommandHandlerResolver implements CommandHandlerResolverInterface
 {
     public function __construct(
         private readonly ContainerInterface $container
@@ -24,10 +25,11 @@ final class CommandHandlerFactory
 
     public function __invoke(CommandInterface $command): CommandHandlerInterface
     {
-        return $this->factory($command);
+        return $this->resolve($command);
     }
 
-    public function factory(CommandInterface $command): CommandHandlerInterface
+    #[Override]
+    public function resolve(CommandInterface $command): CommandHandlerInterface
     {
         /** @phpstan-var array<CmdBusConfig> */
         $config = $this->container->get('config');
