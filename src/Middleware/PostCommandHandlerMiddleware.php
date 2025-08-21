@@ -14,7 +14,7 @@ final class PostCommandHandlerMiddleware implements MiddlewareInterface
 {
     #[Override]
     public function process(
-        CommandInterface|CommandResult $command,
+        CommandInterface $command,
         CommandHandlerInterface $handler
     ): mixed {
         // Custom processing logic for this middleware

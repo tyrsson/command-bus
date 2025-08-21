@@ -12,7 +12,7 @@ use PhpCmd\CmdBus\MiddlewareInterface;
 final class TestMiddlewareSecond implements MiddlewareInterface
 {
     public function process(
-        CommandInterface|CommandResult $command,
+        CommandInterface $command,
         CommandHandlerInterface $handler
     ): mixed {
         // Custom processing logic for this middleware

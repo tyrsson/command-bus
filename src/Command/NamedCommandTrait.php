@@ -6,7 +6,7 @@ namespace PhpCmd\CmdBus\Command;
 
 use Override;
 
-// @phpstan-ignore trait.unused
+// @phpstan-ignore-next-line trait.unused
 trait NamedCommandTrait
 {
     protected readonly string $name;
