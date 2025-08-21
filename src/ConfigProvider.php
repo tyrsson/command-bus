@@ -97,12 +97,13 @@ final class ConfigProvider
     {
         return [
             'aliases'   => [
-                CmdBusInterface::class             => CmdBus::class,
-                MiddlewarePipelineInterface::class => MiddlewarePipe::class,
+                CmdBusInterface::class                 => CmdBus::class,
+                MiddlewarePipelineInterface::class     => MiddlewarePipe::class,
+                CommandHandlerResolverInterface::class => CommandHandlerResolver::class,
             ],
             'factories' => [
                 CmdBus::class                              => Container\CmdBusFactory::class,
-                CommandHandlerFactory::class               => Container\CommandHandlerFactoryFactory::class,
+                CommandHandlerResolver::class              => Container\CommandHandlerResolverFactory::class,
                 MiddlewarePipe::class                      => Container\MiddlewarePipeFactory::class,
                 Middleware\CommandHandlerMiddleware::class => Container\CommandHandlerMiddlewareFactory::class,
                 Handler\EmptyPipelineHandler::class        => Factory\InvokableFactory::class,

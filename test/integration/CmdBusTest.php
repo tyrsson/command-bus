@@ -49,7 +49,7 @@ final class CmdBusTest extends TestCase
             ],
             [
                 'middleware' => TestAssets\TestMiddlewareSecond::class,
-                'priority'   => 50,
+                'priority'   => -1,
             ],
         ];
         $config[ConfigProvider::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY] = array_merge(
