@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace PhpCmd\CmdBusTest\Container;
 
-use PhpCmd\CmdBus\CommandHandlerFactory;
-use PhpCmd\CmdBus\Container\CommandHandlerFactoryFactory;
+use PhpCmd\CmdBus\CommandHandlerResolver;
+use PhpCmd\CmdBus\Container\CommandHandlerResolverFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 
-#[CoversClass(CommandHandlerFactoryFactory::class)]
-final class CommandHandlerFactoryFactoryTest extends TestCase
+#[CoversClass(CommandHandlerResolverFactory::class)]
+final class CommandHandlerResolverFactoryTest extends TestCase
 {
-    private CommandHandlerFactoryFactory $factory;
+    private CommandHandlerResolverFactory $factory;
 
     /** @var ContainerInterface&MockObject */
     private ContainerInterface $container;
@@ -24,26 +24,26 @@ final class CommandHandlerFactoryFactoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->factory   = new CommandHandlerFactoryFactory();
+        $this->factory   = new CommandHandlerResolverFactory();
         $this->container = $this->createMock(ContainerInterface::class);
     }
 
-    public function testInvokeReturnsCommandHandlerFactory(): void
+    public function testInvokeReturnsCommandHandlerResolver(): void
     {
         $result = ($this->factory)($this->container);
 
-        $this->assertInstanceOf(CommandHandlerFactory::class, $result);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $result);
     }
 
-    public function testInvokePassesContainerToCommandHandlerFactory(): void
+    public function testInvokePassesContainerToCommandHandlerResolver(): void
     {
         $result = ($this->factory)($this->container);
 
-        $this->assertInstanceOf(CommandHandlerFactory::class, $result);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $result);
 
-        // Verify that the container was properly injected by checking if the factory
+        // Verify that the container was properly injected by checking if the resolver
         // has access to it through reflection or by testing its behavior
-        $this->assertInstanceOf(CommandHandlerFactory::class, $result);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $result);
     }
 
     public function testFactoryCanBeInvokedMultipleTimes(): void
@@ -51,19 +51,19 @@ final class CommandHandlerFactoryFactoryTest extends TestCase
         $result1 = ($this->factory)($this->container);
         $result2 = ($this->factory)($this->container);
 
-        $this->assertInstanceOf(CommandHandlerFactory::class, $result1);
-        $this->assertInstanceOf(CommandHandlerFactory::class, $result2);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $result1);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $result2);
         $this->assertNotSame($result1, $result2, 'Factory should create new instances each time');
     }
 
     public function testFactoryCreatesNewInstancesWithSameContainer(): void
     {
-        $commandHandlerFactory1 = ($this->factory)($this->container);
-        $commandHandlerFactory2 = ($this->factory)($this->container);
+        $commandHandlerResolver1 = ($this->factory)($this->container);
+        $commandHandlerResolver2 = ($this->factory)($this->container);
 
-        $this->assertInstanceOf(CommandHandlerFactory::class, $commandHandlerFactory1);
-        $this->assertInstanceOf(CommandHandlerFactory::class, $commandHandlerFactory2);
-        $this->assertNotSame($commandHandlerFactory1, $commandHandlerFactory2);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $commandHandlerResolver1);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $commandHandlerResolver2);
+        $this->assertNotSame($commandHandlerResolver1, $commandHandlerResolver2);
     }
 
     public function testFactoryIsCallable(): void
@@ -80,8 +80,8 @@ final class CommandHandlerFactoryFactoryTest extends TestCase
         $result1 = ($this->factory)($container1);
         $result2 = ($this->factory)($container2);
 
-        $this->assertInstanceOf(CommandHandlerFactory::class, $result1);
-        $this->assertInstanceOf(CommandHandlerFactory::class, $result2);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $result1);
+        $this->assertInstanceOf(CommandHandlerResolver::class, $result2);
         $this->assertNotSame($result1, $result2);
     }
 
@@ -96,7 +96,7 @@ final class CommandHandlerFactoryFactoryTest extends TestCase
         $this->assertCount(3, $instances);
 
         foreach ($instances as $instance) {
-            $this->assertInstanceOf(CommandHandlerFactory::class, $instance);
+            $this->assertInstanceOf(CommandHandlerResolver::class, $instance);
         }
 
         // Ensure all instances are different

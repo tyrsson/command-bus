@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace PhpCmd\CmdBusIntegrationTest\TestAssets;
 
-use PhpCmd\CmdBus\Command\NamedCommandInterface;
-use PhpCmd\CmdBus\Command\NamedCommandTrait;
+use PhpCmd\CmdBus\CommandInterface;
 
-final class Command implements NamedCommandInterface
+final class Command implements CommandInterface
 {
-    use NamedCommandTrait;
-
     public function __construct(
-        string $name = 'Command-One'
+        public string $name = 'Command-One'
     ) {
-        $this->name = $name;
+    }
+
+    public function execute(): mixed
+    {
+        return $this->name;
     }
 }

@@ -13,7 +13,8 @@ class CommandResult implements CommandResultInterface
         private CommandInterface $command,
         private CommandStatus $status,
         private mixed $result
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function getCommand(): CommandInterface

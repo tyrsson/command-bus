@@ -68,6 +68,6 @@ final class CmdBusTest extends TestCase
         $cmdBus  = $this->container->get(CmdBusInterface::class);
         $command = new TestAssets\Command();
         $result  = $cmdBus->handle($command);
-        $this->assertEquals($command->name, $result);
+        $this->assertEquals('Command-One', $result);
     }
 }

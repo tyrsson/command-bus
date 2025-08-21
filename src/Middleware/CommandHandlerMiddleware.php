@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace PhpCmd\CmdBus\Middleware;
 
 use Override;
-use PhpCmd\CmdBus\CommandHandlerResolverInterface;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\Command\CommandResult;
 use PhpCmd\CmdBus\Command\CommandStatus;
+use PhpCmd\CmdBus\CommandHandlerInterface;
+use PhpCmd\CmdBus\CommandHandlerResolverInterface;
+use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\MiddlewareInterface;
+use Throwable;
 
 final class CommandHandlerMiddleware implements MiddlewareInterface
 {
@@ -31,7 +32,7 @@ final class CommandHandlerMiddleware implements MiddlewareInterface
             $result = $cmdHandler->handle($command);
             // create a new CommandResult with the captured results
             $command = new CommandResult($command, CommandStatus::Success, $result);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $command = new CommandResult($command, CommandStatus::Failure, $th);
         }
         return $handler->handle($command);
