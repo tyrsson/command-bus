@@ -334,24 +334,34 @@ composer cs-fix
 
 ```
 test/
-├── integration/
-│   └── CmdBusTest.php
-└── unit/
-    ├── CmdBusTest.php
-    ├── ConfigProviderTest.php
-    ├── MiddlewarePipeTest.php
-    ├── NextTest.php
-    ├── Container/
-    │   ├── CmdBusFactoryTest.php
-    │   ├── CommandHandlerResolverFactoryTest.php
-    │   ├── CommandHandlerMiddlewareFactoryTest.php
-    │   └── MiddlewarePipeFactoryTest.php
-    ├── Handler/
-    │   └── EmptyPipelineHandlerTest.php
-    └── Middleware/
-        └── CommandHandlerMiddlewareTest.php
-        └── PostCommandHandlerMiddlewareTest.php
-        └── PreCommandHandlerMiddlewareTest.php
+├───integration
+│   │   CmdBusTest.php
+│   │
+│   └───TestAssets
+│           Command.php
+│           CommandHandler.php
+│           TestMiddlewareFirst.php
+│           TestMiddlewareSecond.php
+│
+└───unit
+    │   CmdBusTest.php
+    │   ConfigProviderTest.php
+    │   MiddlewarePipeTest.php
+    │   NextTest.php
+    │
+    ├───Container
+    │       CmdBusFactoryTest.php
+    │       CommandHandlerMiddlewareFactoryTest.php
+    │       CommandHandlerResolverFactoryTest.php
+    │       MiddlewarePipeFactoryTest.php
+    │
+    ├───Handler
+    │       EmptyPipelineHandlerTest.php
+    │
+    └───Middleware
+            CommandHandlerMiddlewareTest.php
+            PostCommandHandlerMiddlewareTest.php
+            PreCommandHandlerMiddlewareTest.php
 ```
 
 #### 7.2 Test Method Naming Conventions
