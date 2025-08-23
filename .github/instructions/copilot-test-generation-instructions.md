@@ -208,7 +208,7 @@ public function testMiddlewareProcessesCommand(): void
 }
 ```
 
-#### 3.3 Pipeline Testing with Execution Order
+#### 3.3 Pipeline Testing with Execution Order (covers middleware priority)
 
 ```php
 public function testPipelineExecutesMiddlewareInCorrectOrder(): void
