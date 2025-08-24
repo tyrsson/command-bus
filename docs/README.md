@@ -29,7 +29,9 @@ A Command Bus implementation for Mezzio applications, providing a clean way to h
 
 ### Middleware
 
+- [PreCommandHandlerMiddleware](middleware/pre-command-handler-middleware.md) - Middleware for pre-processing commands
 - [CommandHandlerMiddleware](middleware/command-handler-middleware.md) - Final middleware for command execution
+- [PostCommandHandlerMiddleware](middleware/post-command-handler-middleware.md) - Middleware for post-processing results
 
 ### Handlers
 

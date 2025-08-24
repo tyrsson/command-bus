@@ -10,7 +10,7 @@ use PhpCmd\CmdBus\CommandHandlerInterface;
 use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\MiddlewareInterface;
 
-final class PostCommandHandlerMiddleware implements MiddlewareInterface
+class PostCommandHandlerMiddleware implements MiddlewareInterface
 {
     #[Override]
     public function process(

@@ -9,7 +9,7 @@ use PhpCmd\CmdBus\CommandHandlerInterface;
 use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\MiddlewareInterface;
 
-final class PreCommandHandlerMiddleware implements MiddlewareInterface
+class PreCommandHandlerMiddleware implements MiddlewareInterface
 {
     #[Override]
     public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed

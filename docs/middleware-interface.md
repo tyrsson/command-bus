@@ -116,6 +116,8 @@ class LoggingValidationCachingMiddleware implements MiddlewareInterface
 ## Related Components
 
 - [MiddlewarePipe](middleware-pipe.md) - Pipeline that manages middleware execution
+- [PreCommandHandlerMiddleware](middleware/pre-command-handler-middleware.md) - Middleware for pre-processing commands
 - [CommandHandlerMiddleware](middleware/command-handler-middleware.md) - Final middleware for command execution
+- [PostCommandHandlerMiddleware](middleware/post-command-handler-middleware.md) - Middleware for post-processing results
 - [CommandInterface](command-interface.md) - Commands processed by middleware
 - [CommandHandlerInterface](command-handler-interface.md) - Handlers called by middleware
