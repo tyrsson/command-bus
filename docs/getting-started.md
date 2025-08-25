@@ -14,31 +14,29 @@ composer require php-cmd/cmd-bus
 
 ```php
 // config/config.php
-use Laminas\ConfigAggregator\ConfigAggregator;
 
 $aggregator = new ConfigAggregator([
     // Other providers...
     PhpCmd\CmdBus\ConfigProvider::class,
-
-    // Your local config
-    'glob:config/autoload/{{,*.}global,{,*.}local}.php',
+    // Other config providers...
 ]);
-
-return $aggregator->getMergedConfig();
 ```
 
 ### 2. Configure Commands and Handlers
 
 ```php
 // config/autoload/cmd-bus.global.php
+
+use PhpCmd\CmdBus\ConfigProvider;
+
 return [
-    PhpCmd\CmdBus\ConfigProvider::class => [
-        'command-map' => [
+    ConfigProvider::class => [
+        ConfigProvider::COMMAND_MAP_KEY         => [
             App\User\Command\CreateUserCommand::class => App\User\CommandHandler\CreateUserHandler::class,
             App\User\Command\UpdateUserCommand::class => App\User\CommandHandler\UpdateUserHandler::class,
         ],
-        'middleware_pipeline' => [
-            // This is setup by default
+        ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [
+            // This is setup by default, its here only as an example
             ['middleware' => PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware::class, 'priority' => 1],
         ],
     ],
@@ -60,19 +58,9 @@ final class CreateUserCommand implements CommandInterface
     private ServerRequestInterface $request;
 
     public function __construct(
-        private UserRepositoryInterface $userRepository
+        private readonly string $userName,
+        private readonly string $email
     ) {}
-
-    public function execute(): mixed
-    {
-       $data = $this->request->getParsedBody();
-       return $this->userRepository->save($data);
-    }
-
-    public function setRequest(ServerRequestInterface $request): void
-    {
-        $this->request = $request;
-    }
 }
 ```
 
@@ -95,7 +83,10 @@ final class CreateUserHandler implements CommandHandlerInterface
 
     public function handle(CommandInterface $command): User
     {
-        return $command->execute();
+        return $this->userRepository->createUser(
+            $command->userName,
+            $command->email
+        );
     }
 }
 ```
@@ -122,6 +113,7 @@ namespace App\User\RequestHandler;
 use PhpCmd\CmdBus\CmdBusInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
+// Note that this is a request handler, not a command handler
 class CreateUserHandler
 {
     public function __construct(
@@ -130,8 +122,10 @@ class CreateUserHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $command = new CreateUserCommand();
-        $command->setRequest($request);
+        $command = new CreateUserCommand(
+            userName: $request->getParsedBody()['userName'],
+            email: $request->getParsedBody()['email']
+        );
 
         try {
             $user = $this->commandBus->handle($command);
@@ -159,6 +153,7 @@ class CreateUserHandler
 Commands represent an intent to perform an action:
 
 - Implement `CommandInterface`
+- Are generally a simple DTO
 
 ### Handlers
 
@@ -173,7 +168,7 @@ Handlers execute commands:
 Middleware provides cross-cutting concerns:
 
 - Implement `MiddlewareInterface`
-- Process commands before handlers
+- Handle pre/post command logic
 
 ### Pipeline
 
@@ -182,162 +177,7 @@ The middleware pipeline executes middleware in priority order:
 - Higher priority executes first
 - Each middleware can act on a given command
 - Final middleware is typically `CommandHandlerMiddleware`
-
-## Advanced Usage
-
-### Custom Middleware
-
-```php
-namespace App\Middleware;
-
-use PhpCmd\CmdBus\MiddlewareInterface;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-
-final class AuditMiddleware implements MiddlewareInterface
-{
-    public function __construct(
-        private AuditLogger $auditLogger
-    ) {}
-
-    public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed
-    {
-        $this->auditLogger->logCommandStart($command);
-
-        try {
-            $result = $handler->handle($command);
-            $this->auditLogger->logCommandSuccess($command, $result);
-            return $result;
-        } catch (\Throwable $e) {
-            $this->auditLogger->logCommandFailure($command, $e);
-            throw $e;
-        }
-    }
-}
-```
-
-### Event Integration
-
-```php
-// deps
-
-final class EventDispatchingCommandHandler implements CommandHandlerInterface
-{
-    public function __construct(
-        private EventDispatcherInterface $eventDispatcher
-    ) {}
-
-    public function handle(CommandInterface $command): User
-    {
-        $this->eventDispatcher->dispatch(new PreExecuteCommandEvent($command));
-
-        $command = new CreateUserCommand();
-        $command->setRequest($request);
-
-        $result = $command->execute();
-
-        $this->eventDispatcher->dispatch(new PostExecuteCommandEvent($command, $result));
-
-        return $user;
-    }
-}
-```
-
-## Best Practices
-
-### 1. Command Design
-
-- Keep commands simple and focused
-- Use strong typing
-- Validate in constructor
-- Make immutable with `readonly`
-
-### 2. Handler Organization
-
-- One handler per command (Usually)
-- Keep handlers focused on single responsibility
-- Use dependency injection for services
-- Return meaningful results
-
-### 3. Middleware Order
-
-- Cross-cutting concerns (logging, caching)
-- Command execution last (default)
-
-### 4. Error Handling
-
-- Use specific exceptions for business errors
-- Let domain exceptions bubble up
-- Wrap infrastructure errors appropriately
-- Log errors at appropriate levels
-
-## Testing
-
-### Testing Commands
-
-```php
-class CreateUserCommandTest extends TestCase
-{
-    public function testCommandCreation(): void
-    {
-        $command = new CreateUserCommand(
-            email: 'test@example.com',
-            username: 'testuser'
-        );
-
-        $this->assertEquals('test@example.com', $command->email);
-        $this->assertEquals('testuser', $command->username);
-    }
-}
-```
-
-### Testing Handlers
-
-```php
-class CreateUserHandlerTest extends TestCase
-{
-    public function testHandlerCreatesUser(): void
-    {
-        $userRepository = $this->createMock(UserRepositoryInterface::class);
-        $handler = new CreateUserHandler($userRepository);
-
-        $command = new CreateUserCommand(
-            email: 'test@example.com',
-            username: 'testuser'
-        );
-
-        $userRepository->expects($this->once())
-            ->method('save')
-            ->with($this->isInstanceOf(User::class));
-
-        $result = $handler->handle($command);
-
-        $this->assertInstanceOf(User::class, $result);
-    }
-}
-```
-
-### Integration Testing
-
-```php
-class CommandBusIntegrationTest extends TestCase
-{
-    public function testCommandExecution(): void
-    {
-        $container = $this->createConfiguredContainer();
-        $commandBus = $container->get(CmdBusInterface::class);
-
-        $command = new CreateUserCommand(
-            email: 'test@example.com',
-            username: 'testuser'
-        );
-
-        $result = $commandBus->handle($command);
-
-        $this->assertInstanceOf(User::class, $result);
-    }
-}
-```
+- Middleware with lower priority than `CommandHandlerMiddleware` can act on the CommandResult.
 
 ## Troubleshooting
 
@@ -357,37 +197,6 @@ class CommandBusIntegrationTest extends TestCase
    - Check all dependencies are registered
    - Verify factory classes exist
    - Review container configuration
-
-### Debug Configuration
-
-## Migration Guide
-
-### From Tactician
-
-```php
-// Old Tactician code
-$commandBus->handle($command);
-
-// New cmd-bus code (same interface!)
-$commandBus->handle($command);
-```
-
-### From Symfony Messenger
-
-```php
-// Old Symfony Messenger
-$messageBus->dispatch($message);
-
-// New cmd-bus
-$commandBus->handle($command);
-```
-
-## Performance Tips
-
-1. **Optimize Middleware Order** - Put fast middleware first
-2. **Use Caching** - Cache read operations where appropriate
-3. **Lazy Loading** - Use container for lazy service resolution
-4. **Minimal Pipelines** - Only include necessary middleware
 
 ## Next Steps
 

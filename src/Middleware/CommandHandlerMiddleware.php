@@ -13,7 +13,7 @@ use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\MiddlewareInterface;
 use Throwable;
 
-final class CommandHandlerMiddleware implements MiddlewareInterface
+class CommandHandlerMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly CommandHandlerResolverInterface $resolver

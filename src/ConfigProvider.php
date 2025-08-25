@@ -102,14 +102,14 @@ final class ConfigProvider
                 CommandHandlerResolverInterface::class => CommandHandlerResolver::class,
             ],
             'factories' => [
-                CmdBus::class                                  => Container\CmdBusFactory::class,
-                CommandHandlerResolver::class                  => Container\CommandHandlerResolverFactory::class,
-                Handler\EmptyPipelineHandler::class            => Factory\InvokableFactory::class,
-                MiddlewarePipe::class                          => Container\MiddlewarePipeFactory::class,
-                Middleware\CommandHandlerMiddleware::class     => Container\CommandHandlerMiddlewareFactory::class,
-                Middleware\PostCommandHandlerMiddleware::class => Factory\InvokableFactory::class,
-                Middleware\PreCommandHandlerMiddleware::class  => Factory\InvokableFactory::class,
+                CmdBus::class                              => Container\CmdBusFactory::class,
+                CommandHandlerResolver::class              => Container\CommandHandlerResolverFactory::class,
+                MiddlewarePipe::class                      => Container\MiddlewarePipeFactory::class,
+                Middleware\CommandHandlerMiddleware::class => Container\CommandHandlerMiddlewareFactory::class,
             ],
+            'invokables' => [
+                Handler\EmptyPipelineHandler::class => Handler\EmptyPipelineHandler::class,
+            ]
         ];
     }
 
@@ -130,15 +130,7 @@ final class ConfigProvider
     {
         return [
             [
-                'middleware' => Middleware\PreCommandHandlerMiddleware::class,
-                'priority'   => self::DEFAULT_PRIORITY,
-            ],
-            [
                 'middleware' => Middleware\CommandHandlerMiddleware::class,
-                'priority'   => self::DEFAULT_PRIORITY,
-            ],
-            [
-                'middleware' => Middleware\PostCommandHandlerMiddleware::class,
                 'priority'   => self::DEFAULT_PRIORITY,
             ],
         ];
