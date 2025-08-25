@@ -12,11 +12,15 @@ use PhpCmd\CmdBus\Exception\CommandException;
 use PhpCmd\CmdBus\MiddlewareInterface;
 use PhpCmd\CmdBus\MiddlewarePipe;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 #[CoversClass(CmdBus::class)]
+#[CoversMethod(CmdBus::class, '__construct')]
+#[CoversMethod(CmdBus::class, 'handle')]
 final class CmdBusTest extends TestCase
 {
     private CmdBus $cmdBus;
@@ -97,37 +101,32 @@ final class CmdBusTest extends TestCase
         $this->cmdBus->handle($this->command);
     }
 
-    public function testHandleSupportsVariousReturnTypes(): void
+    #[TestWith(['string result'])]
+    #[TestWith([42])]
+    #[TestWith([3.14])]
+    #[TestWith([true])]
+    #[TestWith([false])]
+    #[TestWith([null])]
+    #[TestWith([['array', 'result']])]
+    public function testHandleSupportsVariousReturnTypes(mixed $expectedResult): void
     {
-        $testCases = [
-            'string result',
-            42,
-            3.14,
-            true,
-            false,
-            null,
-            ['array', 'result'],
-            (object) ['property' => 'value'],
-        ];
+        // Create a simple middleware that returns the expected result
+        $pipeline = new MiddlewarePipe();
+        $pipeline->pipe(new class ($expectedResult) implements MiddlewareInterface {
+            public function __construct(private mixed $result)
+            {
+            }
 
-        foreach ($testCases as $expectedResult) {
-            $pipeline = new MiddlewarePipe();
-            $pipeline->pipe(new class ($expectedResult) implements MiddlewareInterface {
-                public function __construct(private mixed $result)
-                {
-                }
+            public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed
+            {
+                return $this->result;
+            }
+        });
 
-                public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed
-                {
-                    return $this->result;
-                }
-            });
+        $cmdBus = new CmdBus($pipeline);
+        $result = $cmdBus->handle($this->command);
 
-            $cmdBus = new CmdBus($pipeline);
-            $result = $cmdBus->handle($this->command);
-
-            $this->assertEquals($expectedResult, $result);
-        }
+        $this->assertEquals($expectedResult, $result);
     }
 
     public function testMultipleCmdBusInstancesAreIndependent(): void

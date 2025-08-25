@@ -33,11 +33,11 @@
     "require": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
         "beberlei/assert": "^3.3",
-        "webmozart/assert": "^1.11"
+        "psr/container": "^2.0"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^3.0.1",
-        "laminas/laminas-servicemanager": "^3.0.0 || ^4.0.0",
+        "laminas/laminas-servicemanager": "^4.0.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^11.5.0"
@@ -48,7 +48,11 @@
     "autoload": {
         "psr-4": {
             "PhpCmd\\CmdBus\\": "src/"
-        }
+        },
+        "files": [
+            "src/functions/priority_queue_reducer_factory.php",
+            "src/functions/collection_mapper_factory.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -9,7 +9,7 @@ use Override;
 final class CmdBus implements CmdBusInterface
 {
     public function __construct(
-        private MiddlewarePipelineInterface&MiddlewarePipe $pipeline
+        private readonly MiddlewarePipelineInterface&MiddlewarePipe $pipeline
     ) {
     }
 

@@ -12,13 +12,9 @@ use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use Psr\Container\ContainerInterface;
 use SplPriorityQueue;
 
-use function array_key_exists;
 use function array_map;
 use function array_reduce;
-use function is_int;
 use function sprintf;
-
-use const PHP_INT_MAX;
 
 /**
  * @phpstan-import-type CmdBusConfig from ConfigProvider
@@ -81,8 +77,8 @@ final class MiddlewarePipeFactory
          * @phpstan-var SplPriorityQueue<int, MiddlewareSpec> $queue
          */
         $queue = array_reduce(
-            array_map(self::createCollectionMapper(), $middleware),
-            self::createPriorityQueueReducer(),
+            array_map(collectionMapperFactory('middleware'), $middleware),
+            priorityQueueReducerFactory(),
             new SplPriorityQueue()
         );
 
@@ -95,57 +91,5 @@ final class MiddlewarePipeFactory
         }
 
         return $middlewarePipe;
-    }
-
-    /**
-     * Create the collection mapping function.
-     *
-     * Returns a callable with the following signature:
-     *
-     * <code>
-     * function (array|string $item) : array
-     * </code>
-     *
-     * If the 'middleware' value is missing, or not viable as middleware, it
-     * raises an exception, to ensure the pipeline is built correctly.
-     */
-    private static function createCollectionMapper(): callable
-    {
-        return static function (array $item): array {
-            if (! array_key_exists('middleware', $item)) {
-                throw Exception\InvalidConfigurationException::fromInvalidType(
-                    '$config[' . ConfigProvider::class . '][' . ConfigProvider::MIDDLEWARE_PIPELINE_KEY . ']',
-                    $item
-                );
-            }
-            return $item;
-        };
-    }
-
-    /**
-     * Create reducer function that will reduce an array to a priority queue.
-     *
-     * Creates and returns a function with the signature:
-     *
-     * <code>
-     * function (SplQueue $queue, array $item) : SplQueue
-     * </code>
-     *
-     * The function is useful to reduce an array of pipeline middleware to a
-     * priority queue.
-     */
-    private static function createPriorityQueueReducer(): callable
-    {
-        // insure that items with the same priority are enqueued in the order
-        // in which they are inserted.
-        $serial = PHP_INT_MAX;
-        return static function (SplPriorityQueue $queue, array $item) use (&$serial): SplPriorityQueue {
-            $priority = isset($item['priority']) && is_int($item['priority'])
-                ? $item['priority']
-                : 1;
-            $queue->insert($item, [$priority, $serial]);
-            $serial -= 1;
-            return $queue;
-        };
     }
 }
