@@ -9,13 +9,20 @@ use PhpCmd\CmdBus\CmdBusInterface;
 use PhpCmd\CmdBus\CommandHandlerResolver;
 use PhpCmd\CmdBus\CommandHandlerResolverInterface;
 use PhpCmd\CmdBus\Container;
-use PhpCmd\CmdBus\MiddlewarePipe;
-use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use PhpCmd\CmdBus\Handler\EmptyPipelineHandler;
 use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
+use PhpCmd\CmdBus\MiddlewarePipe;
+use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 
 final class ExpectedConfig
 {
+    /**
+     * @return array{
+     *     aliases: array<class-string, class-string>,
+     *     factories: array<class-string, class-string>,
+     *     invokables: array<class-string, class-string>
+     * }
+     */
     public static function getExpectedDependencies(): array
     {
         return [
@@ -25,6 +32,9 @@ final class ExpectedConfig
         ];
     }
 
+    /**
+     * @return array<class-string, class-string>
+     */
     public static function getExpectedFactories(): array
     {
         return [
@@ -35,6 +45,9 @@ final class ExpectedConfig
         ];
     }
 
+    /**
+     * @return array<class-string, class-string>
+     */
     public static function getExpectedAliases(): array
     {
         return [
@@ -44,6 +57,9 @@ final class ExpectedConfig
         ];
     }
 
+    /**
+     * @return array<class-string, class-string>
+     */
     public static function getExpectedInvokables(): array
     {
         return [
@@ -51,6 +67,9 @@ final class ExpectedConfig
         ];
     }
 
+    /**
+     * @return array<array{middleware: class-string, priority: int}>
+     */
     public static function getExpectedMiddleware(): array
     {
         return [

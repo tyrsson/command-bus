@@ -18,9 +18,13 @@ use PHPUnit\Framework\TestCase;
 final class ConfigProviderTest extends TestCase
 {
     private ConfigProvider $configProvider;
+    /** @var array<class-string, class-string> */
     private array $expectedAliases;
+    /** @var array<class-string, class-string> */
     private array $expectedFactories;
+    /** @var array<class-string, class-string> */
     private array $expectedInvokables;
+    /** @var array<array{middleware: class-string, priority: int}> */
     private array $expectedMiddleware;
 
     protected function setUp(): void

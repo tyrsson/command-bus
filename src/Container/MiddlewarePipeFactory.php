@@ -12,13 +12,9 @@ use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use Psr\Container\ContainerInterface;
 use SplPriorityQueue;
 
-use function array_key_exists;
 use function array_map;
 use function array_reduce;
-use function is_int;
 use function sprintf;
-
-use const PHP_INT_MAX;
 
 /**
  * @phpstan-import-type CmdBusConfig from ConfigProvider

@@ -90,18 +90,19 @@ final class ConfigProvider
     /**
      * @phpstan-return array{
      *     aliases: array<class-string, class-string>,
-     *     factories: array<class-string, class-string>
+     *     factories: array<class-string, class-string>,
+     *     invokables: array<class-string, class-string>
      * }
      */
     public function getDependencies(): array
     {
         return [
-            'aliases'   => [
+            'aliases'    => [
                 CmdBusInterface::class                 => CmdBus::class,
                 MiddlewarePipelineInterface::class     => MiddlewarePipe::class,
                 CommandHandlerResolverInterface::class => CommandHandlerResolver::class,
             ],
-            'factories' => [
+            'factories'  => [
                 CmdBus::class                              => Container\CmdBusFactory::class,
                 CommandHandlerResolver::class              => Container\CommandHandlerResolverFactory::class,
                 MiddlewarePipe::class                      => Container\MiddlewarePipeFactory::class,
@@ -109,7 +110,7 @@ final class ConfigProvider
             ],
             'invokables' => [
                 Handler\EmptyPipelineHandler::class => Handler\EmptyPipelineHandler::class,
-            ]
+            ],
         ];
     }
 
