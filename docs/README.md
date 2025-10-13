@@ -98,7 +98,7 @@ class UserHandler
 
 The cmd-bus library follows these key principles:
 
-1. **Commands** are classes that "do" something and implement `CommandInterface`
+1. **Commands** are data objects that implement `CommandInterface`
 2. **Handlers** process commands and implement `CommandHandlerInterface`
 3. **Middleware** can intercept and potentially modify command processing
 4. **Pipeline** manages middleware execution order
