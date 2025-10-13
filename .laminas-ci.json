@@ -1,25 +1,7 @@
 {
     "ignore_php_platform_requirements": {
-        "8.4": true
+        "8.5": true
     },
-    "exclude": [
-        {
-            "name": "PHPUnit",
-            "php": "8.1"
-        },
-        {
-            "name": "PHPStan",
-            "php": "8.1"
-        },
-        {
-            "name": "PHPStan",
-            "php": "8.4"
-        },
-        {
-            "name": "PHPUnit",
-            "php": "8.4"
-        }
-    ],
     "additional_checks": [
         {
             "name": "PhpStan",
@@ -29,5 +11,6 @@
                 "command": "composer require --dev --ignore-platform-reqs phpstan/phpstan && vendor/bin/phpstan analyse"
             }
         }
-    ]
+    ],
+    "backwardCompatibilityCheck": true
 }
