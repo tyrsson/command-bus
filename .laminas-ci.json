@@ -11,6 +11,5 @@
                 "command": "composer require --dev --ignore-platform-reqs phpstan/phpstan && vendor/bin/phpstan analyse"
             }
         }
-    ],
-    "backwardCompatibilityCheck": true
+    ]
 }
