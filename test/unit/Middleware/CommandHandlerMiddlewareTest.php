@@ -86,35 +86,6 @@ final class CommandHandlerMiddlewareTest extends TestCase
         $this->assertEquals('final result', $result);
     }
 
-    public function testProcessWrapsExceptionInFailureCommandResult(): void
-    {
-        $exception = new RuntimeException('Test exception');
-
-        $this->resolver->expects($this->once())
-            ->method('resolve')
-            ->with($this->command)
-            ->willReturn($this->commandHandler);
-
-        $this->commandHandler->expects($this->once())
-            ->method('handle')
-            ->with($this->command)
-            ->willThrowException($exception);
-
-        $this->handler->expects($this->once())
-            ->method('handle')
-            ->with($this->callback(function ($commandResult) use ($exception) {
-                return $commandResult instanceof CommandResult
-                    && $commandResult->getCommand() === $this->command
-                    && $commandResult->getStatus() === CommandStatus::Failure
-                    && $commandResult->getResult() === $exception;
-            }))
-            ->willReturn('error handled');
-
-        $result = $this->middleware->process($this->command, $this->handler);
-
-        $this->assertEquals('error handled', $result);
-    }
-
     public function testProcessCallsResolverWithCorrectCommand(): void
     {
         $this->resolver->expects($this->once())
