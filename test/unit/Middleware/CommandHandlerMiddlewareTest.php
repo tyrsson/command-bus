@@ -14,7 +14,6 @@ use PhpCmd\CmdBus\MiddlewareInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 #[CoversClass(CommandHandlerMiddleware::class)]
 final class CommandHandlerMiddlewareTest extends TestCase
