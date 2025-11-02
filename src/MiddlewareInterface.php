@@ -6,5 +6,8 @@ namespace PhpCmd\CmdBus;
 
 interface MiddlewareInterface
 {
-    public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed;
+    public function process(
+        CommandInterface $command,
+        CommandHandlerInterface $handler
+    ): Command\CommandResultInterface;
 }
