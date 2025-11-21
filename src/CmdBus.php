@@ -14,7 +14,7 @@ final class CmdBus implements CmdBusInterface
     }
 
     #[Override]
-    public function handle(CommandInterface $command): mixed
+    public function handle(CommandInterface $command): Command\CommandResultInterface
     {
         return $this->pipeline->handle($command);
     }

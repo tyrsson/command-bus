@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace PhpCmd\CmdBusTest;
 
+use PhpCmd\CmdBus\Command\CommandResult;
+use PhpCmd\CmdBus\Command\CommandResultInterface;
+use PhpCmd\CmdBus\Command\CommandStatus;
 use PhpCmd\CmdBus\CommandHandlerInterface;
 use PhpCmd\CmdBus\CommandInterface;
 use PhpCmd\CmdBus\Exception\CommandException;
@@ -114,6 +117,8 @@ final class MiddlewarePipeTest extends TestCase
 
     public function testHandleWithMiddlewareCallsMiddleware(): void
     {
+        $expectedResult = new CommandResult($this->command, CommandStatus::Success, 'middleware result');
+
         $middleware = $this->createMock(MiddlewareInterface::class);
         $middleware->expects($this->once())
             ->method('process')
@@ -121,29 +126,33 @@ final class MiddlewarePipeTest extends TestCase
                 $this->command,
                 $this->isInstanceOf(CommandHandlerInterface::class)
             )
-            ->willReturn('middleware result');
+            ->willReturn($expectedResult);
 
         $this->middlewarePipe->pipe($middleware);
 
         $result = $this->middlewarePipe->handle($this->command);
 
-        $this->assertEquals('middleware result', $result);
+        $this->assertSame($expectedResult, $result);
     }
 
     public function testProcessWithEmptyPipelineCallsHandler(): void
     {
+        $expectedResult = new CommandResult($this->command, CommandStatus::Success, 'handler result');
+
         $this->handler->expects($this->once())
             ->method('handle')
             ->with($this->command)
-            ->willReturn('handler result');
+            ->willReturn($expectedResult);
 
         $result = $this->middlewarePipe->process($this->command, $this->handler);
 
-        $this->assertEquals('handler result', $result);
+        $this->assertSame($expectedResult, $result);
     }
 
     public function testProcessWithMiddlewareCallsMiddleware(): void
     {
+        $expectedResult = new CommandResult($this->command, CommandStatus::Success, 'middleware result');
+
         $middleware = $this->createMock(MiddlewareInterface::class);
         $middleware->expects($this->once())
             ->method('process')
@@ -151,13 +160,13 @@ final class MiddlewarePipeTest extends TestCase
                 $this->command,
                 $this->isInstanceOf(CommandHandlerInterface::class)
             )
-            ->willReturn('middleware result');
+            ->willReturn($expectedResult);
 
         $this->middlewarePipe->pipe($middleware);
 
         $result = $this->middlewarePipe->process($this->command, $this->handler);
 
-        $this->assertEquals('middleware result', $result);
+        $this->assertSame($expectedResult, $result);
     }
 
     public function testProcessWithMultipleMiddlewareCallsInOrder(): void
@@ -172,7 +181,7 @@ final class MiddlewarePipeTest extends TestCase
             ) {
             }
 
-            public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed
+            public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
                 $this->executionOrder[] = 'middleware1';
                 return $handler->handle($command);
@@ -187,19 +196,21 @@ final class MiddlewarePipeTest extends TestCase
             ) {
             }
 
-            public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed
+            public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
                 $this->executionOrder[] = 'middleware2';
                 return $handler->handle($command);
             }
         };
 
+        $expectedResult = new CommandResult($this->command, CommandStatus::Success, 'final result');
+
         $this->handler->expects($this->once())
             ->method('handle')
             ->with($this->command)
-            ->willReturnCallback(function () use (&$executionOrder) {
+            ->willReturnCallback(function () use (&$executionOrder, $expectedResult) {
                 $executionOrder[] = 'handler';
-                return 'final result';
+                return $expectedResult;
             });
 
         $this->middlewarePipe->pipe($middleware1);
@@ -207,7 +218,7 @@ final class MiddlewarePipeTest extends TestCase
 
         $result = $this->middlewarePipe->process($this->command, $this->handler);
 
-        $this->assertEquals('final result', $result);
+        $this->assertSame($expectedResult, $result);
         $this->assertEquals(['middleware1', 'middleware2', 'handler'], $executionOrder);
     }
 
@@ -249,7 +260,9 @@ final class MiddlewarePipeTest extends TestCase
             null,
         ];
 
-        foreach ($testCases as $expectedResult) {
+        foreach ($testCases as $expectedValue) {
+            $expectedResult = new CommandResult($this->command, CommandStatus::Success, $expectedValue);
+
             $middleware = $this->createMock(MiddlewareInterface::class);
             $middleware->expects($this->once())
                 ->method('process')
@@ -274,7 +287,9 @@ final class MiddlewarePipeTest extends TestCase
             null,
         ];
 
-        foreach ($testCases as $expectedResult) {
+        foreach ($testCases as $expectedValue) {
+            $expectedResult = new CommandResult($this->command, CommandStatus::Success, $expectedValue);
+
             $handler = $this->createMock(CommandHandlerInterface::class);
             $handler->expects($this->once())
                 ->method('handle')
@@ -288,10 +303,12 @@ final class MiddlewarePipeTest extends TestCase
 
     public function testMiddlewareCanShortCircuitPipeline(): void
     {
+        $expectedResult = new CommandResult($this->command, CommandStatus::Success, 'short circuit result');
+
         $shortCircuitMiddleware = $this->createMock(MiddlewareInterface::class);
         $shortCircuitMiddleware->expects($this->once())
             ->method('process')
-            ->willReturn('short circuit result');
+            ->willReturn($expectedResult);
 
         $neverCalledMiddleware = $this->createMock(MiddlewareInterface::class);
         $neverCalledMiddleware->expects($this->never())
@@ -302,7 +319,7 @@ final class MiddlewarePipeTest extends TestCase
 
         $result = $this->middlewarePipe->handle($this->command);
 
-        $this->assertEquals('short circuit result', $result);
+        $this->assertSame($expectedResult, $result);
     }
 
     public function testMultipleMiddlewarePipeInstancesAreIndependent(): void
@@ -339,7 +356,7 @@ final class MiddlewarePipeTest extends TestCase
     {
         $middleware1 = $this->createMock(MiddlewareInterface::class);
         $middleware2 = new class implements MiddlewareInterface {
-            public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed
+            public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
                 return $handler->handle($command);
             }

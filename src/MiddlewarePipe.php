@@ -34,7 +34,7 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface
      * Handle a Command.
      */
     #[Override]
-    public function handle(CommandInterface $command): mixed
+    public function handle(CommandInterface $command): Command\CommandResultInterface
     {
         return $this->process($command, new EmptyPipelineHandler());
     }
@@ -46,7 +46,7 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface
      * handler" in cases when the pipeline exhausts itself.
      */
     #[Override]
-    public function process(CommandInterface $command, CommandHandlerInterface $handler): mixed
+    public function process(CommandInterface $command, CommandHandlerInterface $handler): Command\CommandResultInterface
     {
         return (new Next($this->pipeline, $handler))->handle($command);
     }

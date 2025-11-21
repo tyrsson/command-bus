@@ -28,7 +28,7 @@ final class Next implements CommandHandlerInterface
     }
 
     #[Override]
-    public function handle(CommandInterface $command): mixed
+    public function handle(CommandInterface $command): Command\CommandResultInterface
     {
         if ($this->queue === null) {
             throw NextHandlerAlreadyCalledException::create();

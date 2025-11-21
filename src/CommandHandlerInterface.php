@@ -6,5 +6,5 @@ namespace PhpCmd\CmdBus;
 
 interface CommandHandlerInterface
 {
-    public function handle(CommandInterface $command): mixed;
+    public function handle(CommandInterface $command): Command\CommandResultInterface;
 }
