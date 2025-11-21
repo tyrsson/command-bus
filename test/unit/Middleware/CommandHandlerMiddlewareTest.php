@@ -59,6 +59,7 @@ final class CommandHandlerMiddlewareTest extends TestCase
     public function testProcessResolvesCommandHandlerAndCallsIt(): void
     {
         $expectedResult = 'test result';
+        $commandResult  = new CommandResult($this->command, CommandStatus::Success, $expectedResult);
 
         $this->resolver->expects($this->once())
             ->method('resolve')
@@ -68,21 +69,11 @@ final class CommandHandlerMiddlewareTest extends TestCase
         $this->commandHandler->expects($this->once())
             ->method('handle')
             ->with($this->command)
-            ->willReturn($expectedResult);
-
-        $this->handler->expects($this->once())
-            ->method('handle')
-            ->with($this->callback(function ($commandResult) use ($expectedResult) {
-                return $commandResult instanceof CommandResult
-                    && $commandResult->getCommand() === $this->command
-                    && $commandResult->getStatus() === CommandStatus::Success
-                    && $commandResult->getResult() === $expectedResult;
-            }))
-            ->willReturn('final result');
+            ->willReturn($commandResult);
 
         $result = $this->middleware->process($this->command, $this->handler);
 
-        $this->assertEquals('final result', $result);
+        $this->assertSame($commandResult, $result);
     }
 
     public function testProcessCallsResolverWithCorrectCommand(): void
@@ -93,33 +84,31 @@ final class CommandHandlerMiddlewareTest extends TestCase
             ->willReturn($this->commandHandler);
 
         $this->commandHandler->method('handle')
-            ->willReturn('result');
+            ->willReturn(new CommandResult($this->command, CommandStatus::Success, 'result'));
 
         $this->handler->method('handle')
-            ->willReturn('final');
+            ->willReturn(new CommandResult($this->command, CommandStatus::Success, 'final'));
 
         $this->middleware->process($this->command, $this->handler);
     }
 
-    public function testProcessPassesCommandResultToNextHandler(): void
+    public function testProcessReturnsCommandResultFromHandler(): void
     {
         $expectedResult = 'command result';
+        $commandResult  = new CommandResult($this->command, CommandStatus::Success, $expectedResult);
 
         $this->resolver->method('resolve')
             ->willReturn($this->commandHandler);
 
         $this->commandHandler->method('handle')
-            ->willReturn($expectedResult);
-
-        $this->handler->expects($this->once())
-            ->method('handle')
-            ->with($this->callback(function ($commandResult) {
-                return $commandResult instanceof CommandResult;
-            }))
-            ->willReturn('next result');
+            ->willReturn($commandResult);
 
         $result = $this->middleware->process($this->command, $this->handler);
 
-        $this->assertEquals('next result', $result);
+        $this->assertSame($commandResult, $result);
+        $this->assertInstanceOf(CommandResult::class, $result);
+        $this->assertSame($this->command, $result->getCommand());
+        $this->assertSame(CommandStatus::Success, $result->getStatus());
+        $this->assertSame($expectedResult, $result->getResult());
     }
 }

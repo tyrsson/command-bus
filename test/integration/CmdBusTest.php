@@ -8,6 +8,8 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use PhpCmd\CmdBus\CmdBus;
 use PhpCmd\CmdBus\CmdBusInterface;
+use PhpCmd\CmdBus\Command\CommandResult;
+use PhpCmd\CmdBus\Command\CommandStatus;
 use PhpCmd\CmdBus\ConfigProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
@@ -68,6 +70,10 @@ final class CmdBusTest extends TestCase
         $cmdBus  = $this->container->get(CmdBusInterface::class);
         $command = new TestAssets\Command();
         $result  = $cmdBus->handle($command);
-        $this->assertEquals('Command-One', $result);
+
+        $this->assertInstanceOf(CommandResult::class, $result);
+        $this->assertSame($command, $result->getCommand());
+        $this->assertSame(CommandStatus::Success, $result->getStatus());
+        $this->assertEquals('Command-One', $result->getResult());
     }
 }

@@ -64,7 +64,8 @@
         "check": [
             "@cs-check",
             "@static-analysis",
-            "@test"
+            "@test",
+            "@test-integration"
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",

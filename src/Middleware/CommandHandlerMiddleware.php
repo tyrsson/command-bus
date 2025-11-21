@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace PhpCmd\CmdBus\Middleware;
 
 use Override;
-use PhpCmd\CmdBus\Command\CommandResult;
 use PhpCmd\CmdBus\Command\CommandResultInterface;
-use PhpCmd\CmdBus\Command\CommandStatus;
 use PhpCmd\CmdBus\CommandHandlerInterface;
 use PhpCmd\CmdBus\CommandHandlerResolverInterface;
 use PhpCmd\CmdBus\CommandInterface;
