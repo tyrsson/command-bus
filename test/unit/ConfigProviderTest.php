@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest;
+namespace Webware\CommandBusTest;
 
-use PhpCmd\CmdBus\ConfigProvider;
-use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
+use Webware\CommandBus\ConfigProvider;
+use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
 
 #[CoversClass(ConfigProvider::class)]
 #[CoversMethod(ConfigProvider::class, '__invoke')]

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest\Middleware;
+namespace Webware\CommandBusTest\Middleware;
 
-use PhpCmd\CmdBus\Command\CommandResult;
-use PhpCmd\CmdBus\Command\CommandStatus;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandHandlerResolverInterface;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
-use PhpCmd\CmdBus\MiddlewareInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Webware\CommandBus\Command\CommandResult;
+use Webware\CommandBus\Command\CommandStatus;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\CommandHandlerResolverInterface;
+use Webware\CommandBus\CommandInterface;
+use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
+use Webware\CommandBus\MiddlewareInterface;
 
 #[CoversClass(CommandHandlerMiddleware::class)]
 final class CommandHandlerMiddlewareTest extends TestCase

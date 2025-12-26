@@ -60,10 +60,10 @@ The factory is automatically registered by the `ConfigProvider`:
 return [
     'dependencies' => [
         'factories' => [
-            PhpCmd\CmdBus\CmdBus::class => PhpCmd\CmdBus\Container\CmdBusFactory::class,
+            Webware\CommandBus\CmdBus::class => Webware\CommandBus\Container\CmdBusFactory::class,
         ],
         'aliases' => [
-            PhpCmd\CmdBus\CmdBusInterface::class => PhpCmd\CmdBus\CmdBus::class,
+            Webware\CommandBus\CmdBusInterface::class => Webware\CommandBus\CmdBus::class,
         ],
     ],
 ];
@@ -83,7 +83,7 @@ $commandBus = $container->get(CmdBus::class);
 
 ```php
 use Psr\Container\ContainerInterface;
-use PhpCmd\CmdBus\Container\CmdBusFactory;
+use Webware\CommandBus\Container\CmdBusFactory;
 
 // Container setup (typically handled by Mezzio/Laminas)
 $container = new ServiceManager();
@@ -198,7 +198,7 @@ The factory expects the middleware pipeline to be properly configured:
 ```php
 // config/autoload/cmd-bus.global.php
 return [
-    'PhpCmd\CmdBus\ConfigProvider' => [
+    'Webware\CommandBus\ConfigProvider' => [
         'command-map' => [
             // Map command names to their handlers
             CreateUserCommand::class => CreateUserHandler::class,

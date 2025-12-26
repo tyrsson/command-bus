@@ -37,7 +37,7 @@ Commands serve as:
 ### Basic Command Implementation
 
 ```php
-use PhpCmd\CmdBus\CommandInterface;
+use Webware\CommandBus\CommandInterface;
 
 final readonly class CreateUserCommand implements CommandInterface
 {

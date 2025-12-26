@@ -49,7 +49,7 @@ public function process(CommandInterface|CommandResult $command, CommandHandlerI
 ### Basic Usage
 
 ```php
-use PhpCmd\CmdBus\Middleware\PostCommandHandlerMiddleware;
+use Webware\CommandBus\Middleware\PostCommandHandlerMiddleware;
 
 // The default implementation unwraps CommandResult objects
 $middleware = new PostCommandHandlerMiddleware();
@@ -213,11 +213,11 @@ final class ErrorHandlingPostCommandMiddleware extends PostCommandHandlerMiddlew
 ```php
 // config/autoload/cmd-bus.global.php
 return [
-    PhpCmd\CmdBus\ConfigProvider::class => [
+    Webware\CommandBus\ConfigProvider::class => [
         'middleware-pipeline' => [
             // Pre-command middleware...
             [
-                'middleware' => PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware::class,
+                'middleware' => Webware\CommandBus\Middleware\CommandHandlerMiddleware::class,
                 'priority'   => 0,  // Command handler
             ],
             [
@@ -229,7 +229,7 @@ return [
                 'priority'   => -20, // Execute after caching
             ],
             [
-                'middleware' => PhpCmd\CmdBus\Middleware\PostCommandHandlerMiddleware::class,
+                'middleware' => Webware\CommandBus\Middleware\PostCommandHandlerMiddleware::class,
                 'priority'   => -100, // Default post-processing (lowest priority)
             ],
         ],

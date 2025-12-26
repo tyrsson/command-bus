@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Container;
+namespace Webware\CommandBus\Container;
 
 use Assert\Assertion;
-use PhpCmd\CmdBus\CommandHandlerResolverInterface;
-use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
 use Psr\Container\ContainerInterface;
+use Webware\CommandBus\CommandHandlerResolverInterface;
+use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
 
 final class CommandHandlerMiddlewareFactory
 {

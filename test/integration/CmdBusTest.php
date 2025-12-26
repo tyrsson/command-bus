@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusIntegrationTest;
+namespace Webware\CommandBusIntegrationTest;
 
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
-use PhpCmd\CmdBus\CmdBus;
-use PhpCmd\CmdBus\CmdBusInterface;
-use PhpCmd\CmdBus\Command\CommandResult;
-use PhpCmd\CmdBus\Command\CommandStatus;
-use PhpCmd\CmdBus\ConfigProvider;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Webware\CommandBus\Command\CommandResult;
+use Webware\CommandBus\Command\CommandStatus;
+use Webware\CommandBus\CommandBus;
+use Webware\CommandBus\CommandBusInterface;
+use Webware\CommandBus\ConfigProvider;
 
 use function array_merge;
 
-#[CoversClass(CmdBus::class)]
-#[CoversMethod(CmdBus::class, 'handle')]
+#[CoversClass(CommandBus::class)]
+#[CoversMethod(CommandBus::class, 'handle')]
 /**
  * @phpstan-import-type ServiceManagerConfiguration from ConfigProvider
  * @phpstan-import-type CmdBusConfig from ConfigProvider
@@ -66,8 +66,8 @@ final class CmdBusTest extends TestCase
 
     public function testHandle(): void
     {
-        /** @var CmdBusInterface $cmdBus */
-        $cmdBus  = $this->container->get(CmdBusInterface::class);
+        /** @var CommandBusInterface $cmdBus */
+        $cmdBus  = $this->container->get(CommandBusInterface::class);
         $command = new TestAssets\Command();
         $result  = $cmdBus->handle($command);
 

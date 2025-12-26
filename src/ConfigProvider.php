@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus;
+namespace Webware\CommandBus;
 
 use Laminas\ServiceManager\Factory;
 use Laminas\ServiceManager\Initializer;
@@ -73,7 +73,7 @@ final class ConfigProvider
     /**
      * @phpstan-return array{
      *     dependencies: ServiceManagerConfiguration,
-     *     PhpCmd\CmdBus\ConfigProvider: CmdBusConfig,
+     *     Webware\CommandBus\ConfigProvider: CmdBusConfig,
      * }
      */
     public function __invoke(): array
@@ -98,12 +98,12 @@ final class ConfigProvider
     {
         return [
             'aliases'    => [
-                CmdBusInterface::class                 => CmdBus::class,
+                CommandBusInterface::class             => CommandBus::class,
                 MiddlewarePipelineInterface::class     => MiddlewarePipe::class,
                 CommandHandlerResolverInterface::class => CommandHandlerResolver::class,
             ],
             'factories'  => [
-                CmdBus::class                              => Container\CmdBusFactory::class,
+                CommandBus::class                          => Container\CommandBusFactory::class,
                 CommandHandlerResolver::class              => Container\CommandHandlerResolverFactory::class,
                 MiddlewarePipe::class                      => Container\MiddlewarePipeFactory::class,
                 Middleware\CommandHandlerMiddleware::class => Container\CommandHandlerMiddlewareFactory::class,

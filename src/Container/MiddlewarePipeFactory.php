@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Container;
+namespace Webware\CommandBus\Container;
 
-use PhpCmd\CmdBus\ConfigProvider;
-use PhpCmd\CmdBus\Exception;
-use PhpCmd\CmdBus\MiddlewareInterface;
-use PhpCmd\CmdBus\MiddlewarePipe;
-use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use Psr\Container\ContainerInterface;
 use SplPriorityQueue;
+use Webware\CommandBus\ConfigProvider;
+use Webware\CommandBus\Exception;
+use Webware\CommandBus\MiddlewareInterface;
+use Webware\CommandBus\MiddlewarePipe;
+use Webware\CommandBus\MiddlewarePipelineInterface;
 
 use function array_map;
 use function array_reduce;

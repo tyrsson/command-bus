@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest\Container;
+namespace Webware\CommandBusTest\Container;
 
-use PhpCmd\CmdBus\ConfigProvider;
-use PhpCmd\CmdBus\Container\MiddlewarePipeFactory;
-use PhpCmd\CmdBus\Exception\InvalidConfigurationException;
-use PhpCmd\CmdBus\Exception\ServiceNotFoundException;
-use PhpCmd\CmdBus\MiddlewareInterface;
-use PhpCmd\CmdBus\MiddlewarePipe;
-use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use Webware\CommandBus\ConfigProvider;
+use Webware\CommandBus\Container\MiddlewarePipeFactory;
+use Webware\CommandBus\Exception\InvalidConfigurationException;
+use Webware\CommandBus\Exception\ServiceNotFoundException;
+use Webware\CommandBus\MiddlewareInterface;
+use Webware\CommandBus\MiddlewarePipe;
+use Webware\CommandBus\MiddlewarePipelineInterface;
 
 #[CoversClass(MiddlewarePipeFactory::class)]
 final class MiddlewarePipeFactoryTest extends TestCase
@@ -99,7 +99,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage(
-            'Configuration for key: $config[PhpCmd\CmdBus\ConfigProvider] was not found in the config service.'
+            'Configuration for key: $config[Webware\CommandBus\ConfigProvider] was not found in the config service.'
         );
 
         ($this->factory)($this->container);
@@ -244,7 +244,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage(
-            'Invalid type for configuration key "$config[PhpCmd\CmdBus\ConfigProvider][middleware_pipeline]": array'
+            'Invalid type for config key "$config[Webware\CommandBus\ConfigProvider][middleware_pipeline]": array'
         );
 
         ($this->factory)($this->container);

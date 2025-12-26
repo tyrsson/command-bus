@@ -63,7 +63,7 @@ Resolves and returns the appropriate handler for the given command.
 ### Basic Usage
 
 ```php
-use PhpCmd\CmdBus\CommandHandlerFactory;
+use Webware\CommandBus\CommandHandlerFactory;
 use Psr\Container\ContainerInterface;
 
 // Setup (usually handled by the container)
@@ -127,7 +127,7 @@ The factory relies on command-to-handler mappings configured in your application
 ```php
 // config/autoload/cmd-bus.global.php
 return [
-    PhpCmd\CmdBus\ConfigProvider::class => [
+    Webware\CommandBus\ConfigProvider::class => [
         'command-map' => [
             App\Command\CreateUserCommand::class => App\Handler\CreateUserHandler::class,
             App\Command\UpdateUserCommand::class => App\Handler\UpdateUserHandler::class,

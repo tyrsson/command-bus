@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Container;
+namespace Webware\CommandBus\Container;
 
-use PhpCmd\CmdBus\CommandHandlerResolver;
 use Psr\Container\ContainerInterface;
+use Webware\CommandBus\CommandHandlerResolver;
 
 final class CommandHandlerResolverFactory
 {

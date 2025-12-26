@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest\Container;
+namespace Webware\CommandBusTest\Container;
 
-use PhpCmd\CmdBus\CommandHandlerResolver;
-use PhpCmd\CmdBus\Container\CommandHandlerResolverFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use Webware\CommandBus\CommandHandlerResolver;
+use Webware\CommandBus\Container\CommandHandlerResolverFactory;
 
 #[CoversClass(CommandHandlerResolverFactory::class)]
 final class CommandHandlerResolverFactoryTest extends TestCase

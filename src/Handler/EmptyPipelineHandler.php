@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Handler;
+namespace Webware\CommandBus\Handler;
 
-use PhpCmd\CmdBus\Command\CommandResultInterface;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\Exception\CommandException;
+use Webware\CommandBus\Command\CommandResultInterface;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\CommandInterface;
+use Webware\CommandBus\Exception\CommandException;
 
 final class EmptyPipelineHandler implements CommandHandlerInterface
 {

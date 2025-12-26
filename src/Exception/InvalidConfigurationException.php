@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Exception;
+namespace Webware\CommandBus\Exception;
 
 use InvalidArgumentException;
 
@@ -23,7 +23,7 @@ final class InvalidConfigurationException extends InvalidArgumentException
 
     public static function fromInvalidType(string $key, mixed $value): self
     {
-        return new self(sprintf('Invalid type for configuration key "%s": %s', $key, get_debug_type($value)));
+        return new self(sprintf('Invalid type for config key "%s": %s', $key, get_debug_type($value)));
     }
 
     public static function fromUnMappedCommand(string $commandClass): self

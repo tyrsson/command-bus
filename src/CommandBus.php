@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus;
+namespace Webware\CommandBus;
 
 use Override;
 
-final class CmdBus implements CmdBusInterface
+final class CommandBus implements CommandBusInterface
 {
     public function __construct(
         private readonly MiddlewarePipelineInterface&MiddlewarePipe $pipeline

@@ -57,12 +57,12 @@ composer require php-cmd/cmd-bus
 ```php
 // config/config.php
 return [
-    PhpCmd\CmdBus\ConfigProvider::class => [
+    Webware\CommandBus\ConfigProvider::class => [
         'command-map' => [
             App\Command\CreateUserCommand::class => App\Handler\CreateUserHandler::class,
         ],
         'middleware_pipeline' => [
-            ['middleware' => \PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware::class, 'priority' => 1],
+            ['middleware' => \Webware\CommandBus\Middleware\CommandHandlerMiddleware::class, 'priority' => 1],
         ],
     ],
 ];
@@ -75,7 +75,7 @@ return [
 class UserHandler
 {
     public function __construct(
-        private \PhpCmd\CmdBus\CmdBusInterface $commandBus
+        private \Webware\CommandBus\CmdBusInterface $commandBus
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface

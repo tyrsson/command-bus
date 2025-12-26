@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest\Handler;
+namespace Webware\CommandBusTest\Handler;
 
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\Exception\CommandException;
-use PhpCmd\CmdBus\Handler\EmptyPipelineHandler;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\CommandInterface;
+use Webware\CommandBus\Exception\CommandException;
+use Webware\CommandBus\Handler\EmptyPipelineHandler;
 
 #[CoversClass(EmptyPipelineHandler::class)]
 final class EmptyPipelineHandlerTest extends TestCase
@@ -48,7 +48,7 @@ final class EmptyPipelineHandlerTest extends TestCase
 
         $this->expectException(CommandException::class);
         $this->expectExceptionMessage(
-            'No command handler found for command class "PhpCmd\\CmdBus\\CommandInterface@anonymous'
+            'No command handler found for command class "Webware\\CommandBus\\CommandInterface@anonymous'
         );
 
         $this->handler->handle($command);
@@ -106,7 +106,7 @@ final class EmptyPipelineHandlerTest extends TestCase
             $this->fail('Expected CommandException to be thrown');
         } catch (CommandException $e) {
             $this->assertStringContainsString('No command handler found for command class', $e->getMessage());
-            $this->assertStringContainsString('PhpCmd\\CmdBus\\CommandInterface@anonymous', $e->getMessage());
+            $this->assertStringContainsString('Webware\\CommandBus\\CommandInterface@anonymous', $e->getMessage());
         }
     }
 

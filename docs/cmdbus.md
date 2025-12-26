@@ -46,7 +46,7 @@ Processes a command through the configured middleware pipeline.
 
 ```php
 use App\Command\CreateUserCommand;
-use PhpCmd\CmdBus\CmdBusInterface;
+use Webware\CommandBus\CmdBusInterface;
 
 class UserHandler
 {

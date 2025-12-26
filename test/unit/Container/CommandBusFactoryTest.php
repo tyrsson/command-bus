@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest\Container;
+namespace Webware\CommandBusTest\Container;
 
-use PhpCmd\CmdBus\CmdBus;
-use PhpCmd\CmdBus\Container\CmdBusFactory;
-use PhpCmd\CmdBus\Exception\ServiceNotFoundException;
-use PhpCmd\CmdBus\MiddlewarePipe;
-use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use Webware\CommandBus\CommandBus;
+use Webware\CommandBus\Container\CommandBusFactory;
+use Webware\CommandBus\Exception\ServiceNotFoundException;
+use Webware\CommandBus\MiddlewarePipe;
+use Webware\CommandBus\MiddlewarePipelineInterface;
 
-#[CoversClass(CmdBusFactory::class)]
-final class CmdBusFactoryTest extends TestCase
+#[CoversClass(CommandBusFactory::class)]
+final class CommandBusFactoryTest extends TestCase
 {
-    private CmdBusFactory $factory;
+    private CommandBusFactory $factory;
 
     /** @var ContainerInterface&MockObject */
     private ContainerInterface $container;
@@ -29,7 +29,7 @@ final class CmdBusFactoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->factory   = new CmdBusFactory();
+        $this->factory   = new CommandBusFactory();
         $this->container = $this->createMock(ContainerInterface::class);
 
         // Create an actual MiddlewarePipe instance since it's final and cannot be mocked
@@ -52,7 +52,7 @@ final class CmdBusFactoryTest extends TestCase
 
         $result = ($this->factory)($this->container);
 
-        $this->assertInstanceOf(CmdBus::class, $result);
+        $this->assertInstanceOf(CommandBus::class, $result);
     }
 
     public function testInvokeThrowsServiceNotFoundExceptionWhenMiddlewarePipelineIsNotAvailable(): void
@@ -69,7 +69,7 @@ final class CmdBusFactoryTest extends TestCase
 
         $this->expectException(ServiceNotFoundException::class);
         $this->expectExceptionMessage(
-            'Service not found: PhpCmd\CmdBus\MiddlewarePipelineInterface was not found in the container'
+            'Service not found: Webware\CommandBus\MiddlewarePipelineInterface was not found in the container'
         );
 
         ($this->factory)($this->container);
@@ -91,7 +91,7 @@ final class CmdBusFactoryTest extends TestCase
 
         $result = ($this->factory)($this->container);
 
-        $this->assertInstanceOf(CmdBus::class, $result);
+        $this->assertInstanceOf(CommandBus::class, $result);
     }
 
     public function testFactoryCanBeInvokedMultipleTimes(): void
@@ -111,8 +111,8 @@ final class CmdBusFactoryTest extends TestCase
         $result1 = ($this->factory)($this->container);
         $result2 = ($this->factory)($this->container);
 
-        $this->assertInstanceOf(CmdBus::class, $result1);
-        $this->assertInstanceOf(CmdBus::class, $result2);
+        $this->assertInstanceOf(CommandBus::class, $result1);
+        $this->assertInstanceOf(CommandBus::class, $result2);
         $this->assertNotSame($result1, $result2, 'Factory should create new instances each time');
     }
 
@@ -133,8 +133,8 @@ final class CmdBusFactoryTest extends TestCase
         $cmdBus1 = ($this->factory)($this->container);
         $cmdBus2 = ($this->factory)($this->container);
 
-        $this->assertInstanceOf(CmdBus::class, $cmdBus1);
-        $this->assertInstanceOf(CmdBus::class, $cmdBus2);
+        $this->assertInstanceOf(CommandBus::class, $cmdBus1);
+        $this->assertInstanceOf(CommandBus::class, $cmdBus2);
         $this->assertNotSame($cmdBus1, $cmdBus2);
     }
 

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Middleware;
+namespace Webware\CommandBus\Middleware;
 
 use Override;
-use PhpCmd\CmdBus\Command\CommandResultInterface;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandHandlerResolverInterface;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\MiddlewareInterface;
+use Webware\CommandBus\Command\CommandResultInterface;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\CommandHandlerResolverInterface;
+use Webware\CommandBus\CommandInterface;
+use Webware\CommandBus\MiddlewareInterface;
 
 /** @internal */
 final readonly class CommandHandlerMiddleware implements MiddlewareInterface

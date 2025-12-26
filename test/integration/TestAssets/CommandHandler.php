@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusIntegrationTest\TestAssets;
+namespace Webware\CommandBusIntegrationTest\TestAssets;
 
-use PhpCmd\CmdBus\Command\CommandResult;
-use PhpCmd\CmdBus\Command\CommandResultInterface;
-use PhpCmd\CmdBus\Command\CommandStatus;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandInterface;
+use Webware\CommandBus\Command\CommandResult;
+use Webware\CommandBus\Command\CommandResultInterface;
+use Webware\CommandBus\Command\CommandStatus;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\CommandInterface;
 
 use function assert;
 
