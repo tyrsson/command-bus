@@ -5,7 +5,7 @@ A comprehensive guide to using the cmd-bus Command Bus library in your Mezzio ap
 ## Installation
 
 ```bash
-composer require php-cmd/cmd-bus
+composer require webware/command-bus
 ```
 
 ## Quick Setup
@@ -110,14 +110,14 @@ return [
 // src/User/RequestHandler/CreateUserHandler.php
 namespace App\User\RequestHandler;
 
-use Webware\CommandBus\CmdBusInterface;
+use Webware\CommandBus\CommandBusInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
 // Note that this is a request handler, not a command handler
 class CreateUserHandler
 {
     public function __construct(
-        private CmdBusInterface $commandBus
+        private CommandBusInterface $commandBus
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface

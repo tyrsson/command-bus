@@ -1,15 +1,15 @@
-# CmdBusInterface
+# CommandBusInterface
 
 The core contract defining the command bus behavior in the cmd-bus library.
 
 ## Overview
 
-`CmdBusInterface` extends `CommandHandlerInterface` to provide a unified contract for command processing. This interface ensures that any command bus implementation can handle commands consistently.
+`CommandBusInterface` extends `CommandHandlerInterface` to provide a unified contract for command processing. This interface ensures that any command bus implementation can handle commands consistently.
 
 ## Class Definition
 
 ```php
-interface CmdBusInterface extends CommandHandlerInterface
+interface CommandBusInterface extends CommandHandlerInterface
 {
 }
 ```
@@ -24,7 +24,7 @@ public function handle(CommandInterface $command): mixed;
 
 ## Purpose
 
-The `CmdBusInterface` serves as:
+The `CommandBusInterface` serves as:
 
 1. **Abstraction Layer** - Allows different command bus implementations
 2. **Dependency Injection Target** - Services can depend on the interface rather than concrete implementations
@@ -38,7 +38,7 @@ The `CmdBusInterface` serves as:
 class OrderHandler
 {
     public function __construct(
-        private CmdBusInterface $commandBus
+        private CommandBusInterface $commandBus
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -67,7 +67,7 @@ class OrderHandler
 class ProcessCommandMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private CmdBusInterface $commandBus
+        private CommandBusInterface $commandBus
     ) {}
 
     public function process(
@@ -88,10 +88,10 @@ class ProcessCommandMiddleware implements MiddlewareInterface
 
 ## Default Implementation
 
-The library provides a default implementation via the `CmdBus` class:
+The library provides a default implementation via the `CommandBus` class:
 
 ```php
-final class CmdBus implements CmdBusInterface
+final class CommandBus implements CommandBusInterface
 {
     public function handle(CommandInterface $command): mixed
     {
@@ -102,7 +102,7 @@ final class CmdBus implements CmdBusInterface
 
 ## Related Components
 
-- [CmdBus](cmdbus.md) - Default implementation of this interface
+- [CommandBus](CommandBus.md) - Default implementation of this interface
 - [CommandHandlerInterface](command-handler-interface.md) - Parent interface
 - [CommandInterface](command-interface.md) - Interface for commands
-- [CmdBusFactory](container/cmdbus-factory.md) - Factory for creating command bus instances
+- [CommandBusFactory](container/CommandBus-factory.md) - Factory for creating command bus instances

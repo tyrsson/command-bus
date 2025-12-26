@@ -62,5 +62,5 @@ final readonly class CreateUserCommand implements CommandInterface
 ## Related Components
 
 - [CommandHandlerInterface](command-handler-interface.md) - Handlers that process commands
-- [CmdBusInterface](cmdbus-interface.md) - Bus that dispatches commands
+- [CommandBusInterface](CommandBus-interface.md) - Bus that dispatches commands
 - [MiddlewareInterface](middleware-interface.md) - Middleware that can intercept commands

@@ -6,8 +6,8 @@ A Command Bus implementation for Mezzio applications, providing a clean way to h
 
 ### Core Components
 
-- [CmdBus](docs/cmdbus.md) - The main command bus implementation
-- [CmdBusInterface](docs/cmdbus-interface.md) - Command bus contract
+- [CommandBus](docs/commandbus.md) - The main command bus implementation
+- [CommandBusInterface](docs/commandbus-interface.md) - Command bus contract
 - [MiddlewarePipe](docs/middleware-pipe.md) - Middleware pipeline management
 - [MiddlewarePipelineInterface](docs/middleware-pipeline-interface.md) - Pipeline contract
 - [CommandHandlerFactory](docs/command-handler-factory.md) - Factory for command handlers
@@ -22,7 +22,7 @@ A Command Bus implementation for Mezzio applications, providing a clean way to h
 
 ### Container Factories
 
-- [CmdBusFactory](docs/container/cmdbus-factory.md) - Service factory for CmdBus
+- [CommandBusFactory](docs/container/cmdbus-factory.md) - Service factory for CmdBus
 - [CommandHandlerFactoryFactory](docs/container/command-handler-factory-factory.md) - Factory for CommandHandlerFactory
 - [CommandHandlerMiddlewareFactory](docs/container/command-handler-middleware-factory.md) - Factory for CommandHandlerMiddleware
 - [MiddlewarePipeFactory](docs/container/middleware-pipe-factory.md) - Factory for MiddlewarePipe
