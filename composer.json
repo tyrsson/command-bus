@@ -1,17 +1,17 @@
 {
-    "name": "php-cmd/cmd-bus",
+    "name": "webware/command-bus",
     "description": "CommandBus for Mezzio",
     "license": "BSD-3-Clause",
     "keywords": [
-        "php-cmd",
+        "webware",
         "CommandBus",
         "Mezzio"
     ],
-    "homepage": "https://github.com/php-cmd/cmd-bus/discussions",
+    "homepage": "https://github.com/tyrsson/command-bus/discussions",
     "support": {
-        "issues": "https://github.com/php-cmd/cmd-bus/issues",
-        "source": "https://github.com/php-cmd/cmd-bus",
-        "forum": "https://github.com/php-cmd/cmd-bus/discussions"
+        "issues": "https://github.com/tyrsson/command-bus/issues",
+        "source": "https://github.com/tyrsson/command-bus",
+        "forum": "https://github.com/tyrsson/command-bus/discussions"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -27,7 +27,7 @@
     },
     "extra": {
         "laminas": {
-            "config-provider": "PhpCmd\\CmdBus\\ConfigProvider"
+            "config-provider": "Webware\\CommandBus\\ConfigProvider"
         }
     },
     "require": {
@@ -47,7 +47,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PhpCmd\\CmdBus\\": "src/"
+            "Webware\\CommandBus\\": "src/"
         },
         "files": [
             "src/functions/priority_queue_reducer_factory.php",
@@ -56,14 +56,14 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "PhpCmd\\CmdBusTest\\": "test/unit/",
-            "PhpCmd\\CmdBusIntegrationTest\\": "test/integration/"
+            "Webware\\CommandBusTest\\": "test/unit/",
+            "Webware\\CommandBusIntegrationTest\\": "test/integration/"
         }
     },
     "scripts": {
         "check": [
             "@cs-check",
-            "@static-analysis",
+            "@sa",
             "@test",
             "@test-integration"
         ],
@@ -72,8 +72,9 @@
         "test": "phpunit --colors=always --testsuite \"unit test\"",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "test-integration": "phpunit --colors=always --testsuite \"integration test\"",
-        "static-analysis": "vendor/bin/phpstan analyse",
-        "sa-update-baseline": "vendor/bin/phpstan analyse --generate-baseline",
+        "sa": "vendor/bin/phpstan analyse --memory-limit=256M",
+        "sa-gen-baseline": "vendor/bin/phpstan analyse --memory-limit=256M --generate-baseline",
+        "sa-verbose": "vendor/bin/phpstan analyse --memory-limit=256M -vv",
         "upload-coverage": "coveralls -v"
     }
 }

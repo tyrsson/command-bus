@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Container;
+namespace Webware\CommandBus\Container;
 
 use SplPriorityQueue;
 

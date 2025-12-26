@@ -30,7 +30,7 @@ The middleware serves as:
 ### Basic Implementation
 
 ```php
-use PhpCmd\CmdBus\Middleware\PreCommandHandlerMiddleware;
+use Webware\CommandBus\Middleware\PreCommandHandlerMiddleware;
 
 // The default implementation passes commands through unchanged
 $middleware = new PreCommandHandlerMiddleware();
@@ -126,7 +126,7 @@ final class EnrichmentPreCommandMiddleware extends PreCommandHandlerMiddleware
 ```php
 // config/autoload/cmd-bus.global.php
 return [
-    PhpCmd\CmdBus\ConfigProvider::class => [
+    Webware\CommandBus\ConfigProvider::class => [
         'middleware-pipeline' => [
             [
                 'middleware' => App\Middleware\AuthenticationPreCommandMiddleware::class,
@@ -137,7 +137,7 @@ return [
                 'priority'   => 50,  // Execute after authentication
             ],
             [
-                'middleware' => PhpCmd\CmdBus\Middleware\PreCommandHandlerMiddleware::class,
+                'middleware' => Webware\CommandBus\Middleware\PreCommandHandlerMiddleware::class,
                 'priority'   => 10,  // Default middleware
             ],
             // Other middleware...

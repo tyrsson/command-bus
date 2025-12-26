@@ -60,7 +60,7 @@ Creates an exception specifically for unhandled commands (used by EmptyPipelineH
 ### Basic Exception Handling
 
 ```php
-use PhpCmd\CmdBus\Exception\CommandException;
+use Webware\CommandBus\Exception\CommandException;
 
 class CreateUserHandler
 {

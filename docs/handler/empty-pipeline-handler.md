@@ -39,7 +39,7 @@ The `EmptyPipelineHandler` serves as:
 The handler is automatically used by `MiddlewarePipe` when no other handler is specified:
 
 ```php
-use PhpCmd\CmdBus\MiddlewarePipe;
+use Webware\CommandBus\MiddlewarePipe;
 
 $pipeline = new MiddlewarePipe();
 $pipeline->pipe(new LoggingMiddleware($logger));

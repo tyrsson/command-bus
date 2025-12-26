@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Command;
+namespace Webware\CommandBus\Command;
 
-use PhpCmd\CmdBus\CommandInterface;
+use Webware\CommandBus\CommandInterface;
 
 interface CommandResultInterface extends CommandInterface
 {

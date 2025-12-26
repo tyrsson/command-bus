@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest;
+namespace Webware\CommandBusTest;
 
-use PhpCmd\CmdBus\Command\CommandResult;
-use PhpCmd\CmdBus\Command\CommandStatus;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\Exception\CommandException;
-use PhpCmd\CmdBus\Exception\NextHandlerAlreadyCalledException;
-use PhpCmd\CmdBus\MiddlewareInterface;
-use PhpCmd\CmdBus\Next;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use SplQueue;
+use Webware\CommandBus\Command\CommandResult;
+use Webware\CommandBus\Command\CommandStatus;
+use Webware\CommandBus\CommandInterface;
+use Webware\CommandBus\Exception\CommandException;
+use Webware\CommandBus\Exception\NextHandlerAlreadyCalledException;
+use Webware\CommandBus\MiddlewareInterface;
+use Webware\CommandBus\Next;
 
 #[CoversClass(Next::class)]
 final class NextTest extends TestCase

@@ -6,11 +6,11 @@ applyTo: "test/**/*.php"
 
 ## Overview
 
-This document provides detailed instructions for generating comprehensive PHPUnit 11.5 test suites for PHP Command Bus libraries, based on the successful implementation of the `cmd-bus` repository test coverage expansion project.
+This document provides detailed instructions for generating comprehensive PHPUnit 11.5 test suites for PHP Command Bus libraries, based on the successful implementation of the `CommandBus` repository test coverage expansion project.
 
 ## Project Context
 
-- **Repository**: cmd-bus (PHP Command Bus implementation for Mezzio Framework)
+- **Repository**: command-bus (PHP Command Bus implementation for Mezzio Framework)
 - **Target PHP Framework**: Mezzio
 - **Unit testing Framework**: PHPUnit 11.5
 - **PHP Version**: 8.1+
@@ -60,7 +60,7 @@ composer cs-check
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest\{SubNamespace};
+namespace Webware\CommandBusTest\{SubNamespace};
 
 use {RequiredImports};
 use PHPUnit\Framework\Attributes\CoversClass;

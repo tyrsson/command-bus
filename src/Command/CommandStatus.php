@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Command;
+namespace Webware\CommandBus\Command;
 
 enum CommandStatus
 {

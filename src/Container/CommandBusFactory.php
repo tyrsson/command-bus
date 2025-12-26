@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Container;
+namespace Webware\CommandBus\Container;
 
-use PhpCmd\CmdBus\CmdBus;
-use PhpCmd\CmdBus\Exception\ServiceNotFoundException;
-use PhpCmd\CmdBus\MiddlewarePipe;
-use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use Psr\Container\ContainerInterface;
+use Webware\CommandBus\CommandBus;
+use Webware\CommandBus\Exception\ServiceNotFoundException;
+use Webware\CommandBus\MiddlewarePipe;
+use Webware\CommandBus\MiddlewarePipelineInterface;
 
-final class CmdBusFactory
+final class CommandBusFactory
 {
-    public function __invoke(ContainerInterface $container): CmdBus
+    public function __invoke(ContainerInterface $container): CommandBus
     {
         if (! $container->has(MiddlewarePipelineInterface::class)) {
             throw ServiceNotFoundException::fromService(MiddlewarePipelineInterface::class);
         }
         /** @var MiddlewarePipelineInterface&MiddlewarePipe $middlewarePipeline */
         $middlewarePipeline = $container->get(MiddlewarePipelineInterface::class);
-        return new CmdBus($middlewarePipeline);
+        return new CommandBus($middlewarePipeline);
     }
 }

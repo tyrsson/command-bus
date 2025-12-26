@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Container;
+namespace Webware\CommandBus\Container;
 
-use PhpCmd\CmdBus\ConfigProvider;
-use PhpCmd\CmdBus\Exception;
+use Webware\CommandBus\ConfigProvider;
+use Webware\CommandBus\Exception;
 
 use function array_key_exists;
 

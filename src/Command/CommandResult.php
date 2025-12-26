@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus\Command;
+namespace Webware\CommandBus\Command;
 
 use Override;
-use PhpCmd\CmdBus\CommandInterface;
+use Webware\CommandBus\CommandInterface;
 
 class CommandResult implements CommandResultInterface
 {

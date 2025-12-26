@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest\TestAssets;
+namespace Webware\CommandBusTest\TestAssets;
 
-use PhpCmd\CmdBus\CmdBus;
-use PhpCmd\CmdBus\CmdBusInterface;
-use PhpCmd\CmdBus\CommandHandlerResolver;
-use PhpCmd\CmdBus\CommandHandlerResolverInterface;
-use PhpCmd\CmdBus\Container;
-use PhpCmd\CmdBus\Handler\EmptyPipelineHandler;
-use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
-use PhpCmd\CmdBus\MiddlewarePipe;
-use PhpCmd\CmdBus\MiddlewarePipelineInterface;
+use Webware\CommandBus\CommandBus;
+use Webware\CommandBus\CommandBusInterface;
+use Webware\CommandBus\CommandHandlerResolver;
+use Webware\CommandBus\CommandHandlerResolverInterface;
+use Webware\CommandBus\Container;
+use Webware\CommandBus\Handler\EmptyPipelineHandler;
+use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
+use Webware\CommandBus\MiddlewarePipe;
+use Webware\CommandBus\MiddlewarePipelineInterface;
 
 final class ExpectedConfig
 {
@@ -38,7 +38,7 @@ final class ExpectedConfig
     public static function getExpectedFactories(): array
     {
         return [
-            CmdBus::class                   => Container\CmdBusFactory::class,
+            CommandBus::class               => Container\CommandBusFactory::class,
             CommandHandlerResolver::class   => Container\CommandHandlerResolverFactory::class,
             MiddlewarePipe::class           => Container\MiddlewarePipeFactory::class,
             CommandHandlerMiddleware::class => Container\CommandHandlerMiddlewareFactory::class,
@@ -51,7 +51,7 @@ final class ExpectedConfig
     public static function getExpectedAliases(): array
     {
         return [
-            CmdBusInterface::class                 => CmdBus::class,
+            CommandBusInterface::class             => CommandBus::class,
             MiddlewarePipelineInterface::class     => MiddlewarePipe::class,
             CommandHandlerResolverInterface::class => CommandHandlerResolver::class,
         ];

@@ -17,7 +17,7 @@ composer require php-cmd/cmd-bus
 
 $aggregator = new ConfigAggregator([
     // Other providers...
-    PhpCmd\CmdBus\ConfigProvider::class,
+    Webware\CommandBus\ConfigProvider::class,
     // Other config providers...
 ]);
 ```
@@ -27,7 +27,7 @@ $aggregator = new ConfigAggregator([
 ```php
 // config/autoload/cmd-bus.global.php
 
-use PhpCmd\CmdBus\ConfigProvider;
+use Webware\CommandBus\ConfigProvider;
 
 return [
     ConfigProvider::class => [
@@ -37,7 +37,7 @@ return [
         ],
         ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [
             // This is setup by default, its here only as an example
-            ['middleware' => PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware::class, 'priority' => 1],
+            ['middleware' => Webware\CommandBus\Middleware\CommandHandlerMiddleware::class, 'priority' => 1],
         ],
     ],
 ];
@@ -50,7 +50,7 @@ return [
 namespace App\User\Command;
 
 use App\User\Repository\UserRepositoryInterface;
-use PhpCmd\CmdBus\CommandInterface;
+use Webware\CommandBus\CommandInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 final class CreateUserCommand implements CommandInterface
@@ -70,8 +70,8 @@ final class CreateUserCommand implements CommandInterface
 // src/User/CommandHandler/CreateUserHandler.php
 namespace App\User\CommandHandler;
 
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandInterface;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\CommandInterface;
 use App\User\Command\CreateUserCommand;
 use App\Entity\User;
 
@@ -110,7 +110,7 @@ return [
 // src/User/RequestHandler/CreateUserHandler.php
 namespace App\User\RequestHandler;
 
-use PhpCmd\CmdBus\CmdBusInterface;
+use Webware\CommandBus\CmdBusInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
 // Note that this is a request handler, not a command handler

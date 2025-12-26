@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus;
+namespace Webware\CommandBus;
 
 use Override;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\Exception\NextHandlerAlreadyCalledException;
-use PhpCmd\CmdBus\Handler\EmptyPipelineHandler;
 use SplQueue;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\Exception\NextHandlerAlreadyCalledException;
+use Webware\CommandBus\Handler\EmptyPipelineHandler;
 
 final class Next implements CommandHandlerInterface
 {

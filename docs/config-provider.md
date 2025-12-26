@@ -60,7 +60,7 @@ use Laminas\ConfigAggregator\ConfigAggregator;
 
 $aggregator = new ConfigAggregator([
     // Other config providers...
-    PhpCmd\CmdBus\ConfigProvider::class,
+    Webware\CommandBus\ConfigProvider::class,
 ]);
 ```
 
@@ -69,7 +69,7 @@ $aggregator = new ConfigAggregator([
 ```php
 // config/autoload/cmd-bus.global.php
 return [
-    PhpCmd\CmdBus\ConfigProvider::class => [
+    Webware\CommandBus\ConfigProvider::class => [
         'command-map' => [
             // User management commands
             App\Command\User\CreateUserCommand::class => App\Handler\User\CreateUserHandler::class,
@@ -82,7 +82,7 @@ return [
         ],
         'middleware_pipeline' => [
             [
-                'middleware' => PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware::class,
+                'middleware' => Webware\CommandBus\Middleware\CommandHandlerMiddleware::class,
                 'priority' => 1
             ],
         ],

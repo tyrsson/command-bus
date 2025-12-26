@@ -32,7 +32,7 @@ The middleware implements both `MiddlewareInterface` and `CommandHandlerInterfac
 // config/autoload/cmd-bus.global.php
 return [
     // other config
-    PhpCmd\CmdBus\ConfigProvider::class => [
+    Webware\CommandBus\ConfigProvider::class => [
         'command-map' => [
             App\Command\CreateUserCommand::class => App\Handler\CreateUserHandler::class,
             App\Command\UpdateUserCommand::class => App\Handler\UpdateUserHandler::class,

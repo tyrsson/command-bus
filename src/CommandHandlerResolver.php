@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBus;
+namespace Webware\CommandBus;
 
 use Override;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\ConfigProvider;
-use PhpCmd\CmdBus\Exception\InvalidConfigurationException;
 use Psr\Container\ContainerInterface;
+use Webware\CommandBus\CommandInterface;
+use Webware\CommandBus\ConfigProvider;
+use Webware\CommandBus\Exception\InvalidConfigurationException;
 
 use function array_key_exists;
 

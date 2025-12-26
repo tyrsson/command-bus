@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest;
+namespace Webware\CommandBusTest;
 
-use PhpCmd\CmdBus\Command\CommandResult;
-use PhpCmd\CmdBus\Command\CommandResultInterface;
-use PhpCmd\CmdBus\Command\CommandStatus;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\Exception\CommandException;
-use PhpCmd\CmdBus\MiddlewareInterface;
-use PhpCmd\CmdBus\MiddlewarePipe;
-use PhpCmd\CmdBus\MiddlewarePipelineInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use SplQueue;
+use Webware\CommandBus\Command\CommandResult;
+use Webware\CommandBus\Command\CommandResultInterface;
+use Webware\CommandBus\Command\CommandStatus;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\CommandInterface;
+use Webware\CommandBus\Exception\CommandException;
+use Webware\CommandBus\MiddlewareInterface;
+use Webware\CommandBus\MiddlewarePipe;
+use Webware\CommandBus\MiddlewarePipelineInterface;
 
 #[CoversClass(MiddlewarePipe::class)]
 final class MiddlewarePipeTest extends TestCase

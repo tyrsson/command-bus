@@ -77,10 +77,10 @@ Performs a deep clone of the pipeline queue to ensure cloned instances have inde
 ### Basic Pipeline Setup
 
 ```php
-use PhpCmd\CmdBus\MiddlewarePipe;
+use Webware\CommandBus\MiddlewarePipe;
 use App\Middleware\LoggingMiddleware;
 use App\Middleware\ValidationMiddleware;
-use PhpCmd\CmdBus\Middleware\CommandHandlerMiddleware;
+use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
 
 $pipeline = new MiddlewarePipe();
 

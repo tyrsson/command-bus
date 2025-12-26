@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 
 /**
  * PHPStan stub for Laminas\ServiceManager\Factory\FactoryInterface
- * This is a type alias to help PHPStan understand the interface in the PhpCmd\CmdBus namespace context.
+ * This is a type alias to help PHPStan understand the interface in the Webware\CommandBus namespace context.
  */
 interface FactoryInterface
 {

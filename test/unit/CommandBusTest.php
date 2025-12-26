@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace PhpCmd\CmdBusTest;
+namespace Webware\CommandBusTest;
 
-use PhpCmd\CmdBus\CmdBus;
-use PhpCmd\CmdBus\CmdBusInterface;
-use PhpCmd\CmdBus\Command\CommandResult;
-use PhpCmd\CmdBus\Command\CommandResultInterface;
-use PhpCmd\CmdBus\Command\CommandStatus;
-use PhpCmd\CmdBus\CommandHandlerInterface;
-use PhpCmd\CmdBus\CommandInterface;
-use PhpCmd\CmdBus\Exception\CommandException;
-use PhpCmd\CmdBus\MiddlewareInterface;
-use PhpCmd\CmdBus\MiddlewarePipe;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Webware\CommandBus\Command\CommandResult;
+use Webware\CommandBus\Command\CommandResultInterface;
+use Webware\CommandBus\Command\CommandStatus;
+use Webware\CommandBus\CommandBus;
+use Webware\CommandBus\CommandBusInterface;
+use Webware\CommandBus\CommandHandlerInterface;
+use Webware\CommandBus\CommandInterface;
+use Webware\CommandBus\Exception\CommandException;
+use Webware\CommandBus\MiddlewareInterface;
+use Webware\CommandBus\MiddlewarePipe;
 
-#[CoversClass(CmdBus::class)]
-#[CoversMethod(CmdBus::class, '__construct')]
-#[CoversMethod(CmdBus::class, 'handle')]
-final class CmdBusTest extends TestCase
+#[CoversClass(CommandBus::class)]
+#[CoversMethod(CommandBus::class, '__construct')]
+#[CoversMethod(CommandBus::class, 'handle')]
+final class CommandBusTest extends TestCase
 {
-    private CmdBus $cmdBus;
+    private CommandBus $cmdBus;
 
     private MiddlewarePipe $pipeline;
 
@@ -38,21 +38,21 @@ final class CmdBusTest extends TestCase
         parent::setUp();
 
         $this->pipeline = new MiddlewarePipe();
-        $this->cmdBus   = new CmdBus($this->pipeline);
+        $this->cmdBus   = new CommandBus($this->pipeline);
         $this->command  = $this->createMock(CommandInterface::class);
     }
 
     public function testCmdBusImplementsCmdBusInterface(): void
     {
-        $this->assertInstanceOf(CmdBusInterface::class, $this->cmdBus);
+        $this->assertInstanceOf(CommandBusInterface::class, $this->cmdBus);
     }
 
     public function testConstructorAcceptsMiddlewarePipeline(): void
     {
         $pipeline = new MiddlewarePipe();
-        $cmdBus   = new CmdBus($pipeline);
+        $cmdBus   = new CommandBus($pipeline);
 
-        $this->assertInstanceOf(CmdBus::class, $cmdBus);
+        $this->assertInstanceOf(CommandBus::class, $cmdBus);
     }
 
     public function testHandleDelegatesToPipeline(): void
@@ -72,7 +72,7 @@ final class CmdBusTest extends TestCase
             }
         });
 
-        $cmdBus        = new CmdBus($pipeline);
+        $cmdBus        = new CommandBus($pipeline);
         $commandResult = $cmdBus->handle($this->command);
 
         $this->assertEquals('pipeline result', $commandResult->getResult());
@@ -137,7 +137,7 @@ final class CmdBusTest extends TestCase
             }
         });
 
-        $cmdBus        = new CmdBus($pipeline);
+        $cmdBus        = new CommandBus($pipeline);
         $commandResult = $cmdBus->handle($this->command);
 
         $this->assertEquals($expectedResult, $commandResult->getResult());
@@ -148,12 +148,12 @@ final class CmdBusTest extends TestCase
         $pipeline1 = new MiddlewarePipe();
         $pipeline2 = new MiddlewarePipe();
 
-        $cmdBus1 = new CmdBus($pipeline1);
-        $cmdBus2 = new CmdBus($pipeline2);
+        $cmdBus1 = new CommandBus($pipeline1);
+        $cmdBus2 = new CommandBus($pipeline2);
 
         $this->assertNotSame($cmdBus1, $cmdBus2);
-        $this->assertInstanceOf(CmdBus::class, $cmdBus1);
-        $this->assertInstanceOf(CmdBus::class, $cmdBus2);
+        $this->assertInstanceOf(CommandBus::class, $cmdBus1);
+        $this->assertInstanceOf(CommandBus::class, $cmdBus2);
     }
 
     public function testCmdBusIsImmutable(): void
