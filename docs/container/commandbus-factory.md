@@ -1,24 +1,24 @@
-# CmdBusFactory
+# CommandBusFactory
 
-Factory class for creating `CmdBus` instances with proper dependency injection via Laminas ServiceManager.
+Factory class for creating `CommandBus` instances with proper dependency injection via Laminas ServiceManager.
 
 ## Overview
 
-`CmdBusFactory` is a Laminas ServiceManager factory that creates and configures `CmdBus` instances. It handles dependency resolution and ensures the command bus is properly initialized with its required middleware pipeline.
+`CommandBusFactory` is a Laminas ServiceManager factory that creates and configures `CommandBus` instances. It handles dependency resolution and ensures the command bus is properly initialized with its required middleware pipeline.
 
 ## Class Definition
 
 ```php
-final class CmdBusFactory
+final class CommandBusFactory
 {
-    public function __invoke(ContainerInterface $container): CmdBus;
+    public function __invoke(ContainerInterface $container): CommandBus;
 }
 ```
 
 ## Implementation
 
 ```php
-public function __invoke(ContainerInterface $container): CmdBus
+public function __invoke(ContainerInterface $container): CommandBus
 {
     if (!$container->has(MiddlewarePipelineInterface::class)) {
         throw ServiceNotFoundException::fromService(MiddlewarePipelineInterface::class);
@@ -27,7 +27,7 @@ public function __invoke(ContainerInterface $container): CmdBus
     /** @var MiddlewarePipelineInterface&MiddlewarePipe $middlewarePipeline */
     $middlewarePipeline = $container->get(MiddlewarePipelineInterface::class);
 
-    return new CmdBus($middlewarePipeline);
+    return new CommandBus($middlewarePipeline);
 }
 ```
 
@@ -46,10 +46,10 @@ The factory is automatically registered by the `ConfigProvider`:
 ```php
 // In ConfigProvider::getDependencies()
 'factories' => [
-    CmdBus::class => Container\CmdBusFactory::class,
+    CommandBus::class => Container\CommandBusFactory::class,
 ],
 'aliases' => [
-    CmdBusInterface::class => CmdBus::class,
+    CommandBusInterface::class => CommandBus::class,
 ],
 ```
 
@@ -60,10 +60,10 @@ The factory is automatically registered by the `ConfigProvider`:
 return [
     'dependencies' => [
         'factories' => [
-            Webware\CommandBus\CmdBus::class => Webware\CommandBus\Container\CmdBusFactory::class,
+            Webware\CommandBus\CommandBus::class => Webware\CommandBus\Container\CommandBusFactory::class,
         ],
         'aliases' => [
-            Webware\CommandBus\CmdBusInterface::class => Webware\CommandBus\CmdBus::class,
+            Webware\CommandBus\CommandBusInterface::class => Webware\CommandBus\CommandBus::class,
         ],
     ],
 ];
@@ -73,21 +73,21 @@ return [
 
 ```php
 // In your application code
-$commandBus = $container->get(CmdBusInterface::class);
+$commandBus = $container->get(CommandBusInterface::class);
 
 // Or directly
-$commandBus = $container->get(CmdBus::class);
+$commandBus = $container->get(CommandBus::class);
 ```
 
 ### Factory in Action
 
 ```php
 use Psr\Container\ContainerInterface;
-use Webware\CommandBus\Container\CmdBusFactory;
+use Webware\CommandBus\Container\CommandBusFactory;
 
 // Container setup (typically handled by Mezzio/Laminas)
 $container = new ServiceManager();
-$factory = new CmdBusFactory();
+$factory = new CommandBusFactory();
 
 // Factory creates the command bus
 $commandBus = $factory($container);
@@ -104,7 +104,7 @@ $result = $commandBus->handle($command);
 class ExampleRequestHandler
 {
     public function __construct(
-        private CmdBusInterface $commandBus
+        private CommandBusInterface $commandBus
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -137,7 +137,7 @@ class ExampleRequestHandlerFactory implements FactoryInterface
         array $options = null
     ): ExampleRequestHandler {
         return new ExampleRequestHandler(
-            $container->get(CmdBusInterface::class) // Uses CmdBusFactory internally
+            $container->get(CommandBusInterface::class) // Uses CommandBusFactory internally
         );
     }
 }
@@ -149,7 +149,7 @@ class ExampleRequestHandlerFactory implements FactoryInterface
 class UserService
 {
     public function __construct(
-        private CmdBusInterface $commandBus
+        private CommandBusInterface $commandBus
     ) {}
 
     public function createUser(array $userData): User
@@ -228,10 +228,10 @@ Always inject the interface rather than the concrete class:
 
 ```php
 // ✅ Good - depends on interface
-public function __construct(private CmdBusInterface $commandBus) {}
+public function __construct(private CommandBusInterface $commandBus) {}
 
 // ❌ Bad - depends on implementation
-public function __construct(private CmdBus $commandBus) {}
+public function __construct(private CommandBus $commandBus) {}
 ```
 
 ### 2. Configure All Dependencies
@@ -241,7 +241,7 @@ Ensure all middleware and handlers have proper factories:
 ```php
 'dependencies' => [
     'factories' => [
-        CmdBus::class => CmdBusFactory::class,
+        CommandBus::class => CommandBusFactory::class,
         MiddlewarePipe::class => MiddlewarePipeFactory::class,
         CommandHandlerMiddleware::class => CommandHandlerMiddlewareFactory::class,
         // Your custom services...
@@ -252,7 +252,7 @@ Ensure all middleware and handlers have proper factories:
 
 ## Related Components
 
-- [CmdBus](../cmdbus.md) - The service this factory creates
+- [CommandBus](../CommandBus.md) - The service this factory creates
 - [MiddlewarePipeFactory](middleware-pipe-factory.md) - Factory for the required middleware pipeline
 - [ConfigProvider](../config-provider.md) - Registers this factory
 - [ServiceNotFoundException](../exception/service-not-found-exception.md) - Exception thrown for missing dependencies

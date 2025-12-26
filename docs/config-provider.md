@@ -96,12 +96,12 @@ The ConfigProvider automatically registers these services:
 
 ### Core Services
 
-- `CmdBusInterface` → `CmdBus`
+- `CommandBusInterface` → `CommandBus`
 - `MiddlewarePipelineInterface` → `MiddlewarePipe`
 
 ### Factories
 
-- `CmdBus` → `Container\CmdBusFactory`
+- `CommandBus` → `Container\CommandBusFactory`
 - `CommandHandlerFactory` → `Container\CommandHandlerFactoryFactory`
 - `MiddlewarePipe` → `Container\MiddlewarePipeFactory`
 - `CommandHandlerMiddleware` → `Container\CommandHandlerMiddlewareFactory`
@@ -133,7 +133,7 @@ The ConfigProvider automatically registers these services:
 
 ## Related Components
 
-- [CmdBus](cmdbus.md) - Main service configured by this provider
+- [CommandBus](CommandBus.md) - Main service configured by this provider
 - [MiddlewarePipe](middleware-pipe.md) - Pipeline service configured by this provider
 - [CommandHandlerFactory](command-handler-factory.md) - Factory for resolving handlers
 - [Container Factories](container/) - Service factories registered by this provider

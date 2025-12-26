@@ -1,15 +1,15 @@
-# CmdBus
+# CommandBus
 
 The main command bus implementation that orchestrates command processing through a middleware pipeline.
 
 ## Overview
 
-`CmdBus` is the primary entry point for command processing. It accepts commands and delegates their execution to a configured middleware pipeline. This class provides a clean interface for command dispatch while allowing flexible middleware composition.
+`CommandBus` is the primary entry point for command processing. It accepts commands and delegates their execution to a configured middleware pipeline. This class provides a clean interface for command dispatch while allowing flexible middleware composition.
 
 ## Class Definition
 
 ```php
-final class CmdBus implements CmdBusInterface
+final class CommandBus implements CommandBusInterface
 {
     public function __construct(
         private MiddlewarePipelineInterface&MiddlewarePipe $pipeline
@@ -46,12 +46,12 @@ Processes a command through the configured middleware pipeline.
 
 ```php
 use App\Command\CreateUserCommand;
-use Webware\CommandBus\CmdBusInterface;
+use Webware\CommandBus\CommandBusInterface;
 
 class UserHandler
 {
     public function __construct(
-        private CmdBusInterface $commandBus
+        private CommandBusInterface $commandBus
     ) {}
 
     public function createAction(): ResponseInterface
@@ -70,7 +70,7 @@ class UserHandler
 
 ## Related Components
 
-- [CmdBusInterface](cmdbus-interface.md) - The interface this class implements
+- [CommandBusInterface](CommandBus-interface.md) - The interface this class implements
 - [MiddlewarePipe](middleware-pipe.md) - The pipeline component used internally
-- [CmdBusFactory](container/cmdbus-factory.md) - Factory for creating instances
+- [CommandBusFactory](container/CommandBus-factory.md) - Factory for creating instances
 - [CommandInterface](command-interface.md) - Interface all commands must implement
