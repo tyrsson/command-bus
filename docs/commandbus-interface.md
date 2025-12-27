@@ -29,6 +29,7 @@ The `CommandBusInterface` serves as:
 1. **Abstraction Layer** - Allows different command bus implementations
 2. **Dependency Injection Target** - Services can depend on the interface rather than concrete implementations
 3. **Type Safety** - Provides compile-time guarantees for command handling
+4. **CommandBusInterface::class** - Serves as the top level configuration key
 
 ## Usage Examples
 

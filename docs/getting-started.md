@@ -30,7 +30,7 @@ $aggregator = new ConfigAggregator([
 use Webware\CommandBus\ConfigProvider;
 
 return [
-    ConfigProvider::class => [
+    CommandBusInterface::class => [
         ConfigProvider::COMMAND_MAP_KEY         => [
             App\User\Command\CreateUserCommand::class => App\User\CommandHandler\CreateUserHandler::class,
             App\User\Command\UpdateUserCommand::class => App\User\CommandHandler\UpdateUserHandler::class,

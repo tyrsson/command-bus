@@ -29,10 +29,10 @@ The middleware implements both `MiddlewareInterface` and `CommandHandlerInterfac
 ### Command-Handler Mapping
 
 ```php
-// config/autoload/cmd-bus.global.php
+// config/autoload/commandbus.global.php
 return [
     // other config
-    Webware\CommandBus\ConfigProvider::class => [
+    Webware\CommandBus\CommandBusInterface::class => [
         'command-map' => [
             App\Command\CreateUserCommand::class => App\Handler\CreateUserHandler::class,
             App\Command\UpdateUserCommand::class => App\Handler\UpdateUserHandler::class,

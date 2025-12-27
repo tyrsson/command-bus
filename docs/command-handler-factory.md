@@ -125,9 +125,9 @@ class CustomCommandProcessor
 The factory relies on command-to-handler mappings configured in your application:
 
 ```php
-// config/autoload/cmd-bus.global.php
+// config/autoload/commandbus.global.php
 return [
-    Webware\CommandBus\ConfigProvider::class => [
+    Webware\CommandBus\CommandBusInterface::class => [
         'command-map' => [
             App\Command\CreateUserCommand::class => App\Handler\CreateUserHandler::class,
             App\Command\UpdateUserCommand::class => App\Handler\UpdateUserHandler::class,
@@ -142,7 +142,7 @@ return [
 Handlers must be registered in the dependency injection container:
 
 ```php
-// config/autoload/dependencies.global.php
+// In a autoloaded config file or ConfigProvider
 return [
     'dependencies' => [
         'factories' => [

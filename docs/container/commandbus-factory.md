@@ -196,9 +196,9 @@ try {
 The factory expects the middleware pipeline to be properly configured:
 
 ```php
-// config/autoload/cmd-bus.global.php
+// config/autoload/commandbus.global.php
 return [
-    'Webware\CommandBus\ConfigProvider' => [
+    CommandBusInterface::class => [
         'command-map' => [
             // Map command names to their handlers
             CreateUserCommand::class => CreateUserHandler::class,
