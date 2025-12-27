@@ -25,7 +25,7 @@ use function array_merge;
  * @phpstan-import-type CmdBusConfig from ConfigProvider
  * @phpstan-import-type CommandMap from ConfigProvider
  */
-final class CmdBusTest extends TestCase
+final class CommandBusTest extends TestCase
 {
     private ContainerInterface&ServiceManager $container;
 
@@ -40,10 +40,10 @@ final class CmdBusTest extends TestCase
             TestAssets\TestMiddlewareFirst::class  => InvokableFactory::class,
             TestAssets\TestMiddlewareSecond::class => InvokableFactory::class,
         ];
-        $config[ConfigProvider::class][ConfigProvider::COMMAND_MAP_KEY] = [
+        $config[CommandBusInterface::class][ConfigProvider::COMMAND_MAP_KEY] = [
             TestAssets\Command::class => TestAssets\CommandHandler::class,
         ];
-        $middleware     = $config[ConfigProvider::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY];
+        $middleware     = $config[CommandBusInterface::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY];
         $testMiddleware = [
             [
                 'middleware' => TestAssets\TestMiddlewareFirst::class,
@@ -54,11 +54,11 @@ final class CmdBusTest extends TestCase
                 'priority'   => -1,
             ],
         ];
-        $config[ConfigProvider::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY] = array_merge(
+        $config[CommandBusInterface::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY] = array_merge(
             $middleware,
             $testMiddleware
         );
-        $dependencies['services']['config']                                     = $config;
+        $dependencies['services']['config']                                          = $config;
 
         // @phpstan-ignore-next-line
         $this->container = new ServiceManager($dependencies);

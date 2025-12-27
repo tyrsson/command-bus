@@ -7,6 +7,7 @@ namespace Webware\CommandBusTest;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
+use Webware\CommandBus\CommandBusInterface;
 use Webware\CommandBus\ConfigProvider;
 use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
 
@@ -42,13 +43,13 @@ final class ConfigProviderTest extends TestCase
         $config = ($this->configProvider)();
 
         $this->assertArrayHasKey('dependencies', $config);
-        $this->assertArrayHasKey(ConfigProvider::class, $config);
+        $this->assertArrayHasKey(CommandBusInterface::class, $config);
 
         $dependencies = $config['dependencies'];
         $this->assertArrayHasKey('aliases', $dependencies);
         $this->assertArrayHasKey('factories', $dependencies);
 
-        $cmdBusConfig = $config[ConfigProvider::class];
+        $cmdBusConfig = $config[CommandBusInterface::class];
         $this->assertArrayHasKey(ConfigProvider::COMMAND_MAP_KEY, $cmdBusConfig);
         $this->assertArrayHasKey(ConfigProvider::MIDDLEWARE_PIPELINE_KEY, $cmdBusConfig);
     }

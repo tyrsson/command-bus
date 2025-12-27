@@ -6,6 +6,7 @@ namespace Webware\CommandBus\Container;
 
 use Psr\Container\ContainerInterface;
 use SplPriorityQueue;
+use Webware\CommandBus\CommandBusInterface;
 use Webware\CommandBus\ConfigProvider;
 use Webware\CommandBus\Exception;
 use Webware\CommandBus\MiddlewareInterface;
@@ -17,7 +18,7 @@ use function array_reduce;
 use function sprintf;
 
 /**
- * @phpstan-import-type CmdBusConfig from ConfigProvider
+ * @phpstan-import-type CommandBusConfig from ConfigProvider
  * @phpstan-import-type MiddlewarePipeSpec from ConfigProvider
  * @phpstan-import-type MiddlewareSpec from ConfigProvider
  * @phpstan-import-type CommandMap from ConfigProvider
@@ -30,16 +31,16 @@ final class MiddlewarePipeFactory
             throw Exception\ServiceNotFoundException::fromService('config');
         }
 
-        /** @phpstan-var array<CmdBusConfig> $config */
+        /** @phpstan-var array<CommandBusConfig> $config */
         $config = $container->get('config');
-        /** @phpstan-var CmdBusConfig $config */
-        $config = $config[ConfigProvider::class] ?? [];
+        /** @phpstan-var CommandBusConfig $config */
+        $config = $config[CommandBusInterface::class] ?? [];
 
         if ($config === []) {
             throw Exception\InvalidConfigurationException::fromMissingKey(
                 sprintf(
                     'Configuration for key: %s was not found in the config service.',
-                    '$config[' . ConfigProvider::class . ']'
+                    '$config[' . CommandBusInterface::class . ']'
                 )
             );
         }
@@ -56,9 +57,9 @@ final class MiddlewarePipeFactory
     }
 
     /**
-     * Pipe middleware into the CmdBus middleware pipeline.
+     * Pipe middleware into the CommandBus middleware pipeline.
      *
-     * @phpstan-param CmdBusConfig $config
+     * @phpstan-param CommandBusConfig $config
      */
     private static function pipeMiddleware(
         ContainerInterface $container,
