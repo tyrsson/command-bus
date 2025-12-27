@@ -6,6 +6,7 @@ namespace Webware\CommandBus;
 
 use Override;
 use Psr\Container\ContainerInterface;
+use Webware\CommandBus\CommandBusInterface;
 use Webware\CommandBus\CommandInterface;
 use Webware\CommandBus\ConfigProvider;
 use Webware\CommandBus\Exception\InvalidConfigurationException;
@@ -13,7 +14,7 @@ use Webware\CommandBus\Exception\InvalidConfigurationException;
 use function array_key_exists;
 
 /**
- * @phpstan-import-type CmdBusConfig from ConfigProvider
+ * @phpstan-import-type CommandBusConfig from ConfigProvider
  * @phpstan-import-type CommandMap from ConfigProvider
  */
 final class CommandHandlerResolver implements CommandHandlerResolverInterface
@@ -31,10 +32,10 @@ final class CommandHandlerResolver implements CommandHandlerResolverInterface
     #[Override]
     public function resolve(CommandInterface $command): CommandHandlerInterface
     {
-        /** @phpstan-var array<CmdBusConfig> */
+        /** @phpstan-var array<CommandBusConfig> */
         $config = $this->container->get('config');
-        /** @phpstan-var CmdBusConfig $config */
-        $config = $config[ConfigProvider::class] ?? [];
+        /** @phpstan-var CommandBusConfig $config */
+        $config = $config[CommandBusInterface::class] ?? [];
         /** @phpstan-var CommandMap $map */
         $map = $config[ConfigProvider::COMMAND_MAP_KEY] ?? [];
         if (! array_key_exists($command::class, $map)) {

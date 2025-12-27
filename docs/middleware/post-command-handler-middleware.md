@@ -211,9 +211,9 @@ final class ErrorHandlingPostCommandMiddleware extends PostCommandHandlerMiddlew
 ### Adding to Middleware Pipeline
 
 ```php
-// config/autoload/cmd-bus.global.php
+// config/autoload/commandbus.global.php
 return [
-    Webware\CommandBus\ConfigProvider::class => [
+    Webware\CommandBus\CommandBusInterface::class => [
         'middleware-pipeline' => [
             // Pre-command middleware...
             [

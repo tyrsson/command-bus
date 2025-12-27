@@ -124,9 +124,9 @@ final class EnrichmentPreCommandMiddleware extends PreCommandHandlerMiddleware
 ### Adding to Middleware Pipeline
 
 ```php
-// config/autoload/cmd-bus.global.php
+// config/autoload/commandbus.global.php
 return [
-    Webware\CommandBus\ConfigProvider::class => [
+    Webware\CommandBus\CommandBusInterface::class => [
         'middleware-pipeline' => [
             [
                 'middleware' => App\Middleware\AuthenticationPreCommandMiddleware::class,

@@ -15,7 +15,7 @@ use Psr\Container\ContainerInterface;
  *     priority: int
  * }
  * @phpstan-type MiddlewarePipeSpec array<MiddlewareSpec>
- * @phpstan-type CmdBusConfig array{
+ * @phpstan-type CommandBusConfig array{
  *     command-map: CommandMap,
  *     middleware_pipeline: MiddlewarePipeSpec
  * }
@@ -73,14 +73,14 @@ final class ConfigProvider
     /**
      * @phpstan-return array{
      *     dependencies: ServiceManagerConfiguration,
-     *     Webware\CommandBus\ConfigProvider: CmdBusConfig,
+     *     Webware\CommandBus\CommandBusInterface: CommandBusConfig,
      * }
      */
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies(),
-            static::class  => [
+            'dependencies'             => $this->getDependencies(),
+            CommandBusInterface::class => [
                 self::COMMAND_MAP_KEY         => $this->getCommandMap(),
                 self::MIDDLEWARE_PIPELINE_KEY => $this->getMiddleware(),
             ],

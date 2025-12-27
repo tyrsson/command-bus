@@ -9,6 +9,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use Webware\CommandBus\CommandBusInterface;
 use Webware\CommandBus\ConfigProvider;
 use Webware\CommandBus\Container\MiddlewarePipeFactory;
 use Webware\CommandBus\Exception\InvalidConfigurationException;
@@ -44,7 +45,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
     public function testInvokeReturnsMiddlewarePipelineInterface(): void
     {
         $config = [
-            ConfigProvider::class => [
+            CommandBusInterface::class => [
                 ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [],
             ],
         ];
@@ -81,7 +82,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
         ($this->factory)($this->container);
     }
 
-    public function testInvokeThrowsExceptionWhenConfigProviderKeyMissing(): void
+    public function testInvokeThrowsExceptionWhenCommandBusInterfaceKeyMissing(): void
     {
         $config = [];
 
@@ -99,7 +100,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage(
-            'Configuration for key: $config[Webware\CommandBus\ConfigProvider] was not found in the config service.'
+            'Configuration for key: $config[Webware\CommandBus\CommandBusInterface] was not found in the config service.' // phpcs:ignore
         );
 
         ($this->factory)($this->container);
@@ -108,7 +109,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
     public function testInvokeWithEmptyMiddlewarePipelineConfig(): void
     {
         $config = [
-            ConfigProvider::class => [
+            CommandBusInterface::class => [
                 ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [],
             ],
         ];
@@ -133,7 +134,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
     public function testInvokeWithMiddlewarePipelineConfiguration(): void
     {
         $config = [
-            ConfigProvider::class => [
+            CommandBusInterface::class => [
                 ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [
                     [
                         'middleware' => 'TestMiddleware1',
@@ -177,7 +178,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
     public function testInvokeSkipsMiddlewareNotAvailableInContainer(): void
     {
         $config = [
-            ConfigProvider::class => [
+            CommandBusInterface::class => [
                 ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [
                     [
                         'middleware' => 'TestMiddleware1',
@@ -220,7 +221,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
     public function testInvokeThrowsExceptionWhenMiddlewareConfigMissingMiddlewareKey(): void
     {
         $config = [
-            ConfigProvider::class => [
+            CommandBusInterface::class => [
                 ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [
                     [
                         'priority' => 10,
@@ -253,7 +254,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
     public function testInvokeWithMiddlewareDefaultPriority(): void
     {
         $config = [
-            ConfigProvider::class => [
+            CommandBusInterface::class => [
                 ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [
                     [
                         'middleware' => 'TestMiddleware1',
@@ -291,7 +292,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
     public function testFactoryCanBeInvokedMultipleTimes(): void
     {
         $config = [
-            ConfigProvider::class => [
+            CommandBusInterface::class => [
                 ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [],
             ],
         ];
@@ -325,7 +326,7 @@ final class MiddlewarePipeFactoryTest extends TestCase
     public function testInvokeWithNonIntegerPriorityDefaultsToOne(): void
     {
         $config = [
-            ConfigProvider::class => [
+            CommandBusInterface::class => [
                 ConfigProvider::MIDDLEWARE_PIPELINE_KEY => [
                     [
                         'middleware' => 'TestMiddleware1',

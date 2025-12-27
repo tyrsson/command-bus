@@ -69,7 +69,7 @@ $aggregator = new ConfigAggregator([
 ```php
 // config/autoload/cmd-bus.global.php
 return [
-    Webware\CommandBus\ConfigProvider::class => [
+    Webware\CommandBus\CommandBusInterface::class => [
         'command-map' => [
             // User management commands
             App\Command\User\CreateUserCommand::class => App\Handler\User\CreateUserHandler::class,

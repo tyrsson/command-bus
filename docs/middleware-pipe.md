@@ -58,7 +58,7 @@ Processes a command through the pipeline with a specific final handler.
 
 **Returns:**
 
-- `mixed` - The result from the pipeline execution
+- `CommandResultInterface` - The result from the pipeline execution
 
 ### pipe(MiddlewareInterface $middleware): void
 
