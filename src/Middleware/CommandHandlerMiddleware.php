@@ -11,18 +11,19 @@ use Webware\CommandBus\CommandHandlerResolverInterface;
 use Webware\CommandBus\CommandInterface;
 use Webware\CommandBus\MiddlewareInterface;
 
-/** @internal */
+/**
+ * @internal
+ */
 final readonly class CommandHandlerMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private CommandHandlerResolverInterface $resolver
-    ) {
-    }
+        private CommandHandlerResolverInterface $resolver,
+    ) {}
 
     #[Override]
     public function process(
         CommandInterface $command,
-        CommandHandlerInterface $handler
+        CommandHandlerInterface $handler,
     ): CommandResultInterface {
         // Resolve the command handler for the given command, and execute it
         return ($this->resolver->resolve($command))->handle($command);

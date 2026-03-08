@@ -19,12 +19,16 @@ use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
 final class ConfigProviderTest extends TestCase
 {
     private ConfigProvider $configProvider;
+
     /** @var array<class-string, class-string> */
     private array $expectedAliases;
+
     /** @var array<class-string, class-string> */
     private array $expectedFactories;
+
     /** @var array<class-string, class-string> */
     private array $expectedInvokables;
+
     /** @var array<array{middleware: class-string, priority: int}> */
     private array $expectedMiddleware;
 
@@ -110,7 +114,7 @@ final class ConfigProviderTest extends TestCase
 
     public function testConstants(): void
     {
-        $this->assertSame('command-map', ConfigProvider::COMMAND_MAP_KEY);
+        $this->assertSame('command_map', ConfigProvider::COMMAND_MAP_KEY);
         $this->assertSame('middleware_pipeline', ConfigProvider::MIDDLEWARE_PIPELINE_KEY);
         $this->assertSame(1, ConfigProvider::DEFAULT_PRIORITY);
     }

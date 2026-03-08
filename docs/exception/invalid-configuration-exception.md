@@ -102,4 +102,3 @@ Creates a service not found exception for missing handlers.
 - [ServiceNotFoundException](service-not-found-exception.md) - Related service resolution exception
 - [CommandException](command-exception.md) - Related command processing exception
 - [ConfigProvider](../config-provider.md) - Configuration provider that might throw this exception
-- [CommandHandlerFactory](../command-handler-factory.md) - Component that uses this exception for validation

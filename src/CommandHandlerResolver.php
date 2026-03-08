@@ -6,9 +6,6 @@ namespace Webware\CommandBus;
 
 use Override;
 use Psr\Container\ContainerInterface;
-use Webware\CommandBus\CommandBusInterface;
-use Webware\CommandBus\CommandInterface;
-use Webware\CommandBus\ConfigProvider;
 use Webware\CommandBus\Exception\InvalidConfigurationException;
 
 use function array_key_exists;
@@ -17,12 +14,11 @@ use function array_key_exists;
  * @phpstan-import-type CommandBusConfig from ConfigProvider
  * @phpstan-import-type CommandMap from ConfigProvider
  */
-final class CommandHandlerResolver implements CommandHandlerResolverInterface
+final readonly class CommandHandlerResolver implements CommandHandlerResolverInterface
 {
     public function __construct(
-        private readonly ContainerInterface $container
-    ) {
-    }
+        private ContainerInterface $container,
+    ) {}
 
     public function __invoke(CommandInterface $command): CommandHandlerInterface
     {
@@ -34,22 +30,28 @@ final class CommandHandlerResolver implements CommandHandlerResolverInterface
     {
         /** @phpstan-var array<CommandBusConfig> */
         $config = $this->container->get('config');
+
         /** @phpstan-var CommandBusConfig $config */
         $config = $config[CommandBusInterface::class] ?? [];
+
         /** @phpstan-var CommandMap $map */
         $map = $config[ConfigProvider::COMMAND_MAP_KEY] ?? [];
         if (! array_key_exists($command::class, $map)) {
             throw InvalidConfigurationException::fromUnMappedCommand($command::class);
         }
+
         /** @phpstan-var class-string $handlerClass */
         $handlerClass = $map[$command::class];
         if (! $this->container->has($handlerClass)) {
             throw InvalidConfigurationException::fromHandlerNotFound($handlerClass);
         }
+
         $handler = $this->container->get($handlerClass);
+
         if (! $handler instanceof CommandHandlerInterface) {
             throw InvalidConfigurationException::fromInvalidHandler($handlerClass, $handler);
         }
+
         return $handler;
     }
 }

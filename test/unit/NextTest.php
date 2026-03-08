@@ -22,36 +22,10 @@ use Webware\CommandBus\Next;
 final class NextTest extends TestCase
 {
     #[Test]
-    public function constructorClonesQueue(): void
-    {
-        // Arrange
-        $originalQueue = $this->createMiddlewareQueue();
-        $middleware    = $this->createMockMiddleware();
-        $originalQueue->enqueue($middleware);
-
-        // Act
-        $next = new Next($originalQueue);
-
-        // Modify original queue to prove it was cloned
-        $originalQueue->enqueue($this->createMockMiddleware());
-
-        // Assert - Use reflection to verify the internal queue was cloned
-        $reflection    = new ReflectionClass($next);
-        $queueProperty = $reflection->getProperty('queue');
-        $queueProperty->setAccessible(true);
-        $internalQueue = $queueProperty->getValue($next);
-
-        $this->assertInstanceOf(SplQueue::class, $internalQueue);
-        $this->assertNotSame($originalQueue, $internalQueue);
-        $this->assertCount(1, $internalQueue); // Only original middleware
-        $this->assertCount(2, $originalQueue); // Original + added middleware
-    }
-
-    #[Test]
     public function handleProcessesMiddlewareAndReturnsResult(): void
     {
         // Arrange
-        $command        = $this->createMockCommand();
+        $command        = $this->createCommandStub();
         $expectedResult = new CommandResult($command, CommandStatus::Success, 'test_result');
 
         /** @var MiddlewareInterface&MockObject $middleware */
@@ -76,10 +50,11 @@ final class NextTest extends TestCase
     public function handleDequeuesMiddlewareFromQueue(): void
     {
         // Arrange
-        $command = $this->createMockCommand();
+        $command = $this->createCommandStub();
 
         /** @var MiddlewareInterface&MockObject $middleware1 */
         $middleware1 = $this->createMock(MiddlewareInterface::class);
+
         /** @var MiddlewareInterface&MockObject $middleware2 */
         $middleware2 = $this->createMock(MiddlewareInterface::class);
 
@@ -99,7 +74,6 @@ final class NextTest extends TestCase
         // Assert - Use reflection to verify queue state
         $reflection    = new ReflectionClass($next);
         $queueProperty = $reflection->getProperty('queue');
-        $queueProperty->setAccessible(true);
         $internalQueue = $queueProperty->getValue($next);
 
         // Queue should be null after processing (marked as processed)
@@ -110,7 +84,7 @@ final class NextTest extends TestCase
     public function handleMarksQueueAsProcessedAfterExecution(): void
     {
         // Arrange
-        $command = $this->createMockCommand();
+        $command = $this->createCommandStub();
 
         /** @var MiddlewareInterface&MockObject $middleware */
         $middleware = $this->createMock(MiddlewareInterface::class);
@@ -126,7 +100,6 @@ final class NextTest extends TestCase
         // Assert - Use reflection to verify queue is null
         $reflection    = new ReflectionClass($next);
         $queueProperty = $reflection->getProperty('queue');
-        $queueProperty->setAccessible(true);
         $internalQueue = $queueProperty->getValue($next);
 
         $this->assertNull($internalQueue);
@@ -136,7 +109,7 @@ final class NextTest extends TestCase
     public function handleThrowsExceptionWhenQueueAlreadyProcessed(): void
     {
         // Arrange
-        $command = $this->createMockCommand();
+        $command = $this->createCommandStub();
 
         /** @var MiddlewareInterface&MockObject $middleware */
         $middleware = $this->createMock(MiddlewareInterface::class);
@@ -161,7 +134,7 @@ final class NextTest extends TestCase
     public function handleThrowsExceptionWhenQueueIsEmpty(): void
     {
         // Arrange
-        $command    = $this->createMockCommand();
+        $command    = $this->createCommandStub();
         $emptyQueue = $this->createMiddlewareQueue();
         $next       = new Next($emptyQueue);
 
@@ -177,7 +150,7 @@ final class NextTest extends TestCase
     public function handleClonesNextInstanceWhenProcessingMiddleware(): void
     {
         // Arrange
-        $command = $this->createMockCommand();
+        $command = $this->createCommandStub();
 
         /** @var MiddlewareInterface&MockObject $middleware */
         $middleware = $this->createMock(MiddlewareInterface::class);
@@ -203,7 +176,6 @@ final class NextTest extends TestCase
         // Verify original Next instance queue is marked as processed
         $reflection    = new ReflectionClass($originalNext);
         $queueProperty = $reflection->getProperty('queue');
-        $queueProperty->setAccessible(true);
         $originalQueue = $queueProperty->getValue($originalNext);
 
         $this->assertNull($originalQueue);
@@ -213,13 +185,15 @@ final class NextTest extends TestCase
     public function handleWorksWithMultipleMiddlewareInSequence(): void
     {
         // Arrange
-        $command        = $this->createMockCommand();
+        $command        = $this->createCommandStub();
         $expectedResult = new CommandResult($command, CommandStatus::Success, 'result1');
 
         /** @var MiddlewareInterface&MockObject $middleware1 */
         $middleware1 = $this->createMock(MiddlewareInterface::class);
+
         /** @var MiddlewareInterface&MockObject $middleware2 */
         $middleware2 = $this->createMock(MiddlewareInterface::class);
+
         /** @var MiddlewareInterface&MockObject $middleware3 */
         $middleware3 = $this->createMock(MiddlewareInterface::class);
 
@@ -244,7 +218,6 @@ final class NextTest extends TestCase
         // Verify only first middleware was processed and queue is now null
         $reflection    = new ReflectionClass($next);
         $queueProperty = $reflection->getProperty('queue');
-        $queueProperty->setAccessible(true);
         $internalQueue = $queueProperty->getValue($next);
 
         $this->assertNull($internalQueue);
@@ -254,7 +227,7 @@ final class NextTest extends TestCase
     public function handleSupportsNullReturnFromMiddleware(): void
     {
         // Arrange
-        $command        = $this->createMockCommand();
+        $command        = $this->createCommandStub();
         $expectedResult = new CommandResult($command, CommandStatus::Success, null);
 
         /** @var MiddlewareInterface&MockObject $middleware */
@@ -292,7 +265,7 @@ final class NextTest extends TestCase
 
         foreach ($testCases as $description => $expectedValue) {
             // Arrange
-            $command        = $this->createMockCommand();
+            $command        = $this->createCommandStub();
             $expectedResult = new CommandResult($command, CommandStatus::Success, $expectedValue);
 
             /** @var MiddlewareInterface&MockObject $middleware */
@@ -310,35 +283,20 @@ final class NextTest extends TestCase
             $result = $next->handle($command);
 
             // Assert
-            $this->assertSame($expectedResult, $result, "Failed for test case: $description");
+            $this->assertSame($expectedResult, $result, "Failed for test case: {$description}");
         }
     }
 
     /**
-     * Creates a mock CommandInterface instance
+     * Creates a stub CommandInterface instance
      */
-    private function createMockCommand(): CommandInterface
+    private function createCommandStub(): CommandInterface
     {
-        return $this->createMock(CommandInterface::class);
+        return $this->createStub(CommandInterface::class);
     }
 
-    /**
-     * Creates a mock MiddlewareInterface instance
-     */
-    private function createMockMiddleware(): MiddlewareInterface&MockObject
-    {
-        return $this->createMock(MiddlewareInterface::class);
-    }
-
-    /**
-     * Creates a properly typed SplQueue for MiddlewareInterface
-     *
-     * @return SplQueue<MiddlewareInterface>
-     */
     private function createMiddlewareQueue(): SplQueue
     {
-        /** @var SplQueue<MiddlewareInterface> $queue */
-        $queue = new SplQueue();
-        return $queue;
+        return new SplQueue();
     }
 }

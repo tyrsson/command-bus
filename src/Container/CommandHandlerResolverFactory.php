@@ -6,10 +6,14 @@ namespace Webware\CommandBus\Container;
 
 use Psr\Container\ContainerInterface;
 use Webware\CommandBus\CommandHandlerResolver;
+use Webware\CommandBus\CommandHandlerResolverInterface;
 
-final class CommandHandlerResolverFactory
+/**
+ * @internal
+ */
+final readonly class CommandHandlerResolverFactory
 {
-    public function __invoke(ContainerInterface $container): CommandHandlerResolver
+    public function __invoke(ContainerInterface $container): CommandHandlerResolverInterface
     {
         return new CommandHandlerResolver($container);
     }

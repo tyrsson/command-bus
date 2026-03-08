@@ -8,6 +8,6 @@ interface MiddlewareInterface
 {
     public function process(
         CommandInterface $command,
-        CommandHandlerInterface $handler
+        CommandHandlerInterface $handler,
     ): Command\CommandResultInterface;
 }

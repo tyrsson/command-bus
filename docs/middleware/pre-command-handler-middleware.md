@@ -127,7 +127,7 @@ final class EnrichmentPreCommandMiddleware extends PreCommandHandlerMiddleware
 // config/autoload/commandbus.global.php
 return [
     Webware\CommandBus\CommandBusInterface::class => [
-        'middleware-pipeline' => [
+        'middleware_pipeline' => [
             [
                 'middleware' => App\Middleware\AuthenticationPreCommandMiddleware::class,
                 'priority'   => 100, // High priority - execute first
@@ -150,7 +150,7 @@ return [
 
 ```php
 // Multiple specialized pre-command middleware
-'middleware-pipeline' => [
+'middleware_pipeline' => [
     ['middleware' => SecurityMiddleware::class, 'priority' => 100],
     ['middleware' => ValidationMiddleware::class, 'priority' => 90],
     ['middleware' => LoggingMiddleware::class, 'priority' => 80],

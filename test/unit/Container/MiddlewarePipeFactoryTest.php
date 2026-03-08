@@ -268,9 +268,9 @@ final class MiddlewarePipeFactoryTest extends TestCase
             ->method('has')
             ->willReturnCallback(function ($service) {
                 return match ($service) {
-                    'config' => true,
+                    'config'          => true,
                     'TestMiddleware1' => true,
-                    default => false,
+                    default           => false,
                 };
             });
 
@@ -278,9 +278,9 @@ final class MiddlewarePipeFactoryTest extends TestCase
             ->method('get')
             ->willReturnCallback(function ($service) use ($config) {
                 return match ($service) {
-                    'config' => $config,
+                    'config'          => $config,
                     'TestMiddleware1' => $this->middleware1,
-                    default => null,
+                    default           => null,
                 };
             });
 

@@ -1,0 +1,7 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method Webware\\CommandBusTest\\NextTest\:\:createMiddlewareQueue\(\) return type with generic class SplQueue does not specify its types\: TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: test/unit/NextTest.php

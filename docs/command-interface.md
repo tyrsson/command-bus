@@ -4,26 +4,13 @@ The contract that all commands must implement to be processed by the command bus
 
 ## Overview
 
-`CommandInterface` defines the basic structure for commands in the cmd-bus system. All commands must implement this interface to be compatible with the command bus pipeline.
+`CommandInterface` marker interface for Commands.
 
 ## Class Definition
 
 ```php
-interface CommandInterface
-{
-    public function execute(): mixed;
-}
+interface CommandInterface {}
 ```
-
-## Methods
-
-### execute(): mixed
-
-Defines the execution contract for commands.
-
-**Returns:**
-
-- `mixed` - The result of command execution
 
 ## Purpose
 
@@ -47,17 +34,8 @@ final readonly class CreateUserCommand implements CommandInterface
         public ?string $displayName = null,
         public array $roles = ['user']
     ) {}
-
-    public function execute(): mixed
-    {
-        // run the command
-    }
 }
 ```
-
-### Command with Validation
-
-### Complex Command with Business Rules
 
 ## Related Components
 

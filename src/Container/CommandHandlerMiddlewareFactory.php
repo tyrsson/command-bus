@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Webware\CommandBus\Container;
 
-use Assert\Assertion;
 use Psr\Container\ContainerInterface;
 use Webware\CommandBus\CommandHandlerResolverInterface;
 use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
+use Webware\CommandBus\MiddlewareInterface;
 
-final class CommandHandlerMiddlewareFactory
+/**
+ * @internal
+ */
+final readonly class CommandHandlerMiddlewareFactory
 {
-    public function __invoke(ContainerInterface $container): CommandHandlerMiddleware
-    {
+    public function __invoke(
+        ContainerInterface $container,
+    ): MiddlewareInterface&CommandHandlerMiddleware {
+        /** @var CommandHandlerResolverInterface $resolver */
         $resolver = $container->get(CommandHandlerResolverInterface::class);
-        Assertion::isInstanceOf($resolver, CommandHandlerResolverInterface::class);
+
         return new CommandHandlerMiddleware($resolver);
     }
 }

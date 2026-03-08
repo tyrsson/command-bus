@@ -6,7 +6,6 @@ namespace Webware\CommandBus;
 
 use Override;
 use SplQueue;
-use Webware\CommandBus\CommandHandlerInterface;
 use Webware\CommandBus\Handler\EmptyPipelineHandler;
 
 final class MiddlewarePipe implements MiddlewarePipelineInterface
@@ -42,8 +41,9 @@ final class MiddlewarePipe implements MiddlewarePipelineInterface
     /**
      * Middleware invocation.
      *
-     * Executes the internal pipeline, passing $handler as the "final
-     * handler" in cases when the pipeline exhausts itself.
+     * Executes the internal pipeline, passing $handler as the "final handler".
+     * If this looks familiar it's because it works almost exactly like Mezzio.
+     * Which is intentional.
      */
     #[Override]
     public function process(CommandInterface $command, CommandHandlerInterface $handler): Command\CommandResultInterface

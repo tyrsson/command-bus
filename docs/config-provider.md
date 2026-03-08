@@ -135,5 +135,4 @@ The ConfigProvider automatically registers these services:
 
 - [CommandBus](CommandBus.md) - Main service configured by this provider
 - [MiddlewarePipe](middleware-pipe.md) - Pipeline service configured by this provider
-- [CommandHandlerFactory](command-handler-factory.md) - Factory for resolving handlers
 - [Container Factories](container/) - Service factories registered by this provider

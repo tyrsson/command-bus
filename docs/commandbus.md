@@ -46,24 +46,34 @@ Processes a command through the configured middleware pipeline.
 
 ```php
 use App\Command\CreateUserCommand;
+use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Webware\CommandBus\CommandBusInterface;
+use Webware\CommandBus\Command\CommandResult;
 
-class UserHandler
+final readonly class CreateUserRequestHandler implements RequestHandlerInterface
 {
     public function __construct(
         private CommandBusInterface $commandBus
     ) {}
 
-    public function createAction(): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $command = new CreateUserCommand(
             email: 'user@example.com',
             username: 'newuser'
         );
 
-        $result = $this->commandBus->handle($command);
+        /** @var CommandResult $commandResult */
+        $commandResult = $this->commandBus->handle($command);
 
-        return new JsonResponse(['user_id' => $result->getId()]);
+        return match ($result->getStatus()) {
+            CommandResult::Success => new JsonResponse(['user_id' => $result->getResult()]),
+            CommandResult::Failure => new JsonResponse(['message' => 'Command Failure']),
+            default => throw new \YourException('Some custom message'),
+        };
     }
 }
 ```

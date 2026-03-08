@@ -25,12 +25,14 @@ use const PHP_INT_MAX;
 function priorityQueueReducerFactory(): callable
 {
     $serial = PHP_INT_MAX;
+
     return static function (SplPriorityQueue $queue, array $item) use (&$serial): SplPriorityQueue {
         $priority = isset($item['priority']) && is_int($item['priority'])
             ? $item['priority']
             : 1;
         $queue->insert($item, [$priority, $serial]);
         $serial -= 1;
+
         return $queue;
     };
 }

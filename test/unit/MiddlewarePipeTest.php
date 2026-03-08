@@ -173,32 +173,32 @@ final class MiddlewarePipeTest extends TestCase
     {
         $executionOrder = [];
 
-        $middleware1 = new class ($executionOrder) implements MiddlewareInterface {
+        $middleware1 = new class($executionOrder) implements MiddlewareInterface {
             /** @param array<string> $executionOrder */
             public function __construct(
                 /** @phpstan-ignore property.onlyWritten */
-                private array &$executionOrder
-            ) {
-            }
+                private array &$executionOrder,
+            ) {}
 
             public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
                 $this->executionOrder[] = 'middleware1';
+
                 return $handler->handle($command);
             }
         };
 
-        $middleware2 = new class ($executionOrder) implements MiddlewareInterface {
+        $middleware2 = new class($executionOrder) implements MiddlewareInterface {
             /** @param array<string> $executionOrder */
             public function __construct(
                 /** @phpstan-ignore property.onlyWritten */
-                private array &$executionOrder
-            ) {
-            }
+                private array &$executionOrder,
+            ) {}
 
             public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
                 $this->executionOrder[] = 'middleware2';
+
                 return $handler->handle($command);
             }
         };
@@ -210,6 +210,7 @@ final class MiddlewarePipeTest extends TestCase
             ->with($this->command)
             ->willReturnCallback(function () use (&$executionOrder, $expectedResult) {
                 $executionOrder[] = 'handler';
+
                 return $expectedResult;
             });
 
@@ -355,7 +356,7 @@ final class MiddlewarePipeTest extends TestCase
     public function testPipeAcceptsDifferentMiddlewareTypes(): void
     {
         $middleware1 = $this->createMock(MiddlewareInterface::class);
-        $middleware2 = new class implements MiddlewareInterface {
+        $middleware2 = new class() implements MiddlewareInterface {
             public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
                 return $handler->handle($command);

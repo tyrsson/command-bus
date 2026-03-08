@@ -7,14 +7,13 @@ namespace Webware\CommandBus\Command;
 use Override;
 use Webware\CommandBus\CommandInterface;
 
-class CommandResult implements CommandResultInterface
+final readonly class CommandResult implements CommandResultInterface
 {
     public function __construct(
         private CommandInterface $command,
         private CommandStatus $status,
-        private mixed $result
-    ) {
-    }
+        private mixed $result,
+    ) {}
 
     #[Override]
     public function getCommand(): CommandInterface

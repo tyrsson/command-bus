@@ -23,13 +23,11 @@ use function array_key_exists;
  */
 function collectionMapperFactory(string $key): callable
 {
-        return static function (array $item) use ($key): array {
-            if (! array_key_exists($key, $item)) {
-                throw Exception\InvalidConfigurationException::fromInvalidType(
-                    '$config[' . ConfigProvider::class . '][' . ConfigProvider::MIDDLEWARE_PIPELINE_KEY . ']',
-                    $item
-                );
-            }
-            return $item;
-        };
+    return static function (array $item) use ($key): array {
+        if (! array_key_exists($key, $item)) {
+            throw Exception\InvalidConfigurationException::fromInvalidType('$config[' . ConfigProvider::class . '][' . ConfigProvider::MIDDLEWARE_PIPELINE_KEY . ']', $item);
+        }
+
+        return $item;
+    };
 }

@@ -9,9 +9,7 @@ The core contract defining the command bus behavior in the cmd-bus library.
 ## Class Definition
 
 ```php
-interface CommandBusInterface extends CommandHandlerInterface
-{
-}
+interface CommandBusInterface extends CommandHandlerInterface {}
 ```
 
 ## Inheritance
@@ -106,4 +104,4 @@ final class CommandBus implements CommandBusInterface
 - [CommandBus](CommandBus.md) - Default implementation of this interface
 - [CommandHandlerInterface](command-handler-interface.md) - Parent interface
 - [CommandInterface](command-interface.md) - Interface for commands
-- [CommandBusFactory](container/CommandBus-factory.md) - Factory for creating command bus instances
+- [CommandBusFactory](container/CommandBus-factory.md) - Factory for creating the standard CommandBus instance

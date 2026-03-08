@@ -18,12 +18,14 @@ use function array_reduce;
 use function sprintf;
 
 /**
+ * @internal
+ *
  * @phpstan-import-type CommandBusConfig from ConfigProvider
  * @phpstan-import-type MiddlewarePipeSpec from ConfigProvider
  * @phpstan-import-type MiddlewareSpec from ConfigProvider
  * @phpstan-import-type CommandMap from ConfigProvider
  */
-final class MiddlewarePipeFactory
+final readonly class MiddlewarePipeFactory
 {
     public function __invoke(ContainerInterface $container): MiddlewarePipelineInterface
     {
@@ -33,16 +35,12 @@ final class MiddlewarePipeFactory
 
         /** @phpstan-var array<CommandBusConfig> $config */
         $config = $container->get('config');
+
         /** @phpstan-var CommandBusConfig $config */
         $config = $config[CommandBusInterface::class] ?? [];
 
         if ($config === []) {
-            throw Exception\InvalidConfigurationException::fromMissingKey(
-                sprintf(
-                    'Configuration for key: %s was not found in the config service.',
-                    '$config[' . CommandBusInterface::class . ']'
-                )
-            );
+            throw Exception\InvalidConfigurationException::fromMissingKey(sprintf('Configuration for key: %s was not found in the config service.', '$config[' . CommandBusInterface::class . ']'));
         }
 
         $middlewarePipe = new MiddlewarePipe();
@@ -64,7 +62,7 @@ final class MiddlewarePipeFactory
     private static function pipeMiddleware(
         ContainerInterface $container,
         MiddlewarePipelineInterface $middlewarePipe,
-        array $config
+        array $config,
     ): MiddlewarePipelineInterface {
         /** @phpstan-var MiddlewarePipeSpec $middleware */
         $middleware = $config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY] ?? [];

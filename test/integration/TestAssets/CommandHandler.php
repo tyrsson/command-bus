@@ -17,6 +17,7 @@ final class CommandHandler implements CommandHandlerInterface
     public function handle(CommandInterface $command): CommandResultInterface
     {
         assert($command instanceof Command);
+
         return new CommandResult($command, CommandStatus::Success, $command->execute());
     }
 }

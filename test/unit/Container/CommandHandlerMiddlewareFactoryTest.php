@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Webware\CommandBusTest\Container;
 
-use Assert\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use stdClass;
+use TypeError;
 use Webware\CommandBus\CommandHandlerResolver;
 use Webware\CommandBus\CommandHandlerResolverInterface;
 use Webware\CommandBus\Container\CommandHandlerMiddlewareFactory;
@@ -74,11 +74,7 @@ final class CommandHandlerMiddlewareFactoryTest extends TestCase
             ->with(CommandHandlerResolverInterface::class)
             ->willReturn($invalidResolver);
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            'Class "stdClass" was expected to be instanceof of '
-            . '"Webware\CommandBus\CommandHandlerResolverInterface" but is not.'
-        );
+        $this->expectException(TypeError::class);
 
         ($this->factory)($this->container);
     }

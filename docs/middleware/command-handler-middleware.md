@@ -33,7 +33,7 @@ The middleware implements both `MiddlewareInterface` and `CommandHandlerInterfac
 return [
     // other config
     Webware\CommandBus\CommandBusInterface::class => [
-        'command-map' => [
+        'command_map' => [
             App\Command\CreateUserCommand::class => App\Handler\CreateUserHandler::class,
             App\Command\UpdateUserCommand::class => App\Handler\UpdateUserHandler::class,
             App\Command\DeleteUserCommand::class => App\Handler\DeleteUserHandler::class,
@@ -87,7 +87,7 @@ Each command should map to exactly one handler:
 
 ```php
 // ✅ Good - one-to-one mapping
-'command-map' => [
+'command_map' => [
     CreateUserCommand::class => CreateUserHandler::class,
     UpdateUserCommand::class => UpdateUserHandler::class,
 ]
@@ -95,7 +95,6 @@ Each command should map to exactly one handler:
 
 ## Related Components
 
-- [CommandHandlerFactory](../command-handler-factory.md) - Factory used to resolve handlers
 - [MiddlewareInterface](../middleware-interface.md) - Interface this class implements
 - [CommandHandlerInterface](../command-handler-interface.md) - Interface for the handlers this middleware executes
 - [CommandHandlerMiddlewareFactory](command-handler-middleware-factory.md) - Factory for creating instances

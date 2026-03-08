@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Webware\CommandBus;
 
-interface CommandBusInterface extends CommandHandlerInterface
-{
-}
+interface CommandBusInterface extends CommandHandlerInterface {}
