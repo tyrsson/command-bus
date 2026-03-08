@@ -58,7 +58,7 @@ final class CommandBusTest extends TestCase
             $middleware,
             $testMiddleware
         );
-        $dependencies['services']['config']                                          = $config;
+        $dependencies['services']['config'] = $config;
 
         // @phpstan-ignore-next-line
         $this->container = new ServiceManager($dependencies);

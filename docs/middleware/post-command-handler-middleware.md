@@ -214,7 +214,7 @@ final class ErrorHandlingPostCommandMiddleware extends PostCommandHandlerMiddlew
 // config/autoload/commandbus.global.php
 return [
     Webware\CommandBus\CommandBusInterface::class => [
-        'middleware-pipeline' => [
+        'middleware_pipeline' => [
             // Pre-command middleware...
             [
                 'middleware' => Webware\CommandBus\Middleware\CommandHandlerMiddleware::class,
@@ -240,7 +240,7 @@ return [
 ### Complete Pipeline Example
 
 ```php
-'middleware-pipeline' => [
+'middleware_pipeline' => [
     // Pre-processing (high priority)
     ['middleware' => AuthenticationMiddleware::class, 'priority' => 100],
     ['middleware' => ValidationMiddleware::class, 'priority' => 90],

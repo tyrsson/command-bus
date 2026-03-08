@@ -16,7 +16,7 @@ use Psr\Container\ContainerInterface;
  * }
  * @phpstan-type MiddlewarePipeSpec array<MiddlewareSpec>
  * @phpstan-type CommandBusConfig array{
- *     command-map: CommandMap,
+ *     command_map: CommandMap,
  *     middleware_pipeline: MiddlewarePipeSpec
  * }
  * @phpstan-type AbstractFactoriesConfiguration = array<
@@ -66,8 +66,10 @@ use Psr\Container\ContainerInterface;
  */
 final class ConfigProvider
 {
-    public const COMMAND_MAP_KEY         = 'command-map';
-    public const DEFAULT_PRIORITY        = 1;
+    public const COMMAND_MAP_KEY = 'command_map';
+
+    public const DEFAULT_PRIORITY = 1;
+
     public const MIDDLEWARE_PIPELINE_KEY = 'middleware_pipeline';
 
     /**

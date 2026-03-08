@@ -10,7 +10,6 @@ A Command Bus implementation for Mezzio applications, providing a clean way to h
 - [CommandBusInterface](docs/commandbus-interface.md) - Command bus contract
 - [MiddlewarePipe](docs/middleware-pipe.md) - Middleware pipeline management
 - [MiddlewarePipelineInterface](docs/middleware-pipeline-interface.md) - Pipeline contract
-- [CommandHandlerFactory](docs/command-handler-factory.md) - Factory for command handlers
 - [ConfigProvider](docs/config-provider.md) - Laminas configuration provider
 - [Next](docs/next.md) - Pipeline delegation helper
 
@@ -22,8 +21,7 @@ A Command Bus implementation for Mezzio applications, providing a clean way to h
 
 ### Container Factories
 
-- [CommandBusFactory](docs/container/cmdbus-factory.md) - Service factory for CmdBus
-- [CommandHandlerFactoryFactory](docs/container/command-handler-factory-factory.md) - Factory for CommandHandlerFactory
+- [CommandBusFactory](docs/container/command-bus-factory.md) - Service factory for CmdBus
 - [CommandHandlerMiddlewareFactory](docs/container/command-handler-middleware-factory.md) - Factory for CommandHandlerMiddleware
 - [MiddlewarePipeFactory](docs/container/middleware-pipe-factory.md) - Factory for MiddlewarePipe
 
@@ -49,7 +47,7 @@ A Command Bus implementation for Mezzio applications, providing a clean way to h
 ### Installation
 
 ```bash
-composer require php-cmd/cmd-bus
+composer require webware/command-bus
 ```
 
 ### Basic Configuration
@@ -58,7 +56,7 @@ composer require php-cmd/cmd-bus
 // config/config.php
 return [
     Webware\CommandBus\ConfigProvider::class => [
-        'command-map' => [
+        'command_map' => [
             App\Command\CreateUserCommand::class => App\Handler\CreateUserHandler::class,
         ],
         'middleware_pipeline' => [

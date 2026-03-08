@@ -21,8 +21,8 @@
             "php": "8.2.99"
         },
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "laminas/laminas-component-installer": true
+            "laminas/laminas-component-installer": true,
+            "composer/package-versions-deprecated": true
         }
     },
     "extra": {
@@ -32,15 +32,15 @@
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-        "beberlei/assert": "^3.3",
         "psr/container": "^2.0"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "^3.0.1",
         "laminas/laminas-servicemanager": "^4.0.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
-        "phpunit/phpunit": "^11.5.42"
+        "phpunit/phpunit": "^11.5.42",
+        "roave/security-advisories": "dev-master",
+        "webware/coding-standard": "^0.1.0"
     },
     "suggest": {
         "laminas/laminas-servicemanager": "Laminas\\ServiceManager component"
@@ -67,8 +67,8 @@
             "@test",
             "@test-integration"
         ],
-        "cs-check": "phpcs",
-        "cs-fix": "phpcbf",
+        "cs-check": "vendor/bin/php-cs-fixer check -v --show-progress=dots --stop-on-violation",
+        "cs-fix": "vendor/bin/php-cs-fixer fix",
         "test": "phpunit --colors=always --testsuite \"unit test\"",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "test-integration": "phpunit --colors=always --testsuite \"integration test\"",

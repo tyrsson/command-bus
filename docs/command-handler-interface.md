@@ -59,6 +59,5 @@ final class CreateUserHandler implements CommandHandlerInterface
 ## Related Components
 
 - [CommandInterface](command-interface.md) - Commands that handlers process
-- [CommandHandlerFactory](command-handler-factory.md) - Factory for resolving handlers
 - [CommandHandlerMiddleware](middleware/command-handler-middleware.md) - Middleware that executes handlers
 - [CommandBusInterface](CommandBus-interface.md) - Interface that extends this one

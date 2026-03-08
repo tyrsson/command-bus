@@ -1,11 +1,24 @@
 /.gitattributes export-ignore
 /.github/ export-ignore
 /.gitignore export-ignore
-/phpcs.xml export-ignore
+/.php-cs-fixer.dist.php export-ignore
 /renovate.json export-ignore
 /.laminas-ci.json export-ignore
-/.laminas-ci/ export-ignore
-/.ci/ export-ignore
 /phpunit.xml.dist export-ignore
 /test/ export-ignore
 /clover.xml export-ignore
+/phpstan.neon.dist export-ignore
+
+# Force our line endings to be LF, even for Windows
+* text eol=lf
+# Set certain files to be binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.tgz binary
+*.zip binary
+*.tar.gz binary
+*.ttf binary
+*.svg binary
+*.dia binary
+*.xcf binary

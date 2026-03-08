@@ -199,7 +199,7 @@ The factory expects the middleware pipeline to be properly configured:
 // config/autoload/commandbus.global.php
 return [
     CommandBusInterface::class => [
-        'command-map' => [
+        'command_map' => [
             // Map command names to their handlers
             CreateUserCommand::class => CreateUserHandler::class,
             UpdateUserCommand::class => UpdateUserHandler::class,
@@ -241,8 +241,8 @@ Ensure all middleware and handlers have proper factories:
 ```php
 'dependencies' => [
     'factories' => [
-        CommandBus::class => CommandBusFactory::class,
-        MiddlewarePipe::class => MiddlewarePipeFactory::class,
+        CommandBus::class               => CommandBusFactory::class,
+        MiddlewarePipe::class           => MiddlewarePipeFactory::class,
         CommandHandlerMiddleware::class => CommandHandlerMiddlewareFactory::class,
         // Your custom services...
         MyCustomHandler::class => MyCustomHandlerFactory::class,

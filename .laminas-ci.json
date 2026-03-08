@@ -7,6 +7,14 @@
                 "dependencies": "latest",
                 "command": "composer require --dev --ignore-platform-reqs phpstan/phpstan && vendor/bin/phpstan analyse"
             }
+        },
+        {
+            "name": "PHP CS Fixer",
+            "job": {
+                "php": "8.2",
+                "dependencies": "latest",
+                "command": "composer require --dev friendsofphp/php-cs-fixer && vendor/bin/php-cs-fixer check"
+            }
         }
     ]
 }

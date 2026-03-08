@@ -39,7 +39,7 @@ final class EmptyPipelineHandlerTest extends TestCase
     public function testHandleThrowsCommandExceptionWithCorrectCommandClass(): void
     {
         // Create a specific command class for testing
-        $command = new class implements CommandInterface {
+        $command = new class() implements CommandInterface {
             public function execute(): mixed
             {
                 return 'test';
@@ -81,7 +81,7 @@ final class EmptyPipelineHandlerTest extends TestCase
     public function testHandleWithDifferentCommandTypes(): void
     {
         // Test with a simple command implementation
-        $simpleCommand = new class implements CommandInterface {
+        $simpleCommand = new class() implements CommandInterface {
             public function execute(): mixed
             {
                 return 'simple';
@@ -94,7 +94,7 @@ final class EmptyPipelineHandlerTest extends TestCase
 
     public function testExceptionMessageContainsCommandClassName(): void
     {
-        $command = new class implements CommandInterface {
+        $command = new class() implements CommandInterface {
             public function execute(): mixed
             {
                 return 'test';

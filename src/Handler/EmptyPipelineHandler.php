@@ -9,7 +9,10 @@ use Webware\CommandBus\CommandHandlerInterface;
 use Webware\CommandBus\CommandInterface;
 use Webware\CommandBus\Exception\CommandException;
 
-final class EmptyPipelineHandler implements CommandHandlerInterface
+/**
+ * @internal
+ */
+final readonly class EmptyPipelineHandler implements CommandHandlerInterface
 {
     public function handle(CommandInterface $command): CommandResultInterface
     {

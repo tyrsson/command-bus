@@ -61,7 +61,7 @@ final class CommandBusTest extends TestCase
         $pipeline = new MiddlewarePipe();
 
         // Add a simple middleware that returns a known result
-        $pipeline->pipe(new class implements MiddlewareInterface {
+        $pipeline->pipe(new class() implements MiddlewareInterface {
             public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
                 return new CommandResult(
@@ -83,10 +83,8 @@ final class CommandBusTest extends TestCase
         $expectedResult = 'test result from pipeline';
 
         // Create a simple middleware that returns a known result
-        $this->pipeline->pipe(new class ($expectedResult) implements MiddlewareInterface {
-            public function __construct(private mixed $result)
-            {
-            }
+        $this->pipeline->pipe(new class($expectedResult) implements MiddlewareInterface {
+            public function __construct(private mixed $result) {}
 
             public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
@@ -122,10 +120,8 @@ final class CommandBusTest extends TestCase
     {
         // Create a simple middleware that returns the expected result
         $pipeline = new MiddlewarePipe();
-        $pipeline->pipe(new class ($expectedResult) implements MiddlewareInterface {
-            public function __construct(private mixed $result)
-            {
-            }
+        $pipeline->pipe(new class($expectedResult) implements MiddlewareInterface {
+            public function __construct(private mixed $result) {}
 
             public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
@@ -173,16 +169,16 @@ final class CommandBusTest extends TestCase
     {
         $capturedCommand = null;
 
-        $this->pipeline->pipe(new class ($capturedCommand) implements MiddlewareInterface {
+        $this->pipeline->pipe(new class($capturedCommand) implements MiddlewareInterface {
             public function __construct(
                 /** @phpstan-ignore property.onlyWritten */
-                private mixed &$capturedCommand
-            ) {
-            }
+                private mixed &$capturedCommand,
+            ) {}
 
             public function process(CommandInterface $command, CommandHandlerInterface $handler): CommandResultInterface
             {
                 $this->capturedCommand = $command;
+
                 return new CommandResult(
                     $command,
                     CommandStatus::Success,

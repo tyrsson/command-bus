@@ -9,9 +9,8 @@ use Webware\CommandBus\CommandInterface;
 final class Command implements CommandInterface
 {
     public function __construct(
-        public string $name = 'Command-One'
-    ) {
-    }
+        public string $name = 'Command-One',
+    ) {}
 
     public function execute(): mixed
     {

@@ -13,7 +13,7 @@ final class TestMiddlewareFirst implements MiddlewareInterface
 {
     public function process(
         CommandInterface $command,
-        CommandHandlerInterface $handler
+        CommandHandlerInterface $handler,
     ): CommandResultInterface {
         // Custom processing logic for this middleware
         return $handler->handle($command);

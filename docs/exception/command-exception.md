@@ -110,6 +110,5 @@ class UserCommandException extends CommandException
 ## Related Components
 
 - [EmptyPipelineHandler](../handler/empty-pipeline-handler.md) - Throws this exception for unhandled commands
-- [CommandHandlerFactory](../command-handler-factory.md) - May throw this exception when handlers aren't found
 - [InvalidConfigurationException](invalid-configuration-exception.md) - Related configuration exception
 - [ServiceNotFoundException](service-not-found-exception.md) - Related service resolution exception
