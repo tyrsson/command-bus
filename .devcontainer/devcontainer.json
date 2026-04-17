@@ -16,7 +16,6 @@
 		8080
 	],
 	"features": {
-		"ghcr.io/devcontainers-extra/features/composer:1": {}
 	}
 
 	// Use 'postCreateCommand' to run commands after the container is created.
