@@ -9,8 +9,22 @@
 	// "features": {},
 
 	// Configure tool-specific properties.
-	// "customizations": {},
-
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set the default path that VS Code opens when the container is created.
+			"settings": {
+				"launch.configurations": [
+					{
+						"name": "Listen for Xdebug",
+						"type": "php",
+						"request": "launch",
+						"port": 9003
+					}
+				]
+			}
+		}
+	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
 		8080
