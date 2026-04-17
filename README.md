@@ -42,6 +42,10 @@ A Command Bus implementation for Mezzio applications, providing a clean way to h
 - [NextHandlerAlreadyCalledException](docs/exception/next-handler-already-called-exception.md) - Pipeline state errors
 - [ServiceNotFoundException](docs/exception/service-not-found-exception.md) - Service resolution errors
 
+## Getting Started
+
+For a comprehensive guide to installation, configuration, and usage, see the [Getting Started](docs/getting-started.md) documentation. Full documentation for all components is available in the [docs](docs/) directory.
+
 ## Quick Start
 
 ### Installation
