@@ -16,6 +16,10 @@ final readonly class EmptyPipelineHandler implements CommandHandlerInterface
 {
     public function handle(CommandInterface $command): CommandResultInterface
     {
+        if ($command instanceof CommandResultInterface) {
+            return $command;
+        }
+
         throw CommandException::commandNotHandled($command::class);
     }
 }
