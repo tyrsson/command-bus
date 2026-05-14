@@ -22,7 +22,7 @@ final readonly class CommandResult implements CommandResultInterface
     }
 
     #[Override]
-    public function getStatus(): CommandStatus
+    public function getStatus(): CommandStatusInterface
     {
         return $this->status;
     }

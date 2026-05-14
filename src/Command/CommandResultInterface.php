@@ -10,7 +10,7 @@ interface CommandResultInterface extends CommandInterface
 {
     public function getCommand(): CommandInterface;
 
-    public function getStatus(): CommandStatus;
+    public function getStatus(): CommandStatusInterface;
 
     public function getResult(): mixed;
 }
