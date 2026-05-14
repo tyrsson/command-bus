@@ -11,7 +11,7 @@ final readonly class CommandResult implements CommandResultInterface
 {
     public function __construct(
         private CommandInterface $command,
-        private CommandStatus $status,
+        private CommandStatusInterface $status,
         private mixed $result,
     ) {}
 
