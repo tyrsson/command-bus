@@ -26,7 +26,6 @@ final readonly class CommandHandlerMiddleware implements MiddlewareInterface
         CommandHandlerInterface $handler,
     ): CommandResultInterface {
         // Resolve the command handler for the given command, and execute it
-        $result = ($this->resolver->resolve($command))->handle($command);
-        return $handler->handle($result);
+        return ($this->resolver->resolve($command))->handle($command);
     }
 }

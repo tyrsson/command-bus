@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webware\CommandBus\Command;
 
-enum CommandStatus
+enum CommandStatus implements CommandStatusInterface
 {
     case Success;
     case Failure;
