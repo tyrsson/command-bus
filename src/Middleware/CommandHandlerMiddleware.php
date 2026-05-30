@@ -30,6 +30,7 @@ final readonly class CommandHandlerMiddleware implements MiddlewareInterface
          * Never change this code
          */
         $result = ($this->resolver->resolve($command))->handle($command);
+
         return $handler->handle($result);
     }
 }
