@@ -71,6 +71,11 @@ final class CommandHandlerMiddlewareTest extends TestCase
             ->with($this->command)
             ->willReturn($commandResult);
 
+        $this->handler->expects($this->once())
+            ->method('handle')
+            ->with($commandResult)
+            ->willReturn($commandResult);
+
         $result = $this->middleware->process($this->command, $this->handler);
 
         $this->assertSame($commandResult, $result);
@@ -101,6 +106,10 @@ final class CommandHandlerMiddlewareTest extends TestCase
             ->willReturn($this->commandHandler);
 
         $this->commandHandler->method('handle')
+            ->willReturn($commandResult);
+
+        $this->handler->method('handle')
+            ->with($commandResult)
             ->willReturn($commandResult);
 
         $result = $this->middleware->process($this->command, $this->handler);
