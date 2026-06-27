@@ -22,28 +22,38 @@ use Webware\CommandBus\Next;
 final class NextTest extends TestCase
 {
     #[Test]
-    public function handleProcessesMiddlewareAndReturnsResult(): void
+    public function handleClonesNextInstanceWhenProcessingMiddleware(): void
     {
         // Arrange
-        $command        = $this->createCommandStub();
-        $expectedResult = new CommandResult($command, CommandStatus::Success, 'test_result');
+        $command = $this->createCommandStub();
 
         /** @var MiddlewareInterface&MockObject $middleware */
         $middleware = $this->createMock(MiddlewareInterface::class);
         $middleware->expects($this->once())
             ->method('process')
             ->with($command, $this->isInstanceOf(Next::class))
-            ->willReturn($expectedResult);
+            ->willReturnCallback(static fn($cmd, $next) => new CommandResult(
+                $command,
+                CommandStatus::Success,
+                'result',
+            ));
 
         $queue = $this->createMiddlewareQueue();
         $queue->enqueue($middleware);
-        $next = new Next($queue);
+        $originalNext = new Next($queue);
 
         // Act
-        $result = $next->handle($command);
+        $result = $originalNext->handle($command);
 
         // Assert
-        $this->assertSame($expectedResult, $result);
+        $this->assertInstanceOf(CommandResult::class, $result);
+
+        // Verify original Next instance queue is marked as processed
+        $reflection    = new ReflectionClass($originalNext);
+        $queueProperty = $reflection->getProperty('queue');
+        $originalQueue = $queueProperty->getValue($originalNext);
+
+        $this->assertNull($originalQueue);
     }
 
     #[Test]
@@ -56,7 +66,7 @@ final class NextTest extends TestCase
         $middleware1 = $this->createMock(MiddlewareInterface::class);
 
         /** @var MiddlewareInterface&MockObject $middleware2 */
-        $middleware2 = $this->createMock(MiddlewareInterface::class);
+        $middleware2 = $this->createStub(MiddlewareInterface::class);
 
         $middleware1->expects($this->once())
             ->method('process')
@@ -87,7 +97,7 @@ final class NextTest extends TestCase
         $command = $this->createCommandStub();
 
         /** @var MiddlewareInterface&MockObject $middleware */
-        $middleware = $this->createMock(MiddlewareInterface::class);
+        $middleware = $this->createStub(MiddlewareInterface::class);
         $middleware->method('process')->willReturn(new CommandResult($command, CommandStatus::Success, 'result'));
 
         $queue = $this->createMiddlewareQueue();
@@ -106,107 +116,21 @@ final class NextTest extends TestCase
     }
 
     #[Test]
-    public function handleThrowsExceptionWhenQueueAlreadyProcessed(): void
+    public function handleProcessesMiddlewareAndReturnsResult(): void
     {
         // Arrange
-        $command = $this->createCommandStub();
-
-        /** @var MiddlewareInterface&MockObject $middleware */
-        $middleware = $this->createMock(MiddlewareInterface::class);
-        $middleware->method('process')->willReturn(new CommandResult($command, CommandStatus::Success, 'result'));
-
-        $queue = $this->createMiddlewareQueue();
-        $queue->enqueue($middleware);
-        $next = new Next($queue);
-
-        // Process once to mark as processed
-        $next->handle($command);
-
-        // Assert
-        $this->expectException(NextHandlerAlreadyCalledException::class);
-        $this->expectExceptionMessage('The next handler has already been called.');
-
-        // Act - Try to process again
-        $next->handle($command);
-    }
-
-    #[Test]
-    public function handleThrowsExceptionWhenQueueIsEmpty(): void
-    {
-        // Arrange
-        $command    = $this->createCommandStub();
-        $emptyQueue = $this->createMiddlewareQueue();
-        $next       = new Next($emptyQueue);
-
-        // Assert
-        $this->expectException(CommandException::class);
-        $this->expectExceptionMessage('No command handler found for command class "MockObject_CommandInterface_');
-
-        // Act
-        $next->handle($command);
-    }
-
-    #[Test]
-    public function handleClonesNextInstanceWhenProcessingMiddleware(): void
-    {
-        // Arrange
-        $command = $this->createCommandStub();
+        $command        = $this->createCommandStub();
+        $expectedResult = new CommandResult($command, CommandStatus::Success, 'test_result');
 
         /** @var MiddlewareInterface&MockObject $middleware */
         $middleware = $this->createMock(MiddlewareInterface::class);
         $middleware->expects($this->once())
             ->method('process')
             ->with($command, $this->isInstanceOf(Next::class))
-            ->willReturnCallback(function ($cmd, $next) use ($command) {
-                // In a real scenario, middleware would call $next->handle()
-                // Here we just verify the cloning behavior
-                return new CommandResult($command, CommandStatus::Success, 'result');
-            });
-
-        $queue = $this->createMiddlewareQueue();
-        $queue->enqueue($middleware);
-        $originalNext = new Next($queue);
-
-        // Act
-        $result = $originalNext->handle($command);
-
-        // Assert
-        $this->assertInstanceOf(CommandResult::class, $result);
-
-        // Verify original Next instance queue is marked as processed
-        $reflection    = new ReflectionClass($originalNext);
-        $queueProperty = $reflection->getProperty('queue');
-        $originalQueue = $queueProperty->getValue($originalNext);
-
-        $this->assertNull($originalQueue);
-    }
-
-    #[Test]
-    public function handleWorksWithMultipleMiddlewareInSequence(): void
-    {
-        // Arrange
-        $command        = $this->createCommandStub();
-        $expectedResult = new CommandResult($command, CommandStatus::Success, 'result1');
-
-        /** @var MiddlewareInterface&MockObject $middleware1 */
-        $middleware1 = $this->createMock(MiddlewareInterface::class);
-
-        /** @var MiddlewareInterface&MockObject $middleware2 */
-        $middleware2 = $this->createMock(MiddlewareInterface::class);
-
-        /** @var MiddlewareInterface&MockObject $middleware3 */
-        $middleware3 = $this->createMock(MiddlewareInterface::class);
-
-        $middleware1->expects($this->once())
-            ->method('process')
-            ->with($command, $this->isInstanceOf(Next::class))
             ->willReturn($expectedResult);
 
         $queue = $this->createMiddlewareQueue();
-        $queue->enqueue($middleware1);
-        $queue->enqueue($middleware2);
-        $queue->enqueue($middleware3);
-
+        $queue->enqueue($middleware);
         $next = new Next($queue);
 
         // Act
@@ -214,13 +138,6 @@ final class NextTest extends TestCase
 
         // Assert
         $this->assertSame($expectedResult, $result);
-
-        // Verify only first middleware was processed and queue is now null
-        $reflection    = new ReflectionClass($next);
-        $queueProperty = $reflection->getProperty('queue');
-        $internalQueue = $queueProperty->getValue($next);
-
-        $this->assertNull($internalQueue);
     }
 
     #[Test]
@@ -285,6 +202,89 @@ final class NextTest extends TestCase
             // Assert
             $this->assertSame($expectedResult, $result, "Failed for test case: {$description}");
         }
+    }
+
+    #[Test]
+    public function handleThrowsExceptionWhenQueueAlreadyProcessed(): void
+    {
+        // Arrange
+        $command = $this->createCommandStub();
+
+        /** @var MiddlewareInterface&MockObject $middleware */
+        $middleware = $this->createStub(MiddlewareInterface::class);
+        $middleware->method('process')->willReturn(new CommandResult($command, CommandStatus::Success, 'result'));
+
+        $queue = $this->createMiddlewareQueue();
+        $queue->enqueue($middleware);
+        $next = new Next($queue);
+
+        // Process once to mark as processed
+        $next->handle($command);
+
+        // Assert
+        $this->expectException(NextHandlerAlreadyCalledException::class);
+        $this->expectExceptionMessage('The next handler has already been called.');
+
+        // Act - Try to process again
+        $next->handle($command);
+    }
+
+    #[Test]
+    public function handleThrowsExceptionWhenQueueIsEmpty(): void
+    {
+        // Arrange
+        $command    = $this->createCommandStub();
+        $emptyQueue = $this->createMiddlewareQueue();
+        $next       = new Next($emptyQueue);
+
+        // Assert
+        $this->expectException(CommandException::class);
+        $this->expectExceptionMessage('No command handler found for command class');
+
+        // Act
+        $next->handle($command);
+    }
+
+    #[Test]
+    public function handleWorksWithMultipleMiddlewareInSequence(): void
+    {
+        // Arrange
+        $command        = $this->createCommandStub();
+        $expectedResult = new CommandResult($command, CommandStatus::Success, 'result1');
+
+        /** @var MiddlewareInterface&MockObject $middleware1 */
+        $middleware1 = $this->createMock(MiddlewareInterface::class);
+
+        /** @var MiddlewareInterface&MockObject $middleware2 */
+        $middleware2 = $this->createStub(MiddlewareInterface::class);
+
+        /** @var MiddlewareInterface&MockObject $middleware3 */
+        $middleware3 = $this->createStub(MiddlewareInterface::class);
+
+        $middleware1->expects($this->once())
+            ->method('process')
+            ->with($command, $this->isInstanceOf(Next::class))
+            ->willReturn($expectedResult);
+
+        $queue = $this->createMiddlewareQueue();
+        $queue->enqueue($middleware1);
+        $queue->enqueue($middleware2);
+        $queue->enqueue($middleware3);
+
+        $next = new Next($queue);
+
+        // Act
+        $result = $next->handle($command);
+
+        // Assert
+        $this->assertSame($expectedResult, $result);
+
+        // Verify only first middleware was processed and queue is now null
+        $reflection    = new ReflectionClass($next);
+        $queueProperty = $reflection->getProperty('queue');
+        $internalQueue = $queueProperty->getValue($next);
+
+        $this->assertNull($internalQueue);
     }
 
     /**

@@ -9,10 +9,10 @@
 >
     <testsuites>
         <testsuite name="unit test">
-            <directory>./test/unit</directory>
+            <directory>test/unit</directory>
         </testsuite>
         <testsuite name="integration test">
-            <directory>./test/integration</directory>
+            <directory>test/integration</directory>
         </testsuite>
     </testsuites>
 

@@ -27,33 +27,6 @@ use function sprintf;
  */
 final readonly class MiddlewarePipeFactory
 {
-    public function __invoke(ContainerInterface $container): MiddlewarePipelineInterface
-    {
-        if (! $container->has('config')) {
-            throw Exception\ServiceNotFoundException::fromService('config');
-        }
-
-        /** @phpstan-var array<CommandBusConfig> $config */
-        $config = $container->get('config');
-
-        /** @phpstan-var CommandBusConfig $config */
-        $config = $config[CommandBusInterface::class] ?? [];
-
-        if ($config === []) {
-            throw Exception\InvalidConfigurationException::fromMissingKey(sprintf('Configuration for key: %s was not found in the config service.', '$config[' . CommandBusInterface::class . ']'));
-        }
-
-        $middlewarePipe = new MiddlewarePipe();
-
-        $config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY] ??= [];
-
-        if ($config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY] !== []) {
-            self::pipeMiddleware($container, $middlewarePipe, $config);
-        }
-
-        return $middlewarePipe;
-    }
-
     /**
      * Pipe middleware into the CommandBus middleware pipeline.
      *
@@ -66,7 +39,7 @@ final readonly class MiddlewarePipeFactory
     ): MiddlewarePipelineInterface {
         /** @phpstan-var MiddlewarePipeSpec $middleware */
         $middleware = $config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY] ?? [];
-        if ($middleware === []) {
+        if ([] === $middleware) {
             return $middlewarePipe;
         }
 
@@ -76,17 +49,49 @@ final readonly class MiddlewarePipeFactory
          * @phpstan-var SplPriorityQueue<int, MiddlewareSpec> $queue
          */
         $queue = array_reduce(
-            array_map(collectionMapperFactory('middleware'), $middleware),
-            priorityQueueReducerFactory(),
-            new SplPriorityQueue()
+            array_map(collection_mapper_factory('middleware'), $middleware),
+            priority_queue_reducer_factory(),
+            new SplPriorityQueue(),
         );
 
         foreach ($queue as $spec) {
-            if ($container->has($spec['middleware'])) {
-                /** @var MiddlewareInterface $middleware */
-                $middleware = $container->get($spec['middleware']);
-                $middlewarePipe->pipe($middleware);
+            if (! $container->has($spec['middleware'])) {
+                continue;
             }
+
+            /** @var MiddlewareInterface $middleware */
+            $middleware = $container->get($spec['middleware']);
+            $middlewarePipe->pipe($middleware);
+        }
+
+        return $middlewarePipe;
+    }
+
+    public function __invoke(ContainerInterface $container): MiddlewarePipelineInterface
+    {
+        if (! $container->has('config')) {
+            throw Exception\ServiceNotFoundException::fromService('config');
+        }
+
+        /** @phpstan-var array<CommandBusConfig> $config */
+        $config = $container->get('config');
+
+        /** @phpstan-var CommandBusConfig $config */
+        $config = $config[CommandBusInterface::class] ?? [];
+
+        if ([] === $config) {
+            throw Exception\InvalidConfigurationException::fromMissingKey(sprintf(
+                'Configuration for key: %s was not found in the config service.',
+                '$config[' . CommandBusInterface::class . ']',
+            ));
+        }
+
+        $middlewarePipe = new MiddlewarePipe();
+
+        $config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY] ??= [];
+
+        if ([] !== $config[ConfigProvider::MIDDLEWARE_PIPELINE_KEY]) {
+            self::pipeMiddleware($container, $middlewarePipe, $config);
         }
 
         return $middlewarePipe;

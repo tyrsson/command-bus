@@ -1,0 +1,25 @@
+#:schema https://mago.carthage.software/1.40.1/schema.json
+# Welcome to Mago!
+# For full documentation, see https://mago.carthage.software/1.40.1/en/tools/overview/
+version = "1"
+php-version = "8.4.1"
+
+extends = "vendor/webware/webware-tools/mago.toml"
+
+[source]
+workspace = "."
+paths = ["src/", "test/integration/", "test/unit/"]
+includes = ["vendor"]
+excludes = []
+
+[source.glob]
+literal-separator = true
+
+[analyzer]
+
+[linter]
+[linter.rules]
+kan-defect = { exclude = ["test/unit/"] }
+#function-name = { exclude = ["functions/"] }
+
+[formatter]

@@ -15,8 +15,9 @@ use Webware\CommandBus\Command\CommandStatus;
 use Webware\CommandBus\CommandBus;
 use Webware\CommandBus\CommandBusInterface;
 use Webware\CommandBus\ConfigProvider;
+use PHPUnit\Framework\Attributes\Test;
 
-use function array_merge;
+
 
 #[CoversClass(CommandBus::class)]
 #[CoversMethod(CommandBus::class, 'handle')]
@@ -54,26 +55,27 @@ final class CommandBusTest extends TestCase
                 'priority'   => -1,
             ],
         ];
-        $config[CommandBusInterface::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY] = array_merge(
-            $middleware,
-            $testMiddleware
-        );
+        $config[CommandBusInterface::class][ConfigProvider::MIDDLEWARE_PIPELINE_KEY] = [
+            ...$middleware,
+            ...$testMiddleware
+        ];
         $dependencies['services']['config'] = $config;
 
         // @phpstan-ignore-next-line
         $this->container = new ServiceManager($dependencies);
     }
 
-    public function testHandle(): void
+    #[Test]
+    public function handle(): void
     {
         /** @var CommandBusInterface $cmdBus */
         $cmdBus  = $this->container->get(CommandBusInterface::class);
         $command = new TestAssets\Command();
         $result  = $cmdBus->handle($command);
 
-        $this->assertInstanceOf(CommandResult::class, $result);
-        $this->assertSame($command, $result->getCommand());
-        $this->assertSame(CommandStatus::Success, $result->getStatus());
-        $this->assertEquals('Command-One', $result->getResult());
+        static::assertInstanceOf(CommandResult::class, $result);
+        static::assertSame($command, $result->getCommand());
+        static::assertSame(CommandStatus::Success, $result->getStatus());
+        static::assertSame('Command-One', $result->getResult());
     }
 }

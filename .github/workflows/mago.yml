@@ -1,0 +1,59 @@
+name: "Mago Code Quality"
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  mago:
+    name: "PHP ${{ matrix.php }} | ${{ matrix.dependencies }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+        dependencies: ['lowest', 'locked', 'latest']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up PHP and Mago
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: mago
+
+      # Resolve dependencies at the configured strategy level.
+      # "locked" uses the committed composer.lock as-is.
+      - name: Install dependencies (lowest)
+        if: matrix.dependencies == 'lowest'
+        run: composer update --prefer-lowest --no-interaction --no-progress
+
+      - name: Install dependencies (locked)
+        if: matrix.dependencies == 'locked'
+        run: composer install --no-interaction --no-progress
+
+      - name: Install dependencies (latest)
+        if: matrix.dependencies == 'latest'
+        run: composer update --no-interaction --no-progress
+
+      # Set the Mago PHP version via env var so it overrides mago.toml
+      # for each matrix PHP version without mutating the config file.
+      - name: Pin Mago PHP version
+        run: echo "MAGO_PHP_VERSION=${{ matrix.php }}" >> "$GITHUB_ENV"
+
+      - name: Check formatting
+        run: mago format --check
+
+      - name: Lint
+        if: success() || failure()
+        run: mago lint
+
+      - name: Analyze
+        if: success() || failure()
+        run: mago analyze
+
+      - name: Test
+        if: success() || failure()
+        run: ./vendor/bin/phpunit --colors=always

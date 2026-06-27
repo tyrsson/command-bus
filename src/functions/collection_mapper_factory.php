@@ -8,7 +8,6 @@ use Webware\CommandBus\ConfigProvider;
 use Webware\CommandBus\Exception;
 
 use function array_key_exists;
-
 /**
  * Create the collection mapping function.
  *
@@ -20,12 +19,16 @@ use function array_key_exists;
  *
  * If the 'middleware' value is missing, or not viable as middleware, it
  * raises an exception, to ensure the pipeline is built correctly.
+ * @mago-format-ignore-next
  */
-function collectionMapperFactory(string $key): callable
+function collection_mapper_factory(string $key): callable
 {
     return static function (array $item) use ($key): array {
         if (! array_key_exists($key, $item)) {
-            throw Exception\InvalidConfigurationException::fromInvalidType('$config[' . ConfigProvider::class . '][' . ConfigProvider::MIDDLEWARE_PIPELINE_KEY . ']', $item);
+            throw Exception\InvalidConfigurationException::fromInvalidType(
+                '$config[' . ConfigProvider::class . '][' . ConfigProvider::MIDDLEWARE_PIPELINE_KEY . ']',
+                $item,
+            );
         }
 
         return $item;

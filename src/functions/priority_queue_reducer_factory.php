@@ -22,11 +22,12 @@ use const PHP_INT_MAX;
  * The function is useful to reduce an array of pipeline middleware to a
  * priority queue.
  */
-function priorityQueueReducerFactory(): callable
+function priority_queue_reducer_factory(): callable
 {
     $serial = PHP_INT_MAX;
 
     return static function (SplPriorityQueue $queue, array $item) use (&$serial): SplPriorityQueue {
+        // @mago-expect lint:no-isset
         $priority = isset($item['priority']) && is_int($item['priority'])
             ? $item['priority']
             : 1;

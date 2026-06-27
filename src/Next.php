@@ -32,7 +32,7 @@ final class Next implements CommandHandlerInterface
     #[Override]
     public function handle(CommandInterface $command): Command\CommandResultInterface
     {
-        if ($this->queue === null) {
+        if (null === $this->queue) {
             throw NextHandlerAlreadyCalledException::create();
         }
 

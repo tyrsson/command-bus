@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Webware\CommandBus\CommandBusInterface;
 use Webware\CommandBus\ConfigProvider;
 use Webware\CommandBus\Middleware\CommandHandlerMiddleware;
+use PHPUnit\Framework\Attributes\Test;
 
 #[CoversClass(ConfigProvider::class)]
 #[CoversMethod(ConfigProvider::class, '__invoke')]
@@ -42,88 +43,98 @@ final class ConfigProviderTest extends TestCase
         $this->expectedMiddleware = TestAssets\ExpectedConfig::getExpectedMiddleware();
     }
 
-    public function testInvokeReturnsCorrectStructure(): void
+    #[Test]
+    public function invokeReturnsCorrectStructure(): void
     {
         $config = ($this->configProvider)();
 
-        $this->assertArrayHasKey('dependencies', $config);
-        $this->assertArrayHasKey(CommandBusInterface::class, $config);
+        static::assertArrayHasKey('dependencies', $config);
+        static::assertArrayHasKey(CommandBusInterface::class, $config);
 
         $dependencies = $config['dependencies'];
-        $this->assertArrayHasKey('aliases', $dependencies);
-        $this->assertArrayHasKey('factories', $dependencies);
+        static::assertArrayHasKey('aliases', $dependencies);
+        static::assertArrayHasKey('factories', $dependencies);
 
         $cmdBusConfig = $config[CommandBusInterface::class];
-        $this->assertArrayHasKey(ConfigProvider::COMMAND_MAP_KEY, $cmdBusConfig);
-        $this->assertArrayHasKey(ConfigProvider::MIDDLEWARE_PIPELINE_KEY, $cmdBusConfig);
+        static::assertArrayHasKey(ConfigProvider::COMMAND_MAP_KEY, $cmdBusConfig);
+        static::assertArrayHasKey(ConfigProvider::MIDDLEWARE_PIPELINE_KEY, $cmdBusConfig);
     }
 
-    public function testGetDependenciesReturnsCorrectAliases(): void
+    #[Test]
+    public function getDependenciesReturnsCorrectAliases(): void
     {
         $dependencies = $this->configProvider->getDependencies();
 
-        $this->assertSame($this->expectedAliases, $dependencies['aliases']);
+        static::assertSame($this->expectedAliases, $dependencies['aliases']);
     }
 
-    public function testGetDependenciesReturnsCorrectFactories(): void
+    #[Test]
+    public function getDependenciesReturnsCorrectFactories(): void
     {
         $dependencies = $this->configProvider->getDependencies();
 
-        $this->assertSame($this->expectedFactories, $dependencies['factories']);
+        static::assertSame($this->expectedFactories, $dependencies['factories']);
     }
 
-    public function testGetDependenciesReturnsCorrectInvokables(): void
+    #[Test]
+    public function getDependenciesReturnsCorrectInvokables(): void
     {
         $dependencies = $this->configProvider->getDependencies();
 
-        $this->assertSame($this->expectedInvokables, $dependencies['invokables']);
+        static::assertSame($this->expectedInvokables, $dependencies['invokables']);
     }
 
-    public function testGetDependenciesStructure(): void
+    #[Test]
+    public function getDependenciesStructure(): void
     {
         $dependencies = $this->configProvider->getDependencies();
 
-        $this->assertCount(3, $dependencies);
-        $this->assertArrayHasKey('aliases', $dependencies);
-        $this->assertArrayHasKey('factories', $dependencies);
-        $this->assertArrayHasKey('invokables', $dependencies);
+        static::assertCount(3, $dependencies);
+        static::assertArrayHasKey('aliases', $dependencies);
+        static::assertArrayHasKey('factories', $dependencies);
+        static::assertArrayHasKey('invokables', $dependencies);
     }
 
-    public function testGetCommandMapReturnsEmptyArray(): void
+    #[Test]
+    public function getCommandMapReturnsEmptyArray(): void
     {
         $commandMap = $this->configProvider->getCommandMap();
 
-        $this->assertEmpty($commandMap);
+        static::assertEmpty($commandMap);
     }
 
-    public function testGetMiddlewareReturnsDefaultConfiguration(): void
+    #[Test]
+    public function getMiddlewareReturnsDefaultConfiguration(): void
     {
         $middleware = $this->configProvider->getMiddleware();
 
-        $this->assertSame($this->expectedMiddleware, $middleware);
+        static::assertSame($this->expectedMiddleware, $middleware);
     }
 
-    public function testGetMiddlewareStructure(): void
+    #[Test]
+    public function getMiddlewareStructure(): void
     {
         $middleware = $this->configProvider->getMiddleware();
 
-        $this->assertCount(1, $middleware);
+        static::assertCount(1, $middleware);
 
-        $this->assertSame(CommandHandlerMiddleware::class, $middleware[0]['middleware']);
+        static::assertSame(CommandHandlerMiddleware::class, $middleware[0]['middleware']);
     }
 
-    public function testConstants(): void
+    #[Test]
+    public function constants(): void
     {
-        $this->assertSame('command_map', ConfigProvider::COMMAND_MAP_KEY);
-        $this->assertSame('middleware_pipeline', ConfigProvider::MIDDLEWARE_PIPELINE_KEY);
-        $this->assertSame(1, ConfigProvider::DEFAULT_PRIORITY);
+        static::assertSame('command_map', ConfigProvider::COMMAND_MAP_KEY);
+        static::assertSame('middleware_pipeline', ConfigProvider::MIDDLEWARE_PIPELINE_KEY);
+        static::assertSame(1, ConfigProvider::DEFAULT_PRIORITY);
     }
 
-    public function testConfigProviderCanBeInvokedMultipleTimes(): void
+    #[Test]
+    public function configProviderCanBeInvokedMultipleTimes(): void
     {
         $config1 = ($this->configProvider)();
         $config2 = ($this->configProvider)();
 
-        $this->assertSame($config1, $config2);
+        static::assertSame($config1, $config2);
     }
 }
