@@ -38,7 +38,7 @@
         "laminas/laminas-servicemanager": "^4.0.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
-        "phpunit/phpunit": "^11.5.42",
+        "phpunit/phpunit": "^13.0.0",
         "roave/security-advisories": "dev-master",
         "webware/coding-standard": "^0.1.0"
     },
